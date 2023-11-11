@@ -4,6 +4,7 @@ const skillSchema = new mongoose.Schema(
     {
         tag: {
             type: String,
+            unique: true,
             required: true
         }
     }, {
