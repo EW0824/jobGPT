@@ -56,17 +56,32 @@ const userSchema = new mongoose.Schema(
             message: 'Invalid email address',
         }
       },
-      privacyPreferences: [String],
-      profilePicture: {
+      role: {
         type: String,
-        default: profilePicBaseURL + "default.png",
+        enum: ['regularUser', 'premiumUser', 'admin'],
+        required: true,
       },
-      // primaryAddress: Number,
-      creationDate: Date,
-      jobHistory: [{
+      jobList: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Job'
-      }]
+      }],
+
+      favoriteJobList: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Job'
+      }],
+
+      experienceList: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Experience'
+      }],
+
+      skillList: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Skill'
+      }],
+
+      creationDate: Date,
     }
     // Useful if want to create Redacted User view
     // {autoCreate: false, autoIndex: false}
