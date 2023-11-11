@@ -1,15 +1,14 @@
-
-
-
+const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema(
     {
+      _id: mongoose.Schema.Types.ObjectId,
       firstName: {
         type: String,
         required: [true, "Please enter your first name"],
         trim: true,
         validate: {
           validator: function (v) {
-            return /^[a-zA-Z ]*$/.test(v);
+            return /^[a-zA-Z]*$/.test(v);
           },
           message: "Must be all characters",
         },
@@ -25,27 +24,37 @@ const userSchema = new mongoose.Schema(
           message: "Must be all characters",
         },
       },
-      fullName: {
+      userName: {
         type: String,
-        index: true,
-      },
-      phoneNumber: {
-        type: String,
-        index: true,
-        unique: true,
-        required: [true, "Must have a primary phone number"],
+        required: true,
         trim: true,
         validate: {
-          validator: function (v) {
-            return /^[0-9 +]+$/.test(v);
-          },
-          message: "Must be all numbers (or plus)",
+            validator: function (v) {
+                // You can add custom validation logic here
+                // For example, checking if the username meets certain criteria
+                return /[a-zA-Z0-9]/.test(v);
+            },
+            message: 'Username must contain only letters and numbers',
         },
-      },
+    },
       password: {
         type: String,
-        required: [true, "Please enter a valid password"],
+        required: true,
         trim: true,
+        minlength: 6, // Example minimum password length
+    },
+      email: {
+        type: String,
+        required: true,
+        trim: true,
+        unique: true, // Ensure that each email is unique in the database
+        validate: {
+            validator: function (v) {
+                // You can add a more sophisticated email validation logic here
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+            },
+            message: 'Invalid email address',
+        }
       },
       privacyPreferences: [String],
       profilePicture: {
@@ -54,7 +63,10 @@ const userSchema = new mongoose.Schema(
       },
       // primaryAddress: Number,
       creationDate: Date,
-      jobHistory: [jobSchema]
+      jobHistory: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Job'
+      }]
     }
     // Useful if want to create Redacted User view
     // {autoCreate: false, autoIndex: false}

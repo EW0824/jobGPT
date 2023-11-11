@@ -4,12 +4,11 @@ const mongoose = require('mongoose');
 // Please just finish this
 const jobSchema = new mongoose.Schema(
     {
-        name: {
+        jobName: {
             type: String,
-            required, true,
+            required: true,
             trim: true,
             validate: {
-
             }
         }
     }
