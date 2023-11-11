@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema(
     {
-      _id: mongoose.Schema.Types.ObjectId,
       firstName: {
         type: String,
         required: [true, "Please enter your first name"],
@@ -37,52 +36,47 @@ const userSchema = new mongoose.Schema(
             message: 'Username must contain only letters and numbers',
         },
     },
-      password: {
-        type: String,
-        required: true,
-        trim: true,
-        minlength: 6, // Example minimum password length
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 6, // Example minimum password length
     },
-      email: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true, // Ensure that each email is unique in the database
-        validate: {
-            validator: function (v) {
-                // You can add a more sophisticated email validation logic here
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-            },
-            message: 'Invalid email address',
-        }
-      },
-      role: {
-        type: String,
-        enum: ['regularUser', 'premiumUser', 'admin'],
-        required: true,
-      },
-      jobList: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Job'
-      }],
-
-      favoriteJobList: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Job'
-      }],
-
-      experienceList: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Experience'
-      }],
-
-      skillList: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Skill'
-      }],
-
-      creationDate: Date,
-    }
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true, // Ensure that each email is unique in the database
+      validate: {
+          validator: function (v) {
+              // You can add a more sophisticated email validation logic here
+              return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+          },
+          message: 'Invalid email address',
+      }
+    },
+    role: {
+      type: String,
+      enum: ['regularUser', 'premiumUser', 'admin'],
+      required: true,
+    },
+    jobList: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Job'
+    }],
+    favoriteJobList: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Job'
+    }],
+    experienceList: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Experience'
+    }],
+    skillList: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Skill'
+    }]
+    }, {timestamps: true}
     // Useful if want to create Redacted User view
     // {autoCreate: false, autoIndex: false}
   );

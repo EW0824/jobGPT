@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
 
 const experienceSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true,
-    unique: true,
-    index: true,
-  },
   name: {
     type: String,
     required: true,
@@ -17,6 +11,7 @@ const experienceSchema = new mongoose.Schema({
   },
   startTime: {
     type: Date,
+    required: true,
   },
   endTime: {
     type: Date,
@@ -25,19 +20,10 @@ const experienceSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  userId: {
-    type: Number,
-    ref: 'User',
-    required: true,
-  },
   description: {
     type: String,
   },
-  lastModified: {
-    type: Date,
-    default: Date.now,
-  },
-});
+}, {timestamps: true});
 
 const Experience = mongoose.model('Experience', experienceSchema);
 
