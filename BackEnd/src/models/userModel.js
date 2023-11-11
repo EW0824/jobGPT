@@ -1,19 +1,4 @@
-const mongoose = require('mongoose');
 
-
-// Please just finish this
-const jobSchema = new mongoose.Schema(
-    {
-        name: {
-            type: String,
-            required, true,
-            trim: true,
-            validate: {
-
-            }
-        }
-    }
-)
 
 
 const userSchema = new mongoose.Schema(
@@ -75,3 +60,6 @@ const userSchema = new mongoose.Schema(
     // {autoCreate: false, autoIndex: false}
   );
   
+const User = mongoose.model("User", userSchema);
+
+export default User;
