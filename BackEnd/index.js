@@ -28,5 +28,8 @@ async function startServer() {
 
 startServer();
 
-import JobRouter from './src/api/JobController.js'
-app.use('/jobs', JobRouter);
+import jobRouter from './src/api/JobController.js'
+app.use('/jobs', jobRouter);
+
+import experienceRouter from './src/api/ExperienceController.js'
+app.use('/experience', experienceRouter)
