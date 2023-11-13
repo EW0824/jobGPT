@@ -1,5 +1,8 @@
 import express from "express"
 import cors from 'cors'
+import 'dotenv/config'
+
+import { createMongooseConnection } from "./src/db/connect.js";
 
 const port = 3000;
 
@@ -11,6 +14,16 @@ app.get('/', (req, res) => {
   res.status(200).send("Hello World")
 })
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+async function startServer() {
+  try {
+    await createMongooseConnection();
+    app.listen(port, () => {
+      console.log(`Server is running at http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error("Database connection failed", error);
+    process.exit(1);
+  }
+}
+
+startServer();
