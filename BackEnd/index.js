@@ -1,14 +1,16 @@
-const http = require('http');
+import express from "express"
+import cors from 'cors'
 
-const hostname = '127.0.0.1';
 const port = 3000;
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
-});
+const app = express()
+app.use(cors())
+app.use(express.json())
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.get('/', (req, res) => {
+  res.status(200).send("Hello World")
+})
+
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
 });
