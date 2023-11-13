@@ -4,7 +4,7 @@ import 'dotenv/config'
 
 import { createMongooseConnection } from "./src/db/connect.js";
 
-const port = 3000;
+const port = 8080;
 
 const app = express()
 app.use(cors())
@@ -27,3 +27,6 @@ async function startServer() {
 }
 
 startServer();
+
+import JobRouter from './src/api/JobController.js'
+app.use('/jobs', JobRouter);
