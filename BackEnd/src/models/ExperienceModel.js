@@ -1,30 +1,33 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const experienceSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const experienceSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    location: {
+      type: String,
+      required: true,
+    },
+    startTime: {
+      type: Date,
+      required: true,
+    },
+    endTime: {
+      type: Date,
+    },
+    position: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
   },
-  location: {
-    type: String,
-    required: true,
-  },
-  startTime: {
-    type: Date,
-    required: true,
-  },
-  endTime: {
-    type: Date,
-  },
-  position: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-  },
-}, {timestamps: true});
+  { timestamps: true }
+);
 
-const Experience = mongoose.model('Experience', experienceSchema);
+const Experience = mongoose.model("Experience", experienceSchema);
 
 export default Experience;
