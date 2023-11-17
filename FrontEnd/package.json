@@ -11,9 +11,11 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@iconify/react": "^4.1.1",
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
     "date-fns": "^2.30.0",
+    "iconify": "^1.4.0",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "^6.19.0",
