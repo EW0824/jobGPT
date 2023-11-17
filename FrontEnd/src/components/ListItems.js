@@ -34,7 +34,7 @@ export function MainListItems({ navigate }) {
         <ListItemIcon>
           <BadgeIcon />
         </ListItemIcon>
-        <ListItemText primary="Profile" />
+        <ListItemText primary="Profile" onClick={()=>{navigate("/profile")}}/>
       </ListItemButton>
     </React.Fragment>
   );
