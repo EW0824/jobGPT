@@ -17,7 +17,9 @@ import {
 } from "@mui/material";
 
 // component import
-import Iconify from "../gagets/Iconify";
+import Label from "../styles/Label";
+import { sentenceCase } from "change-case";
+import Iconify from "../styles/Iconify";
 import Title from "./Title";
 import { fDateTime } from "../gagets/formatTime";
 
@@ -130,14 +132,24 @@ export default function Orders() {
                 <TableCell>{fDateTime(row.createdAt)}</TableCell>
                 <TableCell>{row.jobName}</TableCell>
                 <TableCell>{row.jobCompany}</TableCell>
-                <TableCell>{row.jobStatus}</TableCell>
+                <TableCell>
+                  {" "}
+                  <Label
+                    color={
+                      (row.jobStatus === "Applying" && "info") ||
+                      (row.jobStatus === "Rejected" && "error") ||
+                      "success"
+                    }
+                  >
+                    {sentenceCase(row.jobStatus)}
+                  </Label>
+                </TableCell>
                 <TableCell align="right">{row.jobDescription}</TableCell>
               </TableRow>
             ))}
         </TableBody>
         {isNotFound && (
           <TableBody>
-            <TableRow>
             <TableRow>
               <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
                 <Typography variant="h5" paragraph>
@@ -149,7 +161,6 @@ export default function Orders() {
                   <br /> Try checking for typos or using complete words.
                 </Typography>
               </TableCell>
-            </TableRow>
             </TableRow>
           </TableBody>
         )}

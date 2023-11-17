@@ -20,7 +20,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { validateSignUpForm } from "../gagets/validation";
-import Iconify from "../gagets/Iconify";
+import Iconify from "../styles/Iconify";
 
 const defaultTheme = createTheme();
 
@@ -40,11 +40,10 @@ export default function SignUp() {
     const errors = validateSignUpForm(formDataObject);
     console.log(errors);
     if (Object.keys(errors).length !== 0) {
-      setErrMsg(
-        "Please correct the following form errors:\n".concat(
-          Object.values(errors).join("\n")
-        )
-      );
+      const errorMessage = Object.values(errors)
+        .map((error) => `    - ${error}`) // Four spaces before the hyphen
+        .join("\n");
+      setErrMsg(`Please correct the following form errors:\n${errorMessage}`);
     } else {
       setErrMsg("");
     }
@@ -165,17 +164,17 @@ export default function SignUp() {
                 </Link>
               </Grid>
             </Grid>
-            
-              {errMsg && (
-                <Alert
+
+            {errMsg && (
+              <Alert
                 alignItems="center"
-                  size="large"
-                  sx={{ whiteSpace: "pre-line" }}
-                  severity="error"
-                >
-                  {errMsg}
-                </Alert>
-              )}
+                size="large"
+                sx={{ whiteSpace: "pre-line", mt: 1 }}
+                severity="error"
+              >
+                {errMsg}
+              </Alert>
+            )}
           </Box>
         </Box>
       </Container>

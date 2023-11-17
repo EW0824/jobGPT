@@ -17,7 +17,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import Iconify from "../gagets/Iconify";
+import Iconify from "../styles/Iconify";
 
 const defaultTheme = createTheme();
 
