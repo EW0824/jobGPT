@@ -1,8 +1,10 @@
 // React Import
 import React, { useEffect, useState } from "react";
 // @mui Import
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha } from "@mui/material/styles";
 import {
+  Paper,
+  Typography,
   Link,
   Table,
   TableBody,
@@ -20,22 +22,21 @@ import Title from "./Title";
 import { fDateTime } from "../gagets/formatTime";
 
 const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
-  width: '98%',
-  transition: theme.transitions.create(['box-shadow', 'width'], {
+  width: "98%",
+  transition: theme.transitions.create(["box-shadow", "width"], {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,
   }),
-  '&:hover': {
-    width: '100%', // Change width on hover
-    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.3)', // Add boxShadow on hover
+  "&:hover": {
+    width: "100%", // Change width on hover
+    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.3)", // Add boxShadow on hover
   },
-  '&:focus': {
-    width: '100%', // Change width on focus
-    boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)', // Add boxShadow on focus
-    borderColor: '#80bdff', // Example border color on focus
+  "&:focus": {
+    width: "100%", // Change width on focus
+    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)", // Add boxShadow on focus
+    borderColor: "#80bdff", // Example border color on focus
   },
 }));
-
 
 export default function Orders() {
   useEffect(() => {
@@ -50,7 +51,7 @@ export default function Orders() {
       .catch((error) => console.log(error));
   }, []);
 
-  const [filterName, setFilterName] = useState('');
+  const [filterName, setFilterName] = useState("");
   const [jobData, setJobData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -65,8 +66,12 @@ export default function Orders() {
     if (query) {
       return array.filter(
         (el) =>
-          el.jobCompany.toString().toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
-          el.jobStatus.toString().toLowerCase().indexOf(query.toLowerCase()) !== -1
+          el.jobCompany
+            .toString()
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) !== -1 ||
+          el.jobStatus.toString().toLowerCase().indexOf(query.toLowerCase()) !==
+            -1
       );
     }
     return stabilizedThis.map((el) => el[0]);
@@ -78,7 +83,6 @@ export default function Orders() {
     if (a > b) return 1;
     return 0;
   }
-    
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -90,20 +94,24 @@ export default function Orders() {
   };
 
   let filteredJob = applySortFilter(jobData, compareIncreasing, filterName);
+  const isNotFound = !filteredJob.length && !!filterName;
   return (
     <React.Fragment>
       <Title>Recent Job History</Title>
       <StyledSearch
-          value={filterName}
-          onChange={(e) => setFilterName(e.target.value)}
-          placeholder="Search Company Or Status..."
-          startAdornment={
-            <InputAdornment position="start">
-              <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
-            </InputAdornment>
-          }
-          sx={{ mb: 1 }}
-        />
+        value={filterName}
+        onChange={(e) => setFilterName(e.target.value)}
+        placeholder="Search Company Or Status..."
+        startAdornment={
+          <InputAdornment position="start">
+            <Iconify
+              icon="eva:search-fill"
+              sx={{ color: "text.disabled", width: 20, height: 20 }}
+            />
+          </InputAdornment>
+        }
+        sx={{ mb: 1 }}
+      />
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -127,6 +135,22 @@ export default function Orders() {
               </TableRow>
             ))}
         </TableBody>
+        {isNotFound && (
+          <TableBody>
+            <TableRow>
+              <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                <Typography variant="h5" paragraph>
+                  Not found
+                </Typography>
+                <Typography variant="body2">
+                  No results found for &nbsp;
+                  <strong>&quot;{filterName}&quot;</strong>.
+                  <br /> Try checking for typos or using complete words.
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        )}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           count={filteredJob.length}
