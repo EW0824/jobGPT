@@ -52,7 +52,7 @@ export function SecondaryListItems({ navigate }) {
         </ListItemIcon>
         <ListItemText primary="Sign In" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate("/sign-up")}>
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>

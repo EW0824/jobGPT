@@ -138,6 +138,7 @@ export default function Orders() {
         {isNotFound && (
           <TableBody>
             <TableRow>
+            <TableRow>
               <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
                 <Typography variant="h5" paragraph>
                   Not found
@@ -148,6 +149,7 @@ export default function Orders() {
                   <br /> Try checking for typos or using complete words.
                 </Typography>
               </TableCell>
+            </TableRow>
             </TableRow>
           </TableBody>
         )}
