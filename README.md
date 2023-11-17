@@ -17,6 +17,7 @@ npm install
 npm start
 ```
 
+```bash
 Frontend/
 ├── node_modules/
 ├── src/
@@ -31,6 +32,7 @@ Frontend/
 ├── .gitignore
 ├── package.json
 └── package-lock.json
+```
 
 To contribute:
 
