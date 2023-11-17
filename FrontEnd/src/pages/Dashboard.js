@@ -13,8 +13,10 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { MainListItems, SecondaryListItems } from "./listItems";
+import { MainListItems, SecondaryListItems } from "../components/ListItems";
+import Orders from "../components/Orders";
 import { useNavigate } from "react-router-dom";
+import Paper from "@mui/material/Paper";
 
 const drawerWidth = 240;
 
@@ -120,7 +122,7 @@ export default function Dashboard() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            <MainListItems />
+            <MainListItems navigate={navigate} />
             <Divider sx={{ my: 1 }} />
             <SecondaryListItems navigate={navigate} />
           </List>
@@ -139,7 +141,8 @@ export default function Dashboard() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}></Grid>
+            {/* Recent Orders */}
+            <Grid item xs={12}></Grid>
           </Container>
         </Box>
       </Box>

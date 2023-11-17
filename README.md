@@ -16,3 +16,25 @@ To run:
 npm install
 npm start
 ```
+
+Frontend/
+├── node_modules/
+├── src/
+│ ├── components/ (reusable components for the webpages)
+│ ├── pages/ (implement pages for dashboard, job history etc)
+│ ├── App.js
+│ ├── index.js
+|
+├── public/
+│ ├── index.html
+│ └── ...
+├── .gitignore
+├── package.json
+└── package-lock.json
+
+To contribute:
+
+1. Implement pages
+2. Connected to DB
+3. Refactor code
+4. Design a better favicon
