@@ -56,7 +56,7 @@ export default function Orders() {
   const [filterName, setFilterName] = useState("");
   const [jobData, setJobData] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   function applySortFilter(array, comparator, query) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -114,7 +114,15 @@ export default function Orders() {
         }
         sx={{ mb: 1 }}
       />
-      <Table size="small">
+      <Table size="medium">
+        {/* To achieve fixed column width*/}
+            <colgroup>
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+            <col style={{ width: "20%" }} />
+          </colgroup>
         <TableHead>
           <TableRow>
             <TableCell>Date</TableCell>
