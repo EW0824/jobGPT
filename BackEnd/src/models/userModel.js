@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -21,19 +22,6 @@ const userSchema = new mongoose.Schema(
           return /^[a-zA-Z ]*$/.test(v);
         },
         message: "Must be all characters",
-      },
-    },
-    userName: {
-      type: String,
-      required: true,
-      trim: true,
-      validate: {
-        validator: function (v) {
-          // You can add custom validation logic here
-          // For example, checking if the username meets certain criteria
-          return /[a-zA-Z0-9]/.test(v);
-        },
-        message: "Username must contain only letters and numbers",
       },
     },
     password: {
