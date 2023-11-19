@@ -12,25 +12,45 @@ import {
   CssBaseline,
   TextField,
   FormControlLabel,
+  Stack,
+  Alert,
   Checkbox,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import { validateSignUpForm } from "../gagets/validation";
 import Iconify from "../styles/Iconify";
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const formDataObject = {};
+    for (const [key, value] of data.entries()) {
+      formDataObject[key] = value;
+    }
+    formDataObject["role"] = "regularUser";
+    console.log(formDataObject);
+    const errors = validateSignUpForm(formDataObject);
+    console.log(errors);
+    if (Object.keys(errors).length !== 0) {
+      const errorMessage = Object.values(errors)
+        .map((error) => `    - ${error}`) // Four spaces before the hyphen
+        .join("\n");
+      setErrMsg(`Please correct the following form errors:\n${errorMessage}`);
+    } else {
+      setErrMsg("");
+    }
+  };
+
+  const handleInputChange = () => {
+    setErrMsg("");
   };
 
   return (
@@ -49,14 +69,24 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign Up
           </Typography>
           <Box
+            width={500}
             component="form"
             onSubmit={handleSubmit}
-            noValidate
             sx={{ mt: 1 }}
           >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="userName"
+              label="Username"
+              name="userName"
+              autoFocus
+              onChange={handleInputChange}
+            />
             <TextField
               margin="normal"
               required
@@ -66,6 +96,26 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="firstName"
+              label="First Name"
+              name="firstName"
+              autoFocus
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="lastName"
+              label="Last Name"
+              name="lastName"
+              onChange={handleInputChange}
             />
             <TextField
               margin="normal"
@@ -76,6 +126,7 @@ export default function SignIn() {
               label="Password"
               id="password"
               autoComplete="current-password"
+              onChange={handleInputChange}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -103,20 +154,27 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
+              <Grid item xs></Grid>
               <Grid item>
-                <Link href="/sign-up" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link href="#" variant="body2" align="right">
+                  {"Already have an account? Sign In"}
                 </Link>
               </Grid>
             </Grid>
+
+            {errMsg && (
+              <Alert
+                alignItems="center"
+                size="large"
+                sx={{ whiteSpace: "pre-line", mt: 1 }}
+                severity="error"
+              >
+                {errMsg}
+              </Alert>
+            )}
           </Box>
         </Box>
       </Container>

@@ -34,7 +34,7 @@ export function MainListItems({ navigate }) {
         <ListItemIcon>
           <BadgeIcon />
         </ListItemIcon>
-        <ListItemText primary="Profile" />
+        <ListItemText primary="Profile" onClick={()=>{navigate("/profile")}}/>
       </ListItemButton>
     </React.Fragment>
   );
@@ -52,7 +52,7 @@ export function SecondaryListItems({ navigate }) {
         </ListItemIcon>
         <ListItemText primary="Sign In" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate("/sign-up")}>
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
