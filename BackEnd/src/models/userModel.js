@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import pkg from "bcryptjs"
+
+const { hashSync, compareSync } = pkg
 
 const userSchema = new mongoose.Schema(
   {
@@ -77,6 +80,16 @@ const userSchema = new mongoose.Schema(
   // Useful if want to create Redacted User view
   // {autoCreate: false, autoIndex: false}
 );
+
+userSchema.pre("save", function () {
+  if (this.isModified("password")) {
+    this.password = hashSync(this.password, 10);
+  }
+});
+
+userSchema.methods.comparePasswords = function (password) {
+  return compareSync(password, this.password)
+}
 
 const User = mongoose.model("User", userSchema);
 

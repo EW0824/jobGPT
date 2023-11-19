@@ -1,10 +1,10 @@
 import express from 'express'
 import User from '../models/userModel.js'
-import pkg from "bcryptjs"
-
-const { hashSync, compareSync } = pkg
+import session from 'express-session'
 
 const router = express.Router()
+
+const sessionize_user = (user) => ({user_id: user._id, username: user.firstName + " " + user.lastName})
 
 router.post('/signup', async (req, res, next) => {
 
@@ -20,15 +20,69 @@ router.post('/signup', async (req, res, next) => {
             role: role
         })
 
-        const sessionToken = {user_id: newUser._id, userName: newUser.firstName + " " + newUser.lastName}
         await newUser.save()
 
-        req.session.user = sessionToken
-
-        res.status(200).json(sessionToken)
+        const session_user = sessionize_user(newUser)
+        req.session.user = session_user
+        res.status(200).json(session_user)
 
     } catch (error) {
+        res.status(502).send(error)
+    }
+})
 
+router.post("/login", async(req, res, next) => {
+    try {
+
+        const {email, password} = req.body
+
+        const user = await User.findOne({ email })
+    
+        if(!user){
+            throw Error("Incorrect email")
+        }
+        if(!user.comparePasswords(password)){
+            throw Error("Incorrect password")
+        }
+        
+        const session_user = sessionize_user(user)
+        req.session.user = session_user
+        res.status(200).json(session_user)
+
+    } catch(err) {
+
+        console.log(err)
+        res.status(502).send(err)
+
+    }
+})
+
+router.delete("/logout", async({session}, res, next) => {
+    try {
+        const user = {...session.user}
+
+        if(user) {
+            session.destroy((err) => {
+                if(err){
+                    throw err
+                }
+                res.clearCookie(process.env.SESSION_NAME)
+                res.status(200).json(user)
+            })
+        } else {
+            throw Error("Unkown error")
+        }
+    } catch(error){
+
+    }
+})
+
+router.get("/get_session", async({session}, res, next) => {
+    try {
+        const user_id = session.user.user_id
+        res.status(200).json({user_id: user_id})
+    } catch(err){
+        res.status(200).json({ user_id: null })
     }
 })
 
