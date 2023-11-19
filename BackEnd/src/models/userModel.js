@@ -1,4 +1,8 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import pkg from "bcryptjs"
+
+const { hashSync, compareSync } = pkg
+
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -21,19 +25,6 @@ const userSchema = new mongoose.Schema(
           return /^[a-zA-Z ]*$/.test(v);
         },
         message: "Must be all characters",
-      },
-    },
-    userName: {
-      type: String,
-      required: true,
-      trim: true,
-      validate: {
-        validator: function (v) {
-          // You can add custom validation logic here
-          // For example, checking if the username meets certain criteria
-          return /[a-zA-Z0-9]/.test(v);
-        },
-        message: "Username must contain only letters and numbers",
       },
     },
     password: {
@@ -89,6 +80,16 @@ const userSchema = new mongoose.Schema(
   // Useful if want to create Redacted User view
   // {autoCreate: false, autoIndex: false}
 );
+
+userSchema.pre("save", function () {
+  if (this.isModified("password")) {
+    this.password = hashSync(this.password, 10);
+  }
+});
+
+userSchema.methods.comparePasswords = function (password) {
+  return compareSync(password, this.password)
+}
 
 const User = mongoose.model("User", userSchema);
 
