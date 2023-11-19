@@ -1,22 +1,27 @@
 import * as React from "react";
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import MuiDrawer from "@mui/material/Drawer";
-import Box from "@mui/material/Box";
+// @mui
+import {
+  CssBaseline,
+  IconButton,
+  Box,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  Container,
+  Grid,
+  Paper,
+} from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import MuiDrawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+
+
 import { MainListItems, SecondaryListItems } from "../components/ListItems";
-import Orders from "../components/Orders";
-import { useNavigate } from "react-router-dom";
-import Paper from "@mui/material/Paper";
+import DetailedJob from "../components/DetailedJob";
+import { useNavigate, useParams } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -67,7 +72,9 @@ const Drawer = styled(MuiDrawer, {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function JobHistory() {
+export default function DetailedJobView() {
+  let { jobId } = useParams();
+  console.log(jobId);
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -103,7 +110,7 @@ export default function JobHistory() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Job History
+              Detailed Job View
             </Typography>
           </Toolbar>
         </AppBar>
@@ -141,11 +148,11 @@ export default function JobHistory() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                <Orders />
-              </Paper>
-            </Grid>
+            <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+              <Grid item xs={12}>
+                <DetailedJob jobId={jobId} />
+              </Grid>
+            </Paper>
           </Container>
         </Box>
       </Box>

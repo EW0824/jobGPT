@@ -22,6 +22,7 @@ import { sentenceCase } from "change-case";
 import Iconify from "../styles/Iconify";
 import Title from "./Title";
 import { fDateTime } from "../gagets/formatTime";
+import { useNavigate } from "react-router-dom";
 
 const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   width: "98%",
@@ -57,6 +58,7 @@ export default function Orders() {
   const [jobData, setJobData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const navigate = useNavigate();
 
   function applySortFilter(array, comparator, query) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -117,7 +119,8 @@ export default function Orders() {
       <Table size="medium">
         {/* To achieve fixed column width*/}
             <colgroup>
-            <col style={{ width: "20%" }} />
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "10%" }} />
             <col style={{ width: "20%" }} />
             <col style={{ width: "20%" }} />
             <col style={{ width: "20%" }} />
@@ -125,6 +128,7 @@ export default function Orders() {
           </colgroup>
         <TableHead>
           <TableRow>
+            <TableCell>ID</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Job Company</TableCell>
@@ -135,8 +139,9 @@ export default function Orders() {
         <TableBody>
           {filteredJob
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row) => (
+            .map((row, index) => (
               <TableRow key={row._id}>
+                <TableCell onClick={()=>navigate(`/jobs/${row._id}`)}>{index+1}</TableCell>
                 <TableCell>{fDateTime(row.createdAt)}</TableCell>
                 <TableCell>{row.jobName}</TableCell>
                 <TableCell>{row.jobCompany}</TableCell>
