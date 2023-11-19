@@ -27,7 +27,7 @@ router.post('/signup', async (req, res, next) => {
         res.status(200).json(session_user)
 
     } catch (error) {
-        res.status(502).send(error)
+        res.status(400).send({message: error.message})
     }
 })
 
@@ -49,31 +49,30 @@ router.post("/login", async(req, res, next) => {
         req.session.user = session_user
         res.status(200).json(session_user)
 
-    } catch(err) {
-
-        console.log(err)
-        res.status(502).send(err)
-
+    } catch(error) {
+        res.status(400).send({message: error.message})
     }
 })
 
 router.delete("/logout", async({session}, res, next) => {
+
     try {
         const user = {...session.user}
 
-        if(user) {
+        if(user?.user_id != undefined) {
             session.destroy((err) => {
                 if(err){
-                    throw err
+                    throw Error("Unkown error happened during logout")
                 }
                 res.clearCookie(process.env.SESSION_NAME)
                 res.status(200).json(user)
             })
         } else {
-            throw Error("Unkown error")
+            throw Error("Unkown error happened during logout")
         }
     } catch(error){
-
+        console.log(error)
+        res.status(400).send({message: error.message})
     }
 })
 
