@@ -61,7 +61,7 @@ export default function Dashboard() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Profile
+              Cover Letters
             </Typography>
           </Toolbar>
         </AppBar>
