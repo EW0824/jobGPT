@@ -4,7 +4,7 @@ import session from 'express-session'
 
 const router = express.Router()
 
-const sessionize_user = (user) => ({user_id: user._id, username: user.firstName + " " + user.lastName})
+const sessionize_user = (user) => ({userId: user._id, username: user.firstName + " " + user.lastName})
 
 router.post('/signup', async (req, res, next) => {
 
@@ -59,7 +59,7 @@ router.delete("/logout", async({session}, res, next) => {
     try {
         const user = {...session.user}
 
-        if(user?.user_id != undefined) {
+        if(user?.userId != undefined) {
             session.destroy((err) => {
                 if(err){
                     throw Error("Unkown error happened during logout")
@@ -78,10 +78,10 @@ router.delete("/logout", async({session}, res, next) => {
 
 router.get("/get_session", async({session}, res, next) => {
     try {
-        const user_id = session.user.user_id
-        res.status(200).json({user_id: user_id})
+        const userId = session.user.userId
+        res.status(200).json({userId: userId})
     } catch(err){
-        res.status(200).json({ user_id: null })
+        res.status(200).json({ userId: null })
     }
 })
 

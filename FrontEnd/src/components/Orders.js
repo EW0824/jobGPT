@@ -23,6 +23,7 @@ import Iconify from "../styles/Iconify";
 import Title from "./Title";
 import { fDateTime } from "../gagets/formatTime";
 import { useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   width: "98%",
@@ -42,10 +43,28 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
 }));
 
 export default function Orders() {
+  const cookie = new Cookies();
+  const userId = cookie.get('userId');
+  console.log(userId);
+  const [filterName, setFilterName] = useState("");
+  const [jobData, setJobData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    fetch("http://localhost:8080/jobs")
+    fetch('http://localhost:8080/jobs', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "User-ID": userId,
+      },
+    })
       .then((response) => {
-        return response.json();
+        if(response.ok)
+          return response.json();
+        else
+          throw Error('Response not okay')
       })
       .then((data) => {
         console.log(data);
@@ -53,12 +72,6 @@ export default function Orders() {
       })
       .catch((error) => console.log(error));
   }, []);
-
-  const [filterName, setFilterName] = useState("");
-  const [jobData, setJobData] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const navigate = useNavigate();
 
   function applySortFilter(array, comparator, query) {
     const stabilizedThis = array.map((el, index) => [el, index]);
