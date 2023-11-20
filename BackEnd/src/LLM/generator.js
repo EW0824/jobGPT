@@ -24,9 +24,11 @@ const model = new OpenAI({
   temperature: 0.4,
 });
 
-let prompt = `
-You are a professional recruiter who knows what other recruiters want. You are applying for a job at {} You are writing the perfect cover letter which all recruiters will jump at. You
+// later we will use information about the entire job listing
+const simplePrompt = `
+Hope you are doing well! I am a cover letter writer and I need your help crafting a perfect letter for a job seeker named ${name}. They are applying to work at ${companny} as a ${position}, and they have the following experiences: ${experiences}. Can you please use information about what recruiters like to write a perfect cover letter? Make sure to highlight their relevant experience and skills which are relevant to the job, and explain why they are a great fit for the position. Please keep it engaging, persuasive, and also professional. Also keep it short and not too long. Thank you so much!
 `;
+
 
 async function generateAndStoreEmbeddings() {
   // STEP 1: Load the data
