@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import {
   Link,
   Grid,
@@ -22,15 +23,49 @@ import Iconify from "../styles/Iconify";
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [responseInfo, setResponseInfo] = useState(null);
+  const [successMsg, setSuccessMsg] = useState('');
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const formData = new FormData(event.currentTarget);
+    const data = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
+    fetch('http://localhost:8080/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        setSuccessMsg('Log in Failed!');
+        throw new Error('Network response was not ok.');
+      })
+      .then((responseData) => {
+        // Assuming the response contains some data you want to store
+        setResponseInfo(responseData);
+        setSuccessMsg('Log in Successfully!');
+        console.log(responseData);
+        setTimeout(() => {
+          navigate('/job-history');
+        }, 1000); // 1 sec wait time
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
+  const handleInputChange = () => {
+    setSuccessMsg("");
   };
 
   return (
@@ -66,6 +101,7 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={handleInputChange}
             />
             <TextField
               margin="normal"
@@ -92,6 +128,7 @@ export default function SignIn() {
                   </InputAdornment>
                 ),
               }}
+              onChange={handleInputChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -117,7 +154,9 @@ export default function SignIn() {
                 </Link>
               </Grid>
             </Grid>
+
           </Box>
+          {successMsg && <Button sx={{mt:2}}variant="outlined" color={successMsg==='Log in Successfully!'? "success":'error'}>{successMsg}</Button>}
         </Box>
       </Container>
     </ThemeProvider>
