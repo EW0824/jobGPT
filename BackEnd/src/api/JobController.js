@@ -7,7 +7,7 @@ const router = express.Router();
 // Get all jobs
 router.get("/", async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.header('User-ID');
 
     // Get a list of jobs associated with the current user
     const user = await User.findById(userId);
@@ -36,8 +36,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const jobId = req.params.id; // Use req.params.id to get the job ID from the URL parameter
-    const { userId } = req.body;
-
+    const userId = req.header('User-ID');
     const user = await User.findById(userId); 
     if (!user) {
       throw new Error("Incorrect User. Please pass in correct user id.");
@@ -64,7 +63,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const data = req.body;
-    const {userId} = req.body;
+    const userId = req.header('User-ID');
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("Incorrect User. Please pass in correct user id.");
@@ -82,7 +81,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const jobId = req.params.id;
   try {
-    const {userId} = req.body;
+    const userId = req.header('User-ID');
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("Incorrect User. Please pass in correct user id.");
@@ -105,7 +104,7 @@ router.delete("/:id", async (req, res) => {
   const jobId = req.params.id;
 
   try {
-    const {userId} = req.body;
+    const userId = req.header('User-ID');
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("Incorrect User. Please pass in correct user id.");
