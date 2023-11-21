@@ -19,11 +19,20 @@ import Label from "../styles/Label";
 import { sentenceCase } from "change-case";
 import Iconify from "../styles/Iconify";
 import Title from "./Title";
+import Cookies from "universal-cookie";
 import { fDateTime } from "../gagets/formatTime";
 
 export default function DetailedJob({ jobId }) {
+  const cookie = new Cookies();
+  const userId = cookie.get('userId');
   useEffect(() => {
-    fetch(`http://localhost:8080/jobs/${jobId}`)
+    fetch(`http://localhost:8080/jobs/${jobId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "User-ID": userId,
+      },
+    })
       .then((response) => {
         return response.json();
       })
