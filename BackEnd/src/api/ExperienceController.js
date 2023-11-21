@@ -1,5 +1,6 @@
 import express from "express";
 import Experience from "../models/ExperienceModel.js";
+import User from "../models/userModel.js";
 
 const router = express.Router();
 
@@ -14,8 +15,9 @@ router.get("/", async (req, res) => {
 });
 
 // Get experience by ID
-router.get("/:id", async (req, res) => {
-    const experienceId = req.params.id;
+router.get("/get_experience", async (req, res) => {
+    const experienceId = req.query.id;
+    console.log(experienceId)
     try {
       const experience = await Experience.findById(experienceId);
       if (!experience) {
@@ -28,20 +30,17 @@ router.get("/:id", async (req, res) => {
 });
 
 // Create a new experience
-router.post("/", async (req, res) => {
+//TODO: Prevent completely same experience being added repetitively?
+router.post("/create_experience", async (req, res) => {
   try {
     const data = req.body
     const newExperience = new Experience(data);
     const savedExperience = await newExperience.save();
-    //after create a new experience
-    //add this id to User     
-    // const userId = req.user.id; // Adjust this based on your authentication setup
-    // Add the experience's ID to the user's experiences array
-    // const user = await User.findByIdAndUpdate(
-    //     userId,
-    //     { $push: { experiences: savedExperience._id } },
-    //     { new: true }
-    // );
+
+    const user_id = req.session.user.user_id
+    const user = await User.findOneAndUpdate({_id: user_id},
+      {$push: {experienceList: savedExperience._id}},
+      {new: true})
     res.status(201).send(savedExperience);
   } catch (error) {
     res.status(500).send(error);
@@ -49,8 +48,8 @@ router.post("/", async (req, res) => {
 });
 
 // Update an existing experience by ID
-router.put("/:id", async (req, res) => {
-  const experienceId = req.params.id;
+router.put("/update_experience", async (req, res) => {
+  const experienceId = req.query.id;
 
   try {
     const experience = await Experience.findByIdAndUpdate(
@@ -69,33 +68,30 @@ router.put("/:id", async (req, res) => {
 
 
 // DELETE - Remove an experience by ID; Also remove this ID in User.ExperienceList
-router.delete("/:id", async (req, res) => {
-    const experienceId = req.params.id;
+router.delete("/delete_experience", async (req, res) => {
+    const experience_id = req.query.id;
     try {
       // Find and remove the experience by ID
-      const deletedExperience = await Experience.findByIdAndRemove(experienceId);
+      const deletedExperience = await Experience.findOneAndDelete({_id: experience_id});
   
       // Check if the experience exists
       if (!deletedExperience) {
         return res.status(404).send({ error: "Experience not found" });
       }
-    //   // Assuming you also want to remove the experience ID from the user's experiences array
-    //   const userId = req.user.id; // Adjust this based on your authentication setup
-  
-    //   // Remove the experience ID from the user's experiences array
-    //   const user = await User.findByIdAndUpdate(
-    //     userId,
-    //     { $pull: { experiences: experienceId } },
-    //     { new: true }
-    //   );
-  
-    //   // Check if the user exists
-    //   if (!user) {
-    //     return res.status(404).send({ error: "User not found" });
-    //   }
+
+      const user_id = req.session.user.user_id
+      const user = await User.findOneAndUpdate(
+        {_id: user_id},
+        {$pull: { experienceList: experience_id}},
+        {new: true}
+      )
+
+      if (!user) {
+        return res.status(404).send({ error: "User not found" });
+      }
       res.status(200).send({success: "Successfully delete experience!"});
     } catch (error) {
-      res.status(500).send(error);
+      res.status(500).send(error.message);
     }
   });  
 
