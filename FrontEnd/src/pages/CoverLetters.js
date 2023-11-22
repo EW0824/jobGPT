@@ -1,9 +1,9 @@
 import * as React from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-// import MuiDrawer from "@mui/material/Drawer";
+import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
-// import MuiAppBar from "@mui/material/AppBar";
+import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
@@ -21,10 +21,11 @@ import Paper from "@mui/material/Paper";
 import Drawer from '../styles/Drawer'
 import AppBar from "../styles/AppBar";
 
+
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function JobHistory() {
+export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -60,7 +61,7 @@ export default function JobHistory() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Job History
+              Cover Letters
             </Typography>
           </Toolbar>
         </AppBar>
@@ -98,11 +99,8 @@ export default function JobHistory() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid item xs={12}>
-              <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                <Orders />
-              </Paper>
-            </Grid>
+            {/* Recent Orders */}
+            <Grid item xs={12}></Grid>
           </Container>
         </Box>
       </Box>

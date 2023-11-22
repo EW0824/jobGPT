@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
 import {
   Link,
   Grid,
@@ -13,59 +12,45 @@ import {
   CssBaseline,
   TextField,
   FormControlLabel,
+  Stack,
+  Alert,
   Checkbox,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Cookies from 'universal-cookie'
 
+import { validateSignUpForm } from "../gagets/validation";
 import Iconify from "../styles/Iconify";
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
-  const cookies = new Cookies();
-  const navigate = useNavigate();
+export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
-
+  const [errMsg, setErrMsg] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const data = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-    };
-    fetch('http://localhost:8080/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        setSuccessMsg('Log in Failed!');
-        throw new Error('Network response was not ok.');
-      })
-      .then((responseData) => {
-        // Assuming the response contains some data you want to store
-        setSuccessMsg('Log in Successfully!');
-        cookies.set('userId', responseData.userId); 
-        setTimeout(() => {
-          navigate('/job-history');
-        }, 1000); // 1 sec wait time
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+    const data = new FormData(event.currentTarget);
+    const formDataObject = {};
+    for (const [key, value] of data.entries()) {
+      formDataObject[key] = value;
+    }
+    formDataObject["role"] = "regularUser";
+    console.log(formDataObject);
+    const errors = validateSignUpForm(formDataObject);
+    console.log(errors);
+    if (Object.keys(errors).length !== 0) {
+      const errorMessage = Object.values(errors)
+        .map((error) => `    - ${error}`) // Four spaces before the hyphen
+        .join("\n");
+      setErrMsg(`Please correct the following form errors:\n${errorMessage}`);
+    } else {
+      setErrMsg("");
+    }
   };
 
   const handleInputChange = () => {
-    setSuccessMsg("");
+    setErrMsg("");
   };
 
   return (
@@ -84,14 +69,24 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign Up
           </Typography>
           <Box
+            width={500}
             component="form"
             onSubmit={handleSubmit}
-            noValidate
             sx={{ mt: 1 }}
           >
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="userName"
+              label="Username"
+              name="userName"
+              autoFocus
+              onChange={handleInputChange}
+            />
             <TextField
               margin="normal"
               required
@@ -107,11 +102,31 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
+              id="firstName"
+              label="First Name"
+              name="firstName"
+              autoFocus
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="lastName"
+              label="Last Name"
+              name="lastName"
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
               type={showPassword ? "text" : "password"}
               name="password"
               label="Password"
               id="password"
               autoComplete="current-password"
+              onChange={handleInputChange}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -128,7 +143,6 @@ export default function SignIn() {
                   </InputAdornment>
                 ),
               }}
-              onChange={handleInputChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -140,23 +154,28 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
+              <Grid item xs></Grid>
               <Grid item>
-                <Link href="/sign-up" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                <Link href="#" variant="body2" align="right">
+                  {"Already have an account? Sign In"}
                 </Link>
               </Grid>
             </Grid>
 
+            {errMsg && (
+              <Alert
+                alignItems="center"
+                size="large"
+                sx={{ whiteSpace: "pre-line", mt: 1 }}
+                severity="error"
+              >
+                {errMsg}
+              </Alert>
+            )}
           </Box>
-          {successMsg && <Button sx={{mt:2}}variant="outlined" color={successMsg==='Log in Successfully!'? "success":'error'}>{successMsg}</Button>}
         </Box>
       </Container>
     </ThemeProvider>

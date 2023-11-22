@@ -14,13 +14,15 @@
     "@iconify/react": "^4.1.1",
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
+    "change-case": "^5.2.0",
     "date-fns": "^2.30.0",
     "iconify": "^1.4.0",
     "react": "latest",
     "react-dom": "latest",
     "react-router-dom": "^6.19.0",
     "react-scripts": "latest",
-    "recharts": "^2.9.3"
+    "recharts": "^2.9.3",
+    "universal-cookie": "^6.1.1"
   },
   "browserslist": {
     "production": [

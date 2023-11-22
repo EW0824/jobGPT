@@ -18,11 +18,11 @@ export function MainListItems({ navigate }) {
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate("/cover-letters")}>
         <ListItemIcon>
-          <HistoryEduIcon />
+          <HistoryEduIcon/>
         </ListItemIcon>
-        <ListItemText primary="Cover Letter" />
+        <ListItemText primary="Cover Letters" />
       </ListItemButton>
       <ListItemButton onClick={() => navigate("/job-history")}>
         <ListItemIcon>
@@ -34,7 +34,7 @@ export function MainListItems({ navigate }) {
         <ListItemIcon>
           <BadgeIcon />
         </ListItemIcon>
-        <ListItemText primary="Profile" />
+        <ListItemText primary="Profile" onClick={()=>{navigate("/profile")}}/>
       </ListItemButton>
     </React.Fragment>
   );
@@ -52,7 +52,7 @@ export function SecondaryListItems({ navigate }) {
         </ListItemIcon>
         <ListItemText primary="Sign In" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate("/sign-up")}>
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
@@ -61,3 +61,11 @@ export function SecondaryListItems({ navigate }) {
     </React.Fragment>
   );
 }
+
+// export function UserProfile({navigate}) {
+//   return (
+//     <React.Fragment>
+
+//     </React.Fragment>
+//   )
+// }
