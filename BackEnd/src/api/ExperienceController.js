@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get experience by ID
-router.get("/get_experience/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
     const experience_id = req.params.id;
     try {
       const experience = await Experience.findById(experience_id);
@@ -30,7 +30,7 @@ router.get("/get_experience/:id", async (req, res) => {
 
 // Create a new experience
 //TODO: Prevent completely same experience being added repetitively?
-router.post("/create_experience", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const data = req.body
     const newExperience = new Experience(data);
@@ -47,7 +47,7 @@ router.post("/create_experience", async (req, res) => {
 });
 
 // Update an existing experience by ID
-router.put("/update_experience/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const experienceId = req.params.id;
 
   try {
@@ -67,7 +67,7 @@ router.put("/update_experience/:id", async (req, res) => {
 
 
 // DELETE - Remove an experience by ID; Also remove this ID in User.ExperienceList
-router.delete("/delete_experience/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     const experience_id = req.params.id;
     try {
       // Find and remove the experience by ID
