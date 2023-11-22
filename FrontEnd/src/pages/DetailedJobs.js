@@ -29,7 +29,7 @@ import AppBar from "../styles/AppBar";
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function DetailedJobView() {
+export default function DetailedJobs() {
   let { jobId } = useParams();
   console.log(jobId);
   const [open, setOpen] = React.useState(true);

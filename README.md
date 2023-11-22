@@ -2,6 +2,10 @@
 
 A cover letter generator for the UCLA 35L Project.
 
+## LLM
+LangChain only supports Node version >= 18
+
+
 ## Backend
 
 To launch the server, run the command `npm run dev`. The server currently runs at `localhost:3000`.

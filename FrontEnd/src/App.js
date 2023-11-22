@@ -5,7 +5,8 @@ import SignIn from "./pages/SignIn";
 import JobHistory from "./pages/JobsHistory";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
-import DetailedJobView from "./pages/DetailedJobView";
+import DetailedJobs from "./pages/DetailedJobs";
+import CoverLetters from "./pages/CoverLetters";
 
 export default function App() {
   return (
@@ -14,8 +15,9 @@ export default function App() {
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/" element={<Dashboard />} />
-      <Route path="/jobs/:jobId" element={<DetailedJobView />} />
-      <Route path='/profile' element={<Profile/>} />
+      <Route path="/jobs/:jobId" element={<DetailedJobs />} />
+      <Route path="/cover-letters" element={<CoverLetters />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }
