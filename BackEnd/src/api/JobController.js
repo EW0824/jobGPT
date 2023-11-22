@@ -32,7 +32,7 @@ router.get("/get_job/:id", async (req, res) => {
 
 
 // Create a Job
-router.post("/create_job", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
       const data = req.body; 
       const new_job = await Job.create(data);
@@ -54,7 +54,7 @@ router.post("/create_job", async (req, res) => {
 );
 
 // Update a job by id 
-router.put('/update_job/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   const jobId = req.params.id;
 
   try {
@@ -73,7 +73,7 @@ router.put('/update_job/:id', async (req, res) => {
 });
 
 // Delete a job by id
-router.delete('/delete_job/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const jobId = req.params.id;
 
   try {
