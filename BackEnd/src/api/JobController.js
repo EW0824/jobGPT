@@ -1,98 +1,71 @@
 import express from "express";
 import Job from "../models/JobModel.js";
-import User from "../models/userModel.js";
+import User from "../models/userModel.js"
 
 const router = express.Router();
 
 // Get all jobs
 router.get("/", async (req, res) => {
   try {
-    const userId = req.header('User-ID');
-
-    // Get a list of jobs associated with the current user
-    const user = await User.findById(userId);
-
-    if (!user) {
-      throw new Error("Incorrect User. Please pass in correct user id.");
-    }
-
-    const jobs = [];
-
-    for (let jobId of user.jobList) {
-      const job = await Job.findById(jobId);
-
-      if (job) {
-        jobs.push(job); // Storing job information in the jobs object with jobId as key
-      }
-    }
-    // Return jobs data as JSON
-    res.status(200).json(jobs);
+    const jobs = await Job.find();
+    res.status(200).send(jobs);
   } catch (error) {
-    res.status(500).json({ error: error.message }); // Return error message as JSON
+    res.status(500).send(error);
   }
 });
 
 // Get one job by id
-router.get("/:id", async (req, res) => {
+router.get("/get_job/:id", async (req, res) => {
+  const jobId = req.params.id; // Use req.params.id to get the job ID from the URL parameter
+
   try {
-    const jobId = req.params.id; // Use req.params.id to get the job ID from the URL parameter
-    const userId = req.header('User-ID');
-    const user = await User.findById(userId); 
-    if (!user) {
-      throw new Error("Incorrect User. Please pass in correct user id.");
-    }
-
-    const jobList = user.jobList;
-    if (!jobList.includes(jobId)) {
-      // Check if jobId is not in jobList
-      throw new Error("Job ID not associated with the user.");
-    }
-
     const job = await Job.findById(jobId); // Use findById to search by a specific ID
     if (!job) {
-      return res.status(404).send({ error: "Job not found" });
+      return res.status(404).send({ error: 'Job not found' });
     }
 
     res.status(200).send(job);
   } catch (error) {
-    res.status(500).json({ error: error.message }); // Return error message as JSON
+    res.status(500).send(error);
   }
 });
+
 
 // Create a Job
-router.post("/", async (req, res) => {
-  try {
-    const data = req.body;
-    const userId = req.header('User-ID');
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new Error("Incorrect User. Please pass in correct user id.");
-    }
-    const newJob = await Job.create(data);
-    user.jobList.push(newJob);
-    user.save();
-    res.status(201).send(newJob);
-  } catch (error) {
-    res.status(500).send({error: error.message});
-  }
-});
+router.post("/create_job", async (req, res) => {
+    try {
+      const data = req.body; 
+      const new_job = await Job.create(data);
 
-// Update a job by id
-router.put("/:id", async (req, res) => {
-  const jobId = req.params.id;
-  try {
-    const userId = req.header('User-ID');
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new Error("Incorrect User. Please pass in correct user id.");
+      const user_id = req.session.user.user_id
+      const user = await User.findOneAndUpdate({_id: user_id}, 
+        {$push: {jobList: new_job._id}},
+        {new: true})
+
+      if(!user){
+        throw Error("Can not find user")
+      }
+
+      res.status(201).send(new_job);
+    } catch (error) {
+      res.status(400).send(error);
     }
+  }
+);
+
+// Update a job by id 
+router.put('/update_job/:id', async (req, res) => {
+  const jobId = req.params.id;
+
+  try {
     const updatedJob = await Job.findByIdAndUpdate(jobId, req.body, {
       new: true,
     });
 
     if (!updatedJob) {
-      return res.status(404).send({ error: "Job not found" });
+      return res.status(404).send({ error: 'Job not found' });
     }
+
     res.status(200).send(updatedJob);
   } catch (error) {
     res.status(500).send(error);
@@ -100,23 +73,26 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete a job by id
-router.delete("/:id", async (req, res) => {
+router.delete('/delete_job/:id', async (req, res) => {
   const jobId = req.params.id;
 
   try {
-    const userId = req.header('User-ID');
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new Error("Incorrect User. Please pass in correct user id.");
+    const deleted_job = await Job.findByIdAndDelete(jobId);
+
+    if (!deleted_job) {
+      return res.status(404).send({ error: 'Job not found' });
     }
 
-    const deletedJob = await Job.findByIdAndDelete(jobId);
+    const user_id = req.session.user.user_id
+    const user = await User.findOneAndUpdate({_id: user_id},
+      {$pull: {jobList: deleted_job._id}},
+      {new: true})
 
-    if (!deletedJob) {
-      return res.status(404).send({ error: "Job not found" });
+    if(!user){
+      throw Error("User not found")
     }
-    user.jobList.pop(jobId);
-    res.status(200).send({ sucess: "Job has been deleted" });
+    
+    res.status(200).send({sucess : "Job has been deleted"});
   } catch (error) {
     res.status(500).send(error);
   }

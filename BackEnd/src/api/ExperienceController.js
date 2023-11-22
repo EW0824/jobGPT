@@ -15,11 +15,10 @@ router.get("/", async (req, res) => {
 });
 
 // Get experience by ID
-router.get("/get_experience", async (req, res) => {
-    const experienceId = req.query.id;
-    console.log(experienceId)
+router.get("/get_experience/:id", async (req, res) => {
+    const experience_id = req.params.id;
     try {
-      const experience = await Experience.findById(experienceId);
+      const experience = await Experience.findById(experience_id);
       if (!experience) {
         return res.status(404).send({ error: "Experience not found" });
       }
@@ -48,8 +47,8 @@ router.post("/create_experience", async (req, res) => {
 });
 
 // Update an existing experience by ID
-router.put("/update_experience", async (req, res) => {
-  const experienceId = req.query.id;
+router.put("/update_experience/:id", async (req, res) => {
+  const experienceId = req.params.id;
 
   try {
     const experience = await Experience.findByIdAndUpdate(
@@ -68,8 +67,8 @@ router.put("/update_experience", async (req, res) => {
 
 
 // DELETE - Remove an experience by ID; Also remove this ID in User.ExperienceList
-router.delete("/delete_experience", async (req, res) => {
-    const experience_id = req.query.id;
+router.delete("/delete_experience/:id", async (req, res) => {
+    const experience_id = req.params.id;
     try {
       // Find and remove the experience by ID
       const deletedExperience = await Experience.findOneAndDelete({_id: experience_id});

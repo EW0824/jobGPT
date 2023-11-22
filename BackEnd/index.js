@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
   res.status(200).send("Hello World");
 });
 
-app.use('/jobs', jobRouter);
+app.use('/job', jobRouter);
 app.use('/experience', experienceRouter)
 app.use('/auth', sessionRouter)
 
