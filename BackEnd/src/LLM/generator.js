@@ -18,57 +18,91 @@ import { ChatOpenAI } from "langchain/chat_models/openai";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { ChatGPTPluginRetriever } from "langchain/retrievers/remote";
 import { OpenAIModerationChain } from "langchain/chains";
+import { PromptTemplate } from "langchain/dist/prompts/prompt";
 
-const model = new OpenAI({
-  modelName: "",
-  temperature: 0.4,
+// Get rid of this line later
+// import "dotenv/config";
+
+// console.log(process.env.SESSION_NAME)
+
+const llm = new OpenAI({
+  modelName: "gpt-3.5-turbo-1106",
+  temperature: 1.4,
+  openAIApiKey: "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",
+  // temperature controls how random the output -> higher the less deterministic
 });
 
+const chatModel = new ChatOpenAI({
+  modelName: "gpt-3.5-turbo-1106",
+  temperature: 1.4,
+  openAIApiKey: "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",
+});
+
+const text =
+  "Hello, can you please generate a cover letter for me? I am applying for a software engineer job at Google. I am a graduate of UCLA pursuing a BS in Computer Science and am very passioante in both algorithms and AI. Please keep the cover letter engaging, persuasive, and also professional. Also keep it short and not too long. Thank you so much!";
+
+const llmResult = await llm.predict(text);
+const chatResult = await chatModel.predict(text);
+
+console.log(llmResult);
+console.log(chatResult);
+
+
 // later we will use information about the entire job listing
-const simplePrompt = `
-Hope you are doing well! I am a cover letter writer and I need your help crafting a perfect letter for a job seeker named ${name}. They are applying to work at ${companny} as a ${position}, and they have the following experiences: ${experiences}. Can you please use information about what recruiters like to write a perfect cover letter? Make sure to highlight their relevant experience and skills which are relevant to the job, and explain why they are a great fit for the position. Please keep it engaging, persuasive, and also professional. Also keep it short and not too long. Thank you so much!
-`;
+const simplePrompt = PromptTemplate.fromTemplate(`
+Hope you are doing well! I am a cover letter writer and I need your help crafting a perfect letter for a job seeker named {name} at email {email} and phone number {phoneNumber}. They are applying to work at {company} as a {position}, and they have the following experiences: {experiences}. Can you please use information about what recruiters like to write a perfect cover letter? Make sure to highlight their relevant experience and skills which are relevant to the job, and explain why they are a great fit for the position. Please keep it engaging, persuasive, and also professional. Also keep it short and not too long. Thank you so much!
+`);
+
+const formattedPrompt = await prompt.format({
+  name: "Jerry",
+  email: "Jerry@gmail.com",
+  phoneNumber: "123123123",
+  company: "Apple",
+  position: "Software Engineer",
+  experiences: []
+})
 
 
-async function generateAndStoreEmbeddings() {
-  // STEP 1: Load the data
-  const trainingText = fs.readFileSync("training-data.txt", "utf8");
 
-  // STEP 2: Split the data into chunks
-  const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
-  });
+// async function generateAndStoreEmbeddings() {
+//   // STEP 1: Load the data
+//   const trainingText = fs.readFileSync("training-data.txt", "utf8");
 
-  // STEP 3: Create documents
-  const docs = await textSplitter.createDocuments([trainingText]);
+//   // STEP 2: Split the data into chunks
+//   const textSplitter = new RecursiveCharacterTextSplitter({
+//     chunkSize: 1000,
+//   });
 
-  // STEP 4: Generate embeddings from documents
-  const vectorStore = await HNSWLib.fromDocuments(
-    docs,
-    new OpenAIEmbeddings({ openAIApiKey: OPENAI_API_KEY })
-  );
+//   // STEP 3: Create documents
+//   const docs = await textSplitter.createDocuments([trainingText]);
 
-  // STEP 5: Save the vector store
-  vectorStore.save("hnswlib");
-}
+//   // STEP 4: Generate embeddings from documents
+//   const vectorStore = await HNSWLib.fromDocuments(
+//     docs,
+//     new OpenAIEmbeddings({ openAIApiKey: OPENAI_API_KEY })
+//   );
 
-async function getAnswer(question) {
-  // STEP 1: Load the vector store
-  const vectorStore = await HNSWLib.load(
-    "hnswlib",
-    new OpenAIEmbeddings({ openAIApiKey: OPENAI_API_KEY })
-  );
+//   // STEP 5: Save the vector store
+//   vectorStore.save("hnswlib");
+// }
 
-  // STEP 2: Create the chain
-  const chain = new RetrievalQAChain({
-    combineDocumentsChain: loadQARefineChain(model),
-    retriever: vectorStore.asRetriever(),
-  });
+// async function getAnswer(question) {
+//   // STEP 1: Load the vector store
+//   const vectorStore = await HNSWLib.load(
+//     "hnswlib",
+//     new OpenAIEmbeddings({ openAIApiKey: OPENAI_API_KEY })
+//   );
 
-  // STEP 3: Get the answer
-  const result = await chain.call({
-    query: question,
-  });
+//   // STEP 2: Create the chain
+//   const chain = new RetrievalQAChain({
+//     combineDocumentsChain: loadQARefineChain(model),
+//     retriever: vectorStore.asRetriever(),
+//   });
 
-  return result.output_text;
-}
+//   // STEP 3: Get the answer
+//   const result = await chain.call({
+//     query: question,
+//   });
+
+//   return result.output_text;
+// }
