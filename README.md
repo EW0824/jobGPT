@@ -3,7 +3,8 @@
 A cover letter generator for the UCLA 35L Project.
 
 ## LLM
-LangChain only supports Node version >= 18
+1. LangChain only supports Node version >= 18
+2. Please run `npm install --force` when installing LangChain
 
 
 ## Backend
