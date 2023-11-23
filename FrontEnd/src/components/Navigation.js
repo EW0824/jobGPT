@@ -11,10 +11,9 @@ import { SessionContext } from "./SessionContextProvider";
 
 export default function Navigation() {
 
-    // const {sessionToken, setSessionToken} = useContext(SessionContext)
-    const storedSessionData = localStorage.getItem('sessionData');
+    const {sessionToken, setSessionToken} = useContext(SessionContext)
 
-    const PrivateRoute = storedSessionData ? (<Outlet />) : (<Navigate to="/sign-in"/>) 
+    const PrivateRoute = sessionToken ? (<Outlet />) : (<Navigate to="/sign-in"/>) 
 
     return (
         <BrowserRouter>
