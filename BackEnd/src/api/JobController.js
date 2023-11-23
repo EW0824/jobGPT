@@ -7,6 +7,8 @@ const router = express.Router();
 // Get all jobs
 router.get("/", async (req, res) => {
   try {
+    if (!req.session) 
+      throw Error('Please sign in to view this page')
     const jobs = await Job.find();
     res.status(200).send(jobs);
   } catch (error) {
@@ -15,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get one job by id
-router.get("/get_job/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const jobId = req.params.id; // Use req.params.id to get the job ID from the URL parameter
 
   try {
