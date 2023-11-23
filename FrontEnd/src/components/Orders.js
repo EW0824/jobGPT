@@ -23,7 +23,6 @@ import Iconify from "../styles/Iconify";
 import Title from "./Title";
 import { fDateTime } from "../gagets/formatTime";
 import { useNavigate } from "react-router-dom";
-import Cookies from "universal-cookie";
 
 const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
   width: "98%",
@@ -43,9 +42,6 @@ const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
 }));
 
 export default function Orders() {
-  const cookie = new Cookies();
-  const userId = cookie.get('userId');
-  console.log(userId);
   const [filterName, setFilterName] = useState("");
   const [jobData, setJobData] = useState([]);
   const [page, setPage] = useState(0);
@@ -53,12 +49,9 @@ export default function Orders() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:8080/jobs', {
+    fetch('http://localhost:8080/job', {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "User-ID": userId,
-      },
+      headers:{"Authorization": "655982a21240d623c67e4eb6"}
     })
       .then((response) => {
         if(response.ok)

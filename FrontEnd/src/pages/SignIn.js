@@ -26,7 +26,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
-  const {sessionToken, setSessionToken} = useContext(SessionContext)
+  // const {sessionToken, setSessionToken} = useContext(SessionContext)
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -53,7 +53,8 @@ export default function SignIn() {
         // Assuming the response contains some data you want to store
         console.log(responseData)
         setSuccessMsg('Log in Successfully!');
-        setSessionToken(responseData) 
+        // setSessionToken(responseData) 
+        localStorage.setItem('sessionData', JSON.stringify(responseData))
         setTimeout(() => {
           navigate('/job-history');
         }, 1000); // 1 sec wait time
