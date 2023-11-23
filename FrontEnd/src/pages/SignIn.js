@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import {
   Link,
@@ -17,18 +17,16 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Cookies from 'universal-cookie'
-
 import Iconify from "../styles/Iconify";
+import { SessionContext } from "../components/SessionContextProvider";
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const cookies = new Cookies();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
-
+  const {sessionToken, setSessionToken} = useContext(SessionContext)
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -53,8 +51,9 @@ export default function SignIn() {
       })
       .then((responseData) => {
         // Assuming the response contains some data you want to store
+        console.log(responseData)
         setSuccessMsg('Log in Successfully!');
-        cookies.set('userId', responseData.userId); 
+        setSessionToken(responseData) 
         setTimeout(() => {
           navigate('/job-history');
         }, 1000); // 1 sec wait time
