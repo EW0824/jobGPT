@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Link,
   Grid,
@@ -26,7 +27,9 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,6 +50,26 @@ export default function SignUp() {
     } else {
       setErrMsg("");
     }
+    fetch("http://127.0.0.1:8080/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formDataObject),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data.error) {
+          setErrMsg(data.error);
+        } else {
+          setSuccessMsg("Log in Success");
+          setTimeout(() => {
+            navigate("/job-history");
+          }, 1000); // 1 sec wait time
+        }
+      });
   };
 
   const handleInputChange = () => {
@@ -159,7 +182,7 @@ export default function SignUp() {
             <Grid container>
               <Grid item xs></Grid>
               <Grid item>
-                <Link href="#" variant="body2" align="right">
+                <Link href="/sign-in" variant="body2" align="right">
                   {"Already have an account? Sign In"}
                 </Link>
               </Grid>
@@ -173,6 +196,16 @@ export default function SignUp() {
                 severity="error"
               >
                 {errMsg}
+              </Alert>
+            )}
+            {successMsg && (
+              <Alert
+                alignItems="center"
+                size="large"
+                sx={{ whiteSpace: "pre-line", mt: 1 }}
+                severity="success"
+              >
+                {successMsg}
               </Alert>
             )}
           </Box>

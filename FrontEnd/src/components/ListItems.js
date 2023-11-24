@@ -10,6 +10,7 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 
 export function MainListItems({ navigate }) {
+
   return (
     <React.Fragment>
       <ListItemButton onClick={() => navigate("/")}>
@@ -41,22 +42,21 @@ export function MainListItems({ navigate }) {
 }
 
 export function SecondaryListItems({ navigate }) {
+
+  const handleClick = async () => {
+    return 0
+  }
+
   return (
     <React.Fragment>
-      <ListSubheader component="div" inset>
+      {/* <ListSubheader component="div" inset>
         Authentication
-      </ListSubheader>
-      <ListItemButton onClick={() => navigate("/sign-in")}>
+      </ListSubheader> */}
+      <ListItemButton onClick={handleClick}>
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="Sign In" />
-      </ListItemButton>
-      <ListItemButton onClick={() => navigate("/sign-up")}>
-        <ListItemIcon>
-          <AssignmentIcon />
-        </ListItemIcon>
-        <ListItemText primary="Sign Up" />
+        <ListItemText primary="Log Out" />
       </ListItemButton>
     </React.Fragment>
   );
