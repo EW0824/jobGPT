@@ -13,10 +13,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { MainListItems, SecondaryListItems } from "../components/ListItems";
 import { useNavigate } from "react-router-dom";
-
 import Drawer from "../styles/Drawer";
 import AppBar from "../styles/AppBar";
-import { Helmet } from "react-helmet-async";
 import { useState } from "react";
 import Cookies from "universal-cookie";
 import { validateJobPostForm } from "../gagets/validation";
@@ -48,11 +46,10 @@ export default function Dashboard() {
 
   // Initialize formData state to store form data
   const [formData, setFormData] = useState({
-    job_name: "",
-    job_company: "",
-    job_requirement: "",
-    job_question: "",
-    job_description: "",
+    jobName: "",
+    jobCompany: "",
+    jobDescription: "",
+    jobStatus: "Applying",
   });
 
   const handleFormChange = () => {
@@ -75,32 +72,32 @@ export default function Dashboard() {
       }
       // proceed with form submission
       try {
-        const response = await fetch("http://127.0.0.1:8000/job/api/posts", {
+        console.log(formData);
+        const response = await fetch("http://localhost:8080/job", {
           method: "POST",
           headers: {
-            Authorization: authToken,
             "Content-Type": "application/json",
+            Authorization: "655982a21240d623c67e4eb6",
           },
           body: JSON.stringify(formData),
         });
 
         const data = await response.json();
+        console.log(data);
 
         if (data.success) {
-          // console.log('Referral Job Post submitted successfully');
+          console.log("success");
           setSuccessMessage("Referral Job Post Successfully Submitted");
           setErrorMessage("");
           setIsFormModified(false);
-          // navigate(`/dashboard/job-posts/${jobId}`);
         } else {
+          console.log("error");
           setErrorMessage(data.error);
         }
       } catch (error) {
-        // console.log(formData);
-        console.error("Error:", error);
+        console.log("Error:", error);
       }
     } else {
-      // Validation errors found, display them
       setSuccessMessage("");
       setErrorMessage(
         "Please correct the following form errors.\n".concat(
@@ -112,7 +109,7 @@ export default function Dashboard() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Use spread operator to update the specific field in formData
+
     setFormData({
       ...formData,
       [name]: value,
@@ -203,8 +200,8 @@ export default function Dashboard() {
                             <Input
                               multiline
                               rows={1}
-                              name="job_name"
-                              value={formData.job_name}
+                              name="jobName"
+                              value={formData.jobName}
                               onChange={handleChange}
                               required
                             />
@@ -215,53 +212,29 @@ export default function Dashboard() {
                             <Input
                               multiline
                               rows={1}
-                              name="job_company"
-                              value={formData.job_company}
+                              name="jobCompany"
+                              value={formData.jobCompany}
                               onChange={handleChange}
                               required
                             />
                           </FormControl>
 
-                          <FormControl fullWidth sx={{ mb: 3 }}>
-                            <InputLabel>Requirements</InputLabel>
-                            <Input
-                              multiline
-                              rows={2}
-                              name="job_requirement"
-                              value={formData.job_requirement}
-                              onChange={handleChange}
-                              required
-                            />
-                          </FormControl>
                           <FormControl fullWidth sx={{ mb: 3 }}>
                             <InputLabel>Description</InputLabel>
                             <Input
                               multiline
-                              rows={2}
-                              name="job_description"
-                              value={formData.job_description}
+                              rows={4}
+                              name="jobDescription"
+                              value={formData.jobDescription}
                               onChange={handleChange}
                               required
                             />
                           </FormControl>
-
-                          <FormControl fullWidth sx={{ mb: 3 }}>
-                            <InputLabel>Job Questions</InputLabel>
-                            <Input
-                              multiline
-                              rows={2}
-                              name="job_question"
-                              value={formData.job_question}
-                              onChange={handleChange}
-                              required
-                            />
-                          </FormControl>
-
                           <div
                             style={{
                               display: "flex",
                               justifyContent: "center",
-                              marginTop: "10px",
+                              marginTop: "20px",
                             }}
                           >
                             <LoadingButton
