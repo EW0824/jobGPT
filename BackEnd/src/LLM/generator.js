@@ -13,6 +13,10 @@ complicated article: https://vinuraperera.medium.com/i-decided-to-automate-writi
 
 */
 
+
+// DONT WORRY ABOUT OPENAIKEY -> they disable it if accidentally uploaded
+
+
 import { OpenAI } from "langchain/llms/openai";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
