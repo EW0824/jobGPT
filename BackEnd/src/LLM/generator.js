@@ -53,58 +53,76 @@ async function test() {
   // console.log(chatResult);
 }
 
-// Prompt Template
 
-async function parsePrompt() {
-  const llm = new OpenAI({
-    modelName: "gpt-3.5-turbo-1106",
-    temperature: 1.4,
-    openAIApiKey: "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",
-    // temperature controls how random the output -> higher the less deterministic
-    verbose: true,
-  });
+
+// Prompt Template
+async function parsePrompt(
+  name,
+  email,
+  phoneNumber,
+  company,
+  position,
+  jobDescription,
+  experiences,
+  wordLimit
+) {
+  jobDescription =
+    "Working with robots and transformers to create a new Death Star";
+  experiences = [
+    "BS in computer science at UCLA",
+    "Worked at Apple",
+    "Created startup",
+  ];
 
   const simpleTemplate = `Hope you are doing well! You are a recruiter at a large company with experience reading and writing cover letters. I need your help crafting a perfect letter for me, with name {name}, email '{email}' and phone number '{phoneNumber}'. I am applying to work at {company} as a {position} with the following job description: {jobDescription}. I have the following experiences: {experiences}. Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!`;
 
   const promptTemplate = PromptTemplate.fromTemplate(simpleTemplate);
 
   const formattedPrompt = await promptTemplate.format({
-    name: "Edmond",
-    email: "edmond@gmail.com",
-    phoneNumber: "123123123",
-    company: "Wang Enterprise",
-    position: "Software Engineer",
-    jobDescription:
-      "Working with robots and transformers to create a new Death Star",
-    experiences: [
-      "BS in computer science at UCLA",
-      "Worked at Apple",
-      "Created startup",
-    ],
-    wordLimit: 200,
+    name: name,
+    email: email,
+    phoneNumber: phoneNumber,
+    company: company,
+    position: position,
+    jobDescription: jobDescription,
+    experiences: experiences,
+    wordLimit: wordLimit,
   });
 
   console.log(formattedPrompt);
-
-
-  // experimented with different methods call, invoke, predict 
-  // it seems like for generation predict > call > invoke
-  const resA = await llm.predict(formattedPrompt);
-  console.log(resA);
 }
 
+async function generateCoverLetter(formattedPrompt, openAIApiKey) {
+  const llm = new OpenAI({
+    modelName: "gpt-3.5-turbo-1106",
+    temperature: 1.4,
+    openAIApiKey: openAIApiKey,
+    // temperature controls how random the output -> higher the less deterministic
+    verbose: true,
+  });
+
+  // experimented with different methods call, invoke, predict
+  // it seems like for generation predict > call > invoke
+  const res = await llm.predict(formattedPrompt);
+  console.log(res);
+}
 
 // test()
-parsePrompt();
+prompt = parsePrompt(
+  "Edmond",
+  "edmond@gmail.com",
+  "123123123",
+  "Wang Enterprise",
+  200
+);
+letter = generateCoverLetter(
+  prompt,
+  "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"
+);
 
 async function generateCoverLetter(path, link) {
-
   generateAndStoreEmbeddings(path, link);
-
-  
 }
-
-
 
 // async function generateAndStoreEmbeddings() {
 //   // STEP 1: Load the data

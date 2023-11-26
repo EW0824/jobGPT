@@ -28,7 +28,7 @@ async function loadPDF(path) {
 
 
 // To load the job description
-async function loadLink(link) {
+async function loadJob(link) {
 
 }
 
@@ -44,9 +44,9 @@ async function splitDocs(docs) {
 
 
 // To convert resume and job description into text embeddings and retriever
-export async function generateAndStoreEmbeddings(path, link) {
-    resume = loadPDF(path)
-    job_description = loadLink(link)
+export async function generateAndStoreEmbeddings(PDFLink, jobLink) {
+    resume = loadPDF(PDFLink)
+    job_description = loadJob(jobLink)
 
     docs = resume.concat(job_description)
     docOuputs = splitDocs(docs)
