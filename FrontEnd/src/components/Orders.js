@@ -30,6 +30,7 @@ import StyledSearch from "../styles/StyledSearch";
 
 export default function Orders() {
   const [open, setOpen] = useState(null);
+  const [openStatus, setOpenStatus] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
   const [filterName, setFilterName] = useState("");
   const [jobData, setJobData] = useState([]);
@@ -47,6 +48,16 @@ export default function Orders() {
     setOpen(null);
   };
 
+  const handleStatusOpenMenu = (event, jobId) => {
+    setOpenStatus(event.currentTarget);
+    setSelectedJob(jobId);
+    console.log("selected job id", jobId);
+  };
+
+  const handleStatusClose = () => {
+    setOpenStatus(null);
+  };
+
   //TODO: USE REAL ENDPOINTS
   const handleDeleteJob = () => {
     fetch(`job/${selectedJob}`, {
@@ -60,6 +71,10 @@ export default function Orders() {
       .then((data) => {
         if (data) {
           setOpen(null);
+          setJobData((prevData) =>
+            prevData.filter((job) => job._id !== selectedJob)
+          );
+          setSelectedJob("");
         }
         console.log(data);
       })
@@ -72,7 +87,7 @@ export default function Orders() {
   useEffect(() => {
     fetch("/job", {
       method: "GET",
-      credentials: 'include'
+      credentials: "include",
     })
       .then((response) => {
         if (response.ok) return response.json();
@@ -83,7 +98,7 @@ export default function Orders() {
         setJobData(data);
       })
       .catch((error) => console.log(error));
-  }, [handleDeleteJob]);
+  }, []);
 
   function applySortFilter(array, comparator, query) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -113,6 +128,9 @@ export default function Orders() {
     return 0;
   }
 
+  const changeJobStatus = ()=>{
+
+  }
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -176,7 +194,36 @@ export default function Orders() {
                 <TableCell>{row.jobCompany}</TableCell>
                 <TableCell>
                   {" "}
+                  <Popover
+                    open={Boolean(openStatus)}
+                    anchorEl={openStatus}
+                    onClose={handleStatusClose}
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }} // Align the top of the popover with the anchor
+                    transformOrigin={{ vertical: "down", horizontal: "left" }}
+                  >
+                    <MenuItem sx={{ color: "info.main" }}>
+                      <Iconify
+                        icon={"healthicons:i-documents-accepted-negative"}
+                        sx={{ mr: 2 }}
+                      />
+                      <Typography>Applying</Typography>
+                    </MenuItem>
+                    <MenuItem sx={{ color: "success.main" }}>
+                      <Iconify
+                        icon={"icon-park-outline:file-success"}
+                        sx={{ mr: 2 }}
+                      />
+                      <Typography>Accepted</Typography>
+                    </MenuItem>
+                    <MenuItem sx={{ color: "error.main" }}>
+                      <Iconify icon={"pajamas:error"} sx={{ mr: 2 }} />
+                      <Typography>Rejected</Typography>
+                    </MenuItem>
+                  </Popover>
                   <Label
+                    onClick={(clickEvent) =>
+                      handleStatusOpenMenu(clickEvent, row._id)
+                    }
                     color={
                       (row.jobStatus === "Applying" && "info") ||
                       (row.jobStatus === "Rejected" && "error") ||
