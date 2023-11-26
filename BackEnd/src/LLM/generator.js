@@ -19,6 +19,7 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { ChatGPTPluginRetriever } from "langchain/retrievers/remote";
 import { OpenAIModerationChain } from "langchain/chains";
 import { PromptTemplate } from "langchain/prompts";
+import { generateAndStoreEmbeddings } from "./parser";
 
 // Get rid of this line later
 // import "dotenv/config";
@@ -95,6 +96,13 @@ async function parsePrompt() {
 
 // test()
 parsePrompt();
+
+async function generateCoverLetter(path, link) {
+
+  generateAndStoreEmbeddings(path, link);
+
+  
+}
 
 
 
