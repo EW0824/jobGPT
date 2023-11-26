@@ -49,8 +49,7 @@ export default function Orders() {
 
   //TODO: USE REAL ENDPOINTS
   const handleDeleteJob = () => {
-    console.log("success");
-    fetch(favoriteJobsEndpoint.concat("/").concat(setSelectedJob), {
+    fetch(`job/${selectedJob}`, {
       method: "DELETE",
       // more session here
     })
@@ -71,8 +70,9 @@ export default function Orders() {
   const hanldeFavJob = () => {};
 
   useEffect(() => {
-    fetch("http://localhost:8080/job", {
+    fetch("/job", {
       method: "GET",
+      credentials: 'include'
     })
       .then((response) => {
         if (response.ok) return response.json();
@@ -83,7 +83,7 @@ export default function Orders() {
         setJobData(data);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [handleDeleteJob]);
 
   function applySortFilter(array, comparator, query) {
     const stabilizedThis = array.map((el, index) => [el, index]);

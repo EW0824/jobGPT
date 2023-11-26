@@ -35,15 +35,17 @@ export default function SignIn() {
       email: formData.get("email"),
       password: formData.get("password"),
     };
-    fetch('http://localhost:8080/auth/login', {
+    fetch('/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+      credentials: 'include'
     })
       .then((response) => {
         if (response.ok) {
+          console.log(document.cookie);
           return response.json();
         }
         setSuccessMsg('Log in Failed!');

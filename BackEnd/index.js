@@ -13,7 +13,13 @@ const port = 8080;
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -29,10 +35,10 @@ app.use(
       collectionName: "session_store",
     }),
     cookie: {
-      sameSite: true,
+      sameSite: false,
       secure: false, //set to safe in production
       maxAge: parseInt(eval(process.env.SESSION_LIFETIME)),
-      httpOnly: true,
+      httpOnly: false,
     },
   })
 );
