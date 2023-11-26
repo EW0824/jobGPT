@@ -23,7 +23,7 @@ import { fDateTime } from "../gagets/formatTime";
 
 export default function DetailedJob({ jobId }) {
   useEffect(() => {
-    fetch(`http://localhost:8080/job/${jobId}`)
+    fetch(`/job/${jobId}`)
       .then((response) => {
         return response.json();
       })

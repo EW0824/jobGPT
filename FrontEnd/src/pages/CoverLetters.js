@@ -73,11 +73,10 @@ export default function Dashboard() {
       // proceed with form submission
       try {
         console.log(formData);
-        const response = await fetch("http://localhost:8080/job", {
+        const response = await fetch("/job", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: "655982a21240d623c67e4eb6",
           },
           body: JSON.stringify(formData),
         });
