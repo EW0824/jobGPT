@@ -4,9 +4,15 @@ import User from "../models/userModel.js";
 
 const router = express.Router();
 
+
+// TODO:
+// FAVORITEJOB_RELATED API is also NEEDED
+// GET & POST, etc
+
 // Get all jobs
 router.get("/", async (req, res) => {
   try {
+    console.log(req.session.user);
     if (!req.session) throw Error("Please sign in to view this page");
     const jobs = await Job.find();
     //TODO: fix above line
@@ -85,7 +91,7 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).send({ error: "Job not found" });
     }
 
-    const user_id = req.session.user.user_id;
+    const user_id = req.session.user.userId;
     const user = await User.findOneAndUpdate(
       { _id: user_id },
       { $pull: { jobList: deleted_job._id } },
