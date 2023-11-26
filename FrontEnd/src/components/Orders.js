@@ -14,7 +14,6 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  OutlinedInput,
   IconButton,
   InputAdornment,
 } from "@mui/material";
@@ -321,8 +320,8 @@ export default function Orders() {
         </MenuItem>
       </Popover>
 
-      <Link color="primary" href="#" sx={{ mt: 3 }}>
-        See more Jobs
+      <Link align='right' color="primary" href="#" sx={{ mt: 2 }}>
+        Create A new Job
       </Link>
     </React.Fragment>
   );
