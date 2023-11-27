@@ -9,7 +9,7 @@ A cover letter generator for the UCLA 35L Project.
 
 ## Backend
 
-To launch the server, run the command `npm run dev`. The server currently runs at `localhost:3000`.
+To launch the server, run the command `npm run dev`. The server currently runs at `localhost:8080`.
 
 Please remember to run `npm install` everytime after pull to ensure all dependencies are met.
 
@@ -28,6 +28,7 @@ Frontend/
 ├── src/
 │ ├── components/ (reusable components for the webpages)
 │ ├── pages/ (implement pages for dashboard, job history etc)
+│ ├── styles/
 │ ├── App.js
 │ ├── index.js
 |
