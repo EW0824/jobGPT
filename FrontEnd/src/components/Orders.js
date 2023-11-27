@@ -183,7 +183,6 @@ export default function Orders() {
         sx={{ mb: 1 }}
       />
       <Table size="medium">
-        {/* To achieve fixed column width*/}
         <colgroup>
           <col style={{ width: "5%" }} />
           <col style={{ width: "15%" }} />

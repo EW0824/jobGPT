@@ -192,7 +192,6 @@ export default function Dashboard() {
                     <Card>
                       <CardHeader title="Content" />
                       <CardContent>
-                        {/* <Scrollbar> */}
                         <form onSubmit={handleSubmit} noValidate>
                           <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
                             <InputLabel> Position </InputLabel>
@@ -270,7 +269,6 @@ export default function Dashboard() {
                             {successMessage}
                           </Alert>
                         )}
-                        {/* </Scrollbar> */}
                       </CardContent>
                     </Card>
                   </Grid>
