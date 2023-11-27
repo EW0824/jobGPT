@@ -23,7 +23,7 @@ import Label from "../styles/Label";
 import { sentenceCase } from "change-case";
 import Iconify from "../styles/Iconify";
 import Title from "./Title";
-import { fDateTime } from "../gagets/formatTime";
+import { fDateTime } from "../gagets/FormatTime";
 import { useNavigate } from "react-router-dom";
 import StyledSearch from "../styles/StyledSearch";
 
@@ -85,28 +85,29 @@ export default function Orders() {
   const handleStatusUpdate = (status) => {
     // Perform PUT request with the selected status ('Applying', 'Accepted', 'Rejected')
     fetch(`/job/${selectedJob}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ "jobStatus": status })
+      body: JSON.stringify({ jobStatus: status }),
     })
-    .then(response => {
-      // Handle response here if needed
-      if(response.ok) 
-        return response.json();
-      console.log('Job status updated successfully!');
-    })
-    .then(data=>{
-      //update the useState variable JobData using returned Job
-      //re-render the page
-      console.log(data);
-      setJobData(prevData => prevData.map(job => job._id === selectedJob ? data : job));
-    })
-    .catch(error => {
-      // Handle error here
-      console.error('Error updating job status:', error);
-    });
+      .then((response) => {
+        // Handle response here if needed
+        if (response.ok) return response.json();
+        console.log("Job status updated successfully!");
+      })
+      .then((data) => {
+        //update the useState variable JobData using returned Job
+        //re-render the page
+        console.log(data);
+        setJobData((prevData) =>
+          prevData.map((job) => (job._id === selectedJob ? data : job))
+        );
+      })
+      .catch((error) => {
+        // Handle error here
+        console.error("Error updating job status:", error);
+      });
   };
   useEffect(() => {
     fetch("/job", {
@@ -151,9 +152,7 @@ export default function Orders() {
     return 0;
   }
 
-  const changeJobStatus = ()=>{
-
-  }
+  const changeJobStatus = () => {};
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -223,21 +222,30 @@ export default function Orders() {
                     anchorOrigin={{ vertical: "top", horizontal: "right" }} // Align the top of the popover with the anchor
                     // transformOrigin={{ vertical: "down", horizontal: "left" }}
                   >
-                    <MenuItem sx={{ color: "info.main" }} onClick={() => handleStatusUpdate('Applying')}>
+                    <MenuItem
+                      sx={{ color: "info.main" }}
+                      onClick={() => handleStatusUpdate("Applying")}
+                    >
                       <Iconify
                         icon={"healthicons:i-documents-accepted-negative"}
                         sx={{ mr: 2 }}
                       />
                       <Typography>Applying</Typography>
                     </MenuItem>
-                    <MenuItem sx={{ color: "success.main" }} onClick={() => handleStatusUpdate('Accepted')}>
+                    <MenuItem
+                      sx={{ color: "success.main" }}
+                      onClick={() => handleStatusUpdate("Accepted")}
+                    >
                       <Iconify
                         icon={"icon-park-outline:file-success"}
                         sx={{ mr: 2 }}
                       />
                       <Typography>Accepted</Typography>
                     </MenuItem>
-                    <MenuItem sx={{ color: "error.main" }}  onClick={() => handleStatusUpdate('Rejected')}>
+                    <MenuItem
+                      sx={{ color: "error.main" }}
+                      onClick={() => handleStatusUpdate("Rejected")}
+                    >
                       <Iconify icon={"pajamas:error"} sx={{ mr: 2 }} />
                       <Typography>Rejected</Typography>
                     </MenuItem>
@@ -319,7 +327,7 @@ export default function Orders() {
         </MenuItem>
       </Popover>
 
-      <Link align='right' color="primary" href="#" sx={{ mt: 2 }}>
+      <Link align="right" color="primary" href="#" sx={{ mt: 2 }}>
         Create A new Job
       </Link>
     </React.Fragment>

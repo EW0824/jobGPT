@@ -16,13 +16,11 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { MainListItems, SecondaryListItems } from "../components/ListItems";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 
 import Drawer from "../styles/Drawer";
 import AppBar from "../styles/AppBar";
 
-import skillsData from "../gagets/skills.json";
+import skillsData from "../gagets/Skills.json";
 import { Button } from "@mui/material";
 import ExperienceForm from "../components/ExperienceForm";
 
@@ -41,7 +39,6 @@ export default function Dashboard() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle form submission logic
   };
 
   return (
