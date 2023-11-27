@@ -74,9 +74,6 @@ const ExperienceForm = () => {
         >
           Add Another Experience
         </Button>
-        <Button type="submit" style={{ marginTop: "20px" }}>
-          Save
-        </Button>
       </form>
     </div>
   );
