@@ -9,10 +9,12 @@ import {
   Table,
   TableBody,
   TableCell,
+  Popover,
+  MenuItem,
   TableHead,
   TableRow,
   TablePagination,
-  OutlinedInput,
+  IconButton,
   InputAdornment,
 } from "@mui/material";
 
@@ -23,41 +25,96 @@ import Iconify from "../styles/Iconify";
 import Title from "./Title";
 import { fDateTime } from "../gagets/formatTime";
 import { useNavigate } from "react-router-dom";
-
-const StyledSearch = styled(OutlinedInput)(({ theme }) => ({
-  width: "98%",
-  transition: theme.transitions.create(["box-shadow", "width"], {
-    easing: theme.transitions.easing.easeInOut,
-    duration: theme.transitions.duration.shorter,
-  }),
-  "&:hover": {
-    width: "100%", // Change width on hover
-    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.3)", // Add boxShadow on hover
-  },
-  "&:focus": {
-    width: "100%", // Change width on focus
-    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)", // Add boxShadow on focus
-    borderColor: "#80bdff", // Example border color on focus
-  },
-}));
+import StyledSearch from "../styles/StyledSearch";
 
 export default function Orders() {
+  const [open, setOpen] = useState(null);
+  const [openStatus, setOpenStatus] = useState(null);
+  const [selectedJob, setSelectedJob] = useState(null);
   const [filterName, setFilterName] = useState("");
   const [jobData, setJobData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch('http://localhost:8080/job', {
-      method: "GET",
-      headers:{"Authorization": "655982a21240d623c67e4eb6"}
+  const handleOpenMenu = (event, jobId) => {
+    setOpen(event.currentTarget);
+    setSelectedJob(jobId);
+    console.log("selected job id", jobId);
+  };
+
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
+
+  const handleStatusOpenMenu = (event, jobId) => {
+    setOpenStatus(event.currentTarget);
+    setSelectedJob(jobId);
+    console.log("selected job id", jobId);
+  };
+
+  const handleStatusClose = () => {
+    setOpenStatus(null);
+  };
+
+  //TODO: USE REAL ENDPOINTS
+  const handleDeleteJob = () => {
+    fetch(`job/${selectedJob}`, {
+      method: "DELETE",
     })
       .then((response) => {
-        if(response.ok)
-          return response.json();
-        else
-          throw Error('Response not okay')
+        if (response.ok) return response.json();
+        else throw new Error("Fail to delete!");
+      })
+      .then((data) => {
+        if (data) {
+          setOpen(null);
+          setJobData((prevData) =>
+            prevData.filter((job) => job._id !== selectedJob)
+          );
+          setSelectedJob("");
+        }
+        console.log(data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  //TODO: USE ENDPOINTS for Fav Job creation
+  const hanldeFavJob = () => {};
+
+  const handleStatusUpdate = (status) => {
+    // Perform PUT request with the selected status ('Applying', 'Accepted', 'Rejected')
+    fetch(`/job/${selectedJob}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "jobStatus": status })
+    })
+    .then(response => {
+      // Handle response here if needed
+      if(response.ok) 
+        return response.json();
+      console.log('Job status updated successfully!');
+    })
+    .then(data=>{
+      //update the useState variable JobData using returned Job
+      //re-render the page
+      console.log(data);
+      setJobData(prevData => prevData.map(job => job._id === selectedJob ? data : job));
+    })
+    .catch(error => {
+      // Handle error here
+      console.error('Error updating job status:', error);
+    });
+  };
+  useEffect(() => {
+    fetch("/job", {
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else throw Error("Response not okay");
       })
       .then((data) => {
         console.log(data);
@@ -94,6 +151,9 @@ export default function Orders() {
     return 0;
   }
 
+  const changeJobStatus = ()=>{
+
+  }
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -124,14 +184,15 @@ export default function Orders() {
       />
       <Table size="medium">
         {/* To achieve fixed column width*/}
-            <colgroup>
-            <col style={{ width: "10%" }} />
-            <col style={{ width: "10%" }} />
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "20%" }} />
-          </colgroup>
+        <colgroup>
+          <col style={{ width: "5%" }} />
+          <col style={{ width: "15%" }} />
+          <col style={{ width: "15%" }} />
+          <col style={{ width: "15%" }} />
+          <col style={{ width: "15%" }} />
+          <col style={{ width: "15%" }} />
+          <col style={{ width: "10%" }} />
+        </colgroup>
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
@@ -139,7 +200,8 @@ export default function Orders() {
             <TableCell>Name</TableCell>
             <TableCell>Job Company</TableCell>
             <TableCell>Job Status</TableCell>
-            <TableCell align="right">Job Description</TableCell>
+            <TableCell>Job Description</TableCell>
+            <TableCell align="right">More Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -147,13 +209,44 @@ export default function Orders() {
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((row, index) => (
               <TableRow key={row._id}>
-                <TableCell onClick={()=>navigate(`/jobs/${row._id}`)}>{index+1}</TableCell>
+                <TableCell onClick={() => navigate(`/jobs/${row._id}`)}>
+                  {index + 1}
+                </TableCell>
                 <TableCell>{fDateTime(row.createdAt)}</TableCell>
                 <TableCell>{row.jobName}</TableCell>
                 <TableCell>{row.jobCompany}</TableCell>
                 <TableCell>
                   {" "}
+                  <Popover
+                    open={Boolean(openStatus)}
+                    anchorEl={openStatus}
+                    onClose={handleStatusClose}
+                    anchorOrigin={{ vertical: "top", horizontal: "right" }} // Align the top of the popover with the anchor
+                    // transformOrigin={{ vertical: "down", horizontal: "left" }}
+                  >
+                    <MenuItem sx={{ color: "info.main" }} onClick={() => handleStatusUpdate('Applying')}>
+                      <Iconify
+                        icon={"healthicons:i-documents-accepted-negative"}
+                        sx={{ mr: 2 }}
+                      />
+                      <Typography>Applying</Typography>
+                    </MenuItem>
+                    <MenuItem sx={{ color: "success.main" }} onClick={() => handleStatusUpdate('Accepted')}>
+                      <Iconify
+                        icon={"icon-park-outline:file-success"}
+                        sx={{ mr: 2 }}
+                      />
+                      <Typography>Accepted</Typography>
+                    </MenuItem>
+                    <MenuItem sx={{ color: "error.main" }}  onClick={() => handleStatusUpdate('Rejected')}>
+                      <Iconify icon={"pajamas:error"} sx={{ mr: 2 }} />
+                      <Typography>Rejected</Typography>
+                    </MenuItem>
+                  </Popover>
                   <Label
+                    onClick={(clickEvent) =>
+                      handleStatusOpenMenu(clickEvent, row._id)
+                    }
                     color={
                       (row.jobStatus === "Applying" && "info") ||
                       (row.jobStatus === "Rejected" && "error") ||
@@ -163,7 +256,18 @@ export default function Orders() {
                     {sentenceCase(row.jobStatus)}
                   </Label>
                 </TableCell>
-                <TableCell align="right">{row.jobDescription}</TableCell>
+                <TableCell>{row.jobDescription}</TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    size="large"
+                    color="inherit"
+                    onClick={(clickEvent) =>
+                      handleOpenMenu(clickEvent, row._id)
+                    }
+                  >
+                    <Iconify icon={"eva:more-vertical-fill"} />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
         </TableBody>
@@ -192,8 +296,32 @@ export default function Orders() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Table>
-      <Link color="primary" href="#" sx={{ mt: 3 }}>
-        See more Jobs
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MenuItem onClick={() => navigate(`/jobs/${selectedJob}`)}>
+          <Iconify icon={"mdi:information-outline"} sx={{ mr: 2 }} />
+          View Detail
+        </MenuItem>
+        <MenuItem sx={{ color: "error.main" }} onClick={handleDeleteJob}>
+          <Iconify icon={"eva:trash-2-outline"} sx={{ mr: 2 }} />
+          Delete
+        </MenuItem>
+        <MenuItem sx={{ color: "info.main" }} onClick={hanldeFavJob}>
+          <Iconify
+            icon={"material-symbols-light:favorite-outline"}
+            sx={{ mr: 2 }}
+          />
+          Mark as favorite
+        </MenuItem>
+      </Popover>
+
+      <Link align='right' color="primary" href="#" sx={{ mt: 2 }}>
+        Create A new Job
       </Link>
     </React.Fragment>
   );
