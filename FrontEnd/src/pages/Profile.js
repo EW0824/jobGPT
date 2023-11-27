@@ -42,6 +42,7 @@ export default function Profile() {
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
+    experienceList: [],
     skillList: [],
   });
 
@@ -58,8 +59,10 @@ export default function Profile() {
         setUserData({
           firstName: data.firstName,
           lastName: data.lastName,
+          experienceList: data.experienceList ?? [],
           skillList: data.skillList ?? [],
         });
+        console.log("Fetched experienceList:", userData.experienceList);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -70,6 +73,14 @@ export default function Profile() {
       skillList: selectedOptions.map((option) => option.value),
     });
     console.log("skillList", userData.skillList);
+  };
+
+  const handleExperienceDataChange = (newExperiences) => {
+    setUserData({
+      ...userData,
+      experienceList: newExperiences,
+    });
+    console.log("experienceList", userData.experienceList);
   };
 
   const handleSave = () => {
@@ -194,7 +205,10 @@ export default function Profile() {
                 <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
                   Experiences
                 </Typography>
-                <ExperienceForm />
+                <ExperienceForm
+                  onExperiencesChange={handleExperienceDataChange}
+                  experienceList={userData.experienceList}
+                />
               </Grid>
               <Grid item xs={12} sx={{ mt: 3 }}>
                 <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>

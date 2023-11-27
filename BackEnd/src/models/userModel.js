@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import Experience from "./ExperienceModel.js";
+import Skill from "./SkillModel.js";
 import pkg from "bcryptjs";
 
 const { hashSync, compareSync } = pkg;
@@ -64,9 +66,13 @@ const userSchema = new mongoose.Schema(
       },
     ],
     experienceList: [
+      // {
+      //   type: mongoose.Schema.Types.ObjectId,
+      //   ref: "Experience",
+      // },
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Experience",
+        company: String,
+        jobTitle: String,
       },
     ],
     skillList: [

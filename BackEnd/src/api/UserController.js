@@ -11,10 +11,9 @@ router.get("/", async (req, res) => {
     }
 
     // Find the user based on the session data or any identifier
-    const user = await User.findById(req.session.user.userId).populate(
-      "skillList"
-    );
-    //   .populate("experienceList")
+    const user = await User.findById(req.session.user.userId)
+      .populate("skillList")
+      .populate("experienceList");
 
     if (!user) {
       res.status(404).send({ error: "User not found" }); // 404 for not found
@@ -24,7 +23,7 @@ router.get("/", async (req, res) => {
     const response = {
       firstName: user.firstName,
       lastName: user.lastName,
-      //   expereienceList: user.experienceList,
+      experienceList: user.experienceList,
       skillList: user.skillList,
     };
 
@@ -44,8 +43,7 @@ router.patch("/", async (req, res) => {
     console.log("doing PATCH method");
     const updatedUser = await User.findByIdAndUpdate(
       req.session.user.userId,
-      req.body,
-      { skillList: ["python", "java"] }
+      req.body
     );
 
     if (!updatedUser) {

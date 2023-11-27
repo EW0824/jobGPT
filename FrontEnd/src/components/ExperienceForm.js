@@ -1,11 +1,24 @@
 import { Button, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const ExperienceForm = () => {
-  const [experiences, setExperiences] = useState([]);
+const ExperienceForm = (props) => {
+  console.log("props.experienceList: ", props.experienceList);
+  const [experiences, setExperiences] = useState(props.experienceList || []);
+
+  useEffect(() => {
+    setExperiences(props.experienceList || []);
+  }, [props.experienceList]);
+  console.log("experiences: ", experiences);
 
   const addNewExperience = () => {
     setExperiences([
+      ...experiences,
+      {
+        company: "",
+        jobTitle: "",
+      },
+    ]);
+    props.onExperiencesChange([
       ...experiences,
       {
         company: "",
@@ -22,6 +35,7 @@ const ExperienceForm = () => {
       return experience;
     });
     setExperiences(updatedExperiences);
+    props.onExperiencesChange(updatedExperiences);
   };
 
   const handleDeleteExperience = (index) => {
@@ -29,6 +43,7 @@ const ExperienceForm = () => {
       (_, expIndex) => expIndex !== index
     );
     setExperiences(filteredExperiences);
+    props.onExperiencesChange(filteredExperiences);
   };
 
   const handleSubmit = (event) => {
