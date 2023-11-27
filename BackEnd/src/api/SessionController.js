@@ -27,7 +27,7 @@ router.post('/signup', async (req, res, next) => {
         res.status(200).json(session_user)
 
     } catch (error) {
-        res.status(400).send({message: error.message})
+        res.status(400).send({error: error.message})
     }
 })
 
@@ -50,6 +50,7 @@ router.post("/login", async(req, res, next) => {
 
         const session_user = sessionize_user(user)
         req.session.user = session_user
+        res.setHeader('Allow-Control-Allow-Credentials', "true");
         res.status(200).json(session_user)
 
     } catch(error) {

@@ -56,16 +56,8 @@ export function SecondaryListItems({ navigate }) {
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="Log Out" />
+        <ListItemText primary="Log Out" onClick={()=>{navigate('/sign-in')}}/>
       </ListItemButton>
     </React.Fragment>
   );
 }
-
-// export function UserProfile({navigate}) {
-//   return (
-//     <React.Fragment>
-
-//     </React.Fragment>
-//   )
-// }

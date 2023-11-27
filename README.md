@@ -3,9 +3,9 @@
 A cover letter generator for the UCLA 35L Project.
 
 ## LLM
+
 1. LangChain only supports Node version >= 18
 2. Please run `npm install --force` when installing LangChain
-
 
 ## Backend
 
@@ -42,6 +42,5 @@ Frontend/
 To contribute:
 
 1. Implement pages
-2. Connected to DB
-3. Refactor code
-4. Design a better favicon
+2. Design a better favicon
+3. Utilize Redux for state management

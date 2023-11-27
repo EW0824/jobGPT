@@ -35,16 +35,18 @@ export default function SignIn() {
       email: formData.get("email"),
       password: formData.get("password"),
     };
-    fetch('http://localhost:8080/auth/login', {
+    fetch('/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       credentials: 'include',
       body: JSON.stringify(data),
+      credentials: 'include'
     })
       .then((response) => {
         if (response.ok) {
+          console.log(document.cookie);
           return response.json();
         }
         setSuccessMsg('Log in Failed!');
@@ -55,6 +57,7 @@ export default function SignIn() {
         console.log(responseData)
         setSuccessMsg('Log in Successfully!');
         setSessionToken(responseData) 
+        localStorage.setItem('sessionData', JSON.stringify(responseData))
         setTimeout(() => {
           navigate('/job-history');
         }, 1000); // 1 sec wait time
