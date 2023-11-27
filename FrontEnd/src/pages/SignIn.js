@@ -38,8 +38,9 @@ export default function SignIn() {
     fetch('http://localhost:8080/auth/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     })
       .then((response) => {

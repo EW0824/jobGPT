@@ -37,6 +37,7 @@ router.post("/login", async(req, res, next) => {
         console.log("received")
 
         const {email, password} = req.body
+        console.log(email, password)
 
         const user = await User.findOne({ email })
     
@@ -46,7 +47,7 @@ router.post("/login", async(req, res, next) => {
         if(!user.comparePasswords(password)){
             throw Error("Incorrect password")
         }
-        
+
         const session_user = sessionize_user(user)
         req.session.user = session_user
         res.status(200).json(session_user)

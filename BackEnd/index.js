@@ -13,7 +13,12 @@ const port = 8080;
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000', // Allow your front-end origin
+  credentials: true, // Allow credentials (cookies, session, etc.)
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
