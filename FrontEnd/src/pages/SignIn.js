@@ -42,11 +42,9 @@ export default function SignIn() {
       },
       credentials: 'include',
       body: JSON.stringify(data),
-      credentials: 'include'
     })
       .then((response) => {
         if (response.ok) {
-          console.log(document.cookie);
           return response.json();
         }
         setSuccessMsg('Log in Failed!');
@@ -54,7 +52,6 @@ export default function SignIn() {
       })
       .then((responseData) => {
         // Assuming the response contains some data you want to store
-        console.log(responseData)
         setSuccessMsg('Log in Successfully!');
         setSessionToken(responseData) 
         localStorage.setItem('sessionData', JSON.stringify(responseData))

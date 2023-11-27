@@ -35,10 +35,10 @@ app.use(
       collectionName: "session_store",
     }),
     cookie: {
-      sameSite: false,
+      sameSite: true,
       secure: false, //set to safe in production
       maxAge: parseInt(eval(process.env.SESSION_LIFETIME)),
-      httpOnly: false,
+      httpOnly: true,
     },
   })
 );

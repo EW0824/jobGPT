@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useContext} from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -8,6 +8,8 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import BadgeIcon from "@mui/icons-material/Badge";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
+import { SessionContext } from "./SessionContextProvider";
+import { useNavigate } from "react-router-dom";
 
 export function MainListItems({ navigate }) {
 
@@ -43,8 +45,22 @@ export function MainListItems({ navigate }) {
 
 export function SecondaryListItems({ navigate }) {
 
+  const {sessionToken, setSessionToken} = useContext(SessionContext)
+
   const handleClick = async () => {
-    return 0
+    try {
+      await fetch('/auth/logout', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      })
+      setSessionToken({ userId: null })
+      navigate('/sign-in')
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -56,7 +72,7 @@ export function SecondaryListItems({ navigate }) {
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="Log Out" onClick={()=>{navigate('/sign-in')}}/>
+        <ListItemText primary="Log Out"/>
       </ListItemButton>
     </React.Fragment>
   );
