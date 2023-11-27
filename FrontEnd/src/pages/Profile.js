@@ -33,15 +33,17 @@ export default function Profile() {
   };
   const navigate = useNavigate();
 
-  const [skills, setSkills] = useState([]);
-
   const options = skillsData;
 
   const handleSubmit = (event) => {
     event.preventDefault();
   };
 
-  const [userData, setUserData] = useState({ firstName: "", lastName: "" });
+  const [userData, setUserData] = useState({
+    firstName: "",
+    lastName: "",
+    skillList: [],
+  });
 
   useEffect(() => {
     fetch("/user", {
@@ -52,18 +54,27 @@ export default function Profile() {
         else throw Error("Response error");
       })
       .then((data) => {
-        console.log(data);
+        console.log("Fetched data:", data);
         setUserData({
           firstName: data.firstName,
           lastName: data.lastName,
+          skillList: data.skillList ?? [],
         });
       })
       .catch((error) => console.log(error));
   }, []);
 
+  const handleSkillsChange = (selectedOptions) => {
+    setUserData({
+      ...userData,
+      skillList: selectedOptions.map((option) => option.value),
+    });
+    console.log("skillList", userData.skillList);
+  };
+
   const handleSave = () => {
     fetch("/user", {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -196,7 +207,11 @@ export default function Profile() {
                   <Select
                     options={options}
                     isMulti
-                    onChange={setSkills}
+                    onChange={handleSkillsChange}
+                    value={userData.skillList.map((skill) => ({
+                      value: skill,
+                      label: skill,
+                    }))}
                     placeholder="Enter your skills"
                   />
                   <Button

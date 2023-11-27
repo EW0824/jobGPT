@@ -4,7 +4,6 @@ import User from "../models/userModel.js";
 
 const router = express.Router();
 
-
 // TODO:
 // FAVORITEJOB_RELATED API is also NEEDED
 // GET & POST, etc
@@ -18,7 +17,9 @@ router.get("/", async (req, res) => {
     }
 
     // Find the user based on the session data or any identifier
-    const user = await User.findById(req.session.user.userId).populate('jobList');
+    const user = await User.findById(req.session.user.userId).populate(
+      "jobList"
+    );
 
     if (!user) {
       res.status(404).send({ error: "User not found" }); // 404 for not found
@@ -43,13 +44,13 @@ router.get("/:id", async (req, res) => {
       return;
     }
     const userId = req.session.user.userId;
-    const user = await User.findById(userId).populate('jobList'); // Populate the user's jobList
+    const user = await User.findById(userId).populate("jobList"); // Populate the user's jobList
     if (!user) {
       res.status(404).send({ error: "User not found" });
       return;
     }
     // Check if the job ID exists in the user's jobList
-    const jobExists = user.jobList.some(job => job.equals(jobId)); // Assuming jobList contains job IDs
+    const jobExists = user.jobList.some((job) => job.equals(jobId)); // Assuming jobList contains job IDs
     if (!jobExists) {
       res.status(403).send({ error: "You do not have access to this job" }); // 403 for forbidden
       return;

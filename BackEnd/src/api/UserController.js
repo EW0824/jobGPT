@@ -11,9 +11,10 @@ router.get("/", async (req, res) => {
     }
 
     // Find the user based on the session data or any identifier
-    const user = await User.findById(req.session.user.userId);
+    const user = await User.findById(req.session.user.userId).populate(
+      "skillList"
+    );
     //   .populate("experienceList")
-    //   .populate("skillList");
 
     if (!user) {
       res.status(404).send({ error: "User not found" }); // 404 for not found
@@ -24,7 +25,7 @@ router.get("/", async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       //   expereienceList: user.experienceList,
-      //   skillList: user.skillList,
+      skillList: user.skillList,
     };
 
     res.status(200).send(response);
@@ -34,19 +35,17 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.put("/", async (req, res) => {
+router.patch("/", async (req, res) => {
   try {
     if (!req.session.user) {
       res.status(401).send({ error: "Please sign in to view this page" }); // 401 for unauthorized
       return;
     }
-
+    console.log("doing PATCH method");
     const updatedUser = await User.findByIdAndUpdate(
       req.session.user.userId,
       req.body,
-      {
-        new: true,
-      }
+      { skillList: ["python", "java"] }
     );
 
     if (!updatedUser) {
