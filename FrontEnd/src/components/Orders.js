@@ -14,7 +14,6 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  OutlinedInput,
   IconButton,
   InputAdornment,
 } from "@mui/material";
@@ -62,7 +61,6 @@ export default function Orders() {
   const handleDeleteJob = () => {
     fetch(`job/${selectedJob}`, {
       method: "DELETE",
-      // more session here
     })
       .then((response) => {
         if (response.ok) return response.json();
@@ -81,13 +79,38 @@ export default function Orders() {
       .catch((error) => console.log(error));
   };
 
-  //TODO: USE REAL ENDPOINTS
+  //TODO: USE ENDPOINTS for Fav Job creation
   const hanldeFavJob = () => {};
 
+  const handleStatusUpdate = (status) => {
+    // Perform PUT request with the selected status ('Applying', 'Accepted', 'Rejected')
+    fetch(`/job/${selectedJob}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ "jobStatus": status })
+    })
+    .then(response => {
+      // Handle response here if needed
+      if(response.ok) 
+        return response.json();
+      console.log('Job status updated successfully!');
+    })
+    .then(data=>{
+      //update the useState variable JobData using returned Job
+      //re-render the page
+      console.log(data);
+      setJobData(prevData => prevData.map(job => job._id === selectedJob ? data : job));
+    })
+    .catch(error => {
+      // Handle error here
+      console.error('Error updating job status:', error);
+    });
+  };
   useEffect(() => {
     fetch("/job", {
       method: "GET",
-      credentials: "include",
     })
       .then((response) => {
         if (response.ok) return response.json();
@@ -199,23 +222,23 @@ export default function Orders() {
                     anchorEl={openStatus}
                     onClose={handleStatusClose}
                     anchorOrigin={{ vertical: "top", horizontal: "right" }} // Align the top of the popover with the anchor
-                    transformOrigin={{ vertical: "down", horizontal: "left" }}
+                    // transformOrigin={{ vertical: "down", horizontal: "left" }}
                   >
-                    <MenuItem sx={{ color: "info.main" }}>
+                    <MenuItem sx={{ color: "info.main" }} onClick={() => handleStatusUpdate('Applying')}>
                       <Iconify
                         icon={"healthicons:i-documents-accepted-negative"}
                         sx={{ mr: 2 }}
                       />
                       <Typography>Applying</Typography>
                     </MenuItem>
-                    <MenuItem sx={{ color: "success.main" }}>
+                    <MenuItem sx={{ color: "success.main" }} onClick={() => handleStatusUpdate('Accepted')}>
                       <Iconify
                         icon={"icon-park-outline:file-success"}
                         sx={{ mr: 2 }}
                       />
                       <Typography>Accepted</Typography>
                     </MenuItem>
-                    <MenuItem sx={{ color: "error.main" }}>
+                    <MenuItem sx={{ color: "error.main" }}  onClick={() => handleStatusUpdate('Rejected')}>
                       <Iconify icon={"pajamas:error"} sx={{ mr: 2 }} />
                       <Typography>Rejected</Typography>
                     </MenuItem>
@@ -297,8 +320,8 @@ export default function Orders() {
         </MenuItem>
       </Popover>
 
-      <Link color="primary" href="#" sx={{ mt: 3 }}>
-        See more Jobs
+      <Link align='right' color="primary" href="#" sx={{ mt: 2 }}>
+        Create A new Job
       </Link>
     </React.Fragment>
   );
