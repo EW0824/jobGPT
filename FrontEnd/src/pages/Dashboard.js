@@ -14,7 +14,7 @@ import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { MainListItems, SecondaryListItems } from "../components/ListItems";
-import Orders from "../components/Tables";
+import Tables from "../components/Tables";
 import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 

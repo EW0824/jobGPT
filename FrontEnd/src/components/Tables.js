@@ -27,7 +27,7 @@ import { fDateTime } from "../gagets/FormatTime";
 import { useNavigate } from "react-router-dom";
 import StyledSearch from "../styles/StyledSearch";
 
-export default function Orders() {
+export default function Tables() {
   const [open, setOpen] = useState(null);
   const [openStatus, setOpenStatus] = useState(null);
   const [selectedJob, setSelectedJob] = useState(null);
