@@ -20,7 +20,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { validateSignUpForm } from "../gagets/validation";
+import { validateSignUpForm } from "../gagets/Validation";
 import Iconify from "../styles/Iconify";
 
 const defaultTheme = createTheme();

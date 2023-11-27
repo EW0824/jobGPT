@@ -6,7 +6,6 @@ import session from "express-session";
 
 import { createMongooseConnection } from "./src/db/connect.js";
 import jobRouter from "./src/api/JobController.js";
-import experienceRouter from "./src/api/ExperienceController.js";
 import sessionRouter from "./src/api/SessionController.js";
 
 const port = 8080;
@@ -48,7 +47,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/job", jobRouter);
-app.use("/experience", experienceRouter);
 app.use("/auth", sessionRouter);
 
 async function startServer() {

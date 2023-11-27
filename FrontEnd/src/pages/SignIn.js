@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import {
   Link,
   Grid,
@@ -25,8 +25,8 @@ const defaultTheme = createTheme();
 export default function SignIn() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
-  const {sessionToken, setSessionToken} = useContext(SessionContext)
+  const [successMsg, setSuccessMsg] = useState("");
+  const { sessionToken, setSessionToken } = useContext(SessionContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -35,34 +35,33 @@ export default function SignIn() {
       email: formData.get("email"),
       password: formData.get("password"),
     };
-    fetch('/auth/login', {
-      method: 'POST',
+    fetch("/auth/login", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-      credentials: 'include'
+      credentials: "include",
     })
       .then((response) => {
         if (response.ok) {
           console.log(document.cookie);
           return response.json();
         }
-        setSuccessMsg('Log in Failed!');
-        throw new Error('Network response was not ok.');
+        setSuccessMsg("Log in Failed!");
+        throw new Error("Network response was not ok.");
       })
       .then((responseData) => {
-        // Assuming the response contains some data you want to store
-        console.log(responseData)
-        setSuccessMsg('Log in Successfully!');
-        setSessionToken(responseData) 
-        localStorage.setItem('sessionData', JSON.stringify(responseData))
+        console.log(responseData);
+        setSuccessMsg("Log in Successfully!");
+        setSessionToken(responseData);
+        localStorage.setItem("sessionData", JSON.stringify(responseData));
         setTimeout(() => {
-          navigate('/job-history');
+          navigate("/job-history");
         }, 1000); // 1 sec wait time
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
   };
 
@@ -156,9 +155,18 @@ export default function SignIn() {
                 </Link>
               </Grid>
             </Grid>
-
           </Box>
-          {successMsg && <Button sx={{mt:2}}variant="outlined" color={successMsg==='Log in Successfully!'? "success":'error'}>{successMsg}</Button>}
+          {successMsg && (
+            <Button
+              sx={{ mt: 2 }}
+              variant="outlined"
+              color={
+                successMsg === "Log in Successfully!" ? "success" : "error"
+              }
+            >
+              {successMsg}
+            </Button>
+          )}
         </Box>
       </Container>
     </ThemeProvider>
