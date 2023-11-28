@@ -7,21 +7,21 @@ import {
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 
-const SYSTEM_TEMPLATE = `
-Please use the following information about the user to answer. 
-These are some basic information about the user:
---------
-name: {name}
-email: {email}
-phoneNumber: {phoneNumber}
---------
+// const SYSTEM_TEMPLATE = `
+// Please use the following information about the user to answer. 
+// These are some basic information about the user:
+// --------
+// name: {name}
+// email: {email}
+// phoneNumber: {phoneNumber}
+// --------
 
-This is the user's past experiences and skills
---------
-{experiences}
-{skills}
---------
-`;
+// This is the user's past experiences and skills
+// --------
+// {experiences}
+// {skills}
+// --------
+// `;
 
 // To load the PDF from user
 async function loadPDFLocally(path) {
@@ -88,6 +88,14 @@ async function splitText(text) {
   return output;
 }
 
+export async function loadAllDocs(PDFLink, jobLink) {
+
+  const resumeDoc = await loadPDFLocally(PDFLink);
+  const jobDescriptionDoc = await loadJob(jobLink);
+
+  const combinedDoc = resumeDoc.concat(jobDescriptionDoc);
+  return combinedDoc;
+}
 
 
 
@@ -100,7 +108,6 @@ export async function generateAndStoreEmbeddings(PDFLink, jobLink) {
 
   const combinedDoc = resumeDoc.concat(jobDescriptionDoc);
 
-  //   Embeddings: storing text in high-dimensional vector space
   //   vectorStore: retrieve embedding vectors most similar to the embedded query
 
   const embeddings = new OpenAIEmbeddings();
