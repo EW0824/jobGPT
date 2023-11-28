@@ -1,13 +1,9 @@
 import express from "express";
 
-import parsePrompt from "../LLM/generator.js"
-import generateCoverLetter from "../LLM/generator.js"
-import { generateAndStoreEmbeddings } from "../LLM/parser.js";
+import generateCoverLetter from "../LLM/main"
 
 const router = express.Router();
 
-
-// SUBJECT TO A LOT OF MODIFICATION
 router.get("/generate_letter", async (req, res) => {
     const name = req.params.name
     const email = req.params.email
@@ -17,14 +13,10 @@ router.get("/generate_letter", async (req, res) => {
     const wordLimit = req.params.wordLimit
     const PDFLink = req.params.PDFLink
     const jobLink = req.params.jobLink
+    const addDescription = req.params.addDescription
+    const skills = req.params.skills
     try {
-        const embeddings = generateAndStoreEmbeddings(PDFLink, jobLink)
-
-        // Still working on transforming embeddings to experience + jobDescription [trying out a more advanced approach]
-        const jobDescription = ""
-        const experiences = ""
-        const prompt = parsePrompt(name, email, phoneNumber, company, jobDescription, experiences)
-        const letter = generateCoverLetter(prompt, "")
+        const letter = generateCoverLetter(name, email, phoneNumber, company, position, wordLimit, PDFLink, jobLink, addDescription, skills)
         res.status(200).send(letter);
     } catch (error) {
         res.status(500)
