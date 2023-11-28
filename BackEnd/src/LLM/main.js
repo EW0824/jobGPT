@@ -1,8 +1,9 @@
-import { RetrievalQAChain, loadQARefineChain } from "langchain/chains.js";
-import { parsePrompt, generate } from "../LLM/generator.js";
-import { generateAndStoreEmbeddings, loadAllDocs } from "./preprocessing.js";
-import { PromptTemplate } from "langchain/prompts.js";
-import { OpenAIEmbeddings } from "langchain/embeddings/openai.js";
+import { OpenAI } from "langchain/llms/openai";
+import { HNSWLib } from "langchain/vectorstores/hnswlib";
+import { loadQARefineChain } from "langchain/chains";
+import { loadAllDocs } from "./preprocessing.js";
+import { PromptTemplate } from "langchain/prompts";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 
 /*
 Useful Resources:
@@ -49,7 +50,8 @@ Hope you are doing well! You are a recruiter at a large company with experience 
 I am applying to work at {company} as a {position}. Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position using information from the job description. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!
 `;
 
-async function generateCoverLetter(
+
+export default async function generateCoverLetter(
   name,
   email,
   phoneNumber,
@@ -74,10 +76,10 @@ async function generateCoverLetter(
   // STEP 1: Creating model and chain
   const model = new OpenAI({
     modelName: "gpt-3.5-turbo-1106",
-    temperature: 1.4,
-    openAIApiKey: openAIApiKey,
     // temperature controls how random the output -> higher the less deterministic
-    verbose: true,
+    temperature: 1.4,
+    // openAIApiKey: API_KEY,
+    // verbose: true,
   });
 
   const chain = loadQARefineChain(model);
@@ -125,40 +127,55 @@ async function generateCoverLetter(
     wordLimit: wordLimit,
   });
 
-  const prompt = parsePrompt(
-    name,
-    email,
-    phoneNumber,
-    company,
-    position,
-    wordLimit
-  );
+  // console.log(formattedPrompt)
 
   // STEP 4: generate embeddings and vector store
 
   // Embeddings: storing text in high-dimensional vector space
-  const embeddings = new OpenAIEmbeddings();
+  const embeddings = new OpenAIEmbeddings({  
+    // openAIApiKey: API_KEY 
+  });
 
   // vectorStore: database to efficiently store and search for embeddings
-
   const vectorStore = await HNSWLib.fromDocuments(docs, embeddings);
 
   // retriever: retrieve embedding vectors most similar to the embedded query
   const vectorStoreRetriever = vectorStore.asRetriever();
 
   // STEP 5: retrieve relevant documents given the prompt
-  const relevantDocs = retriever.getRelevantDocuments(prompt);
+  const relevantDocs =
+    await vectorStoreRetriever.getRelevantDocuments(formattedPrompt);
+
+  // console.log(relevantDocs)
+
 
   // STEP 6: CALL
-
   const letter = await chain.call({
     input_documents: relevantDocs,
-    prompt,
+    question: formattedPrompt,
   });
 
-  return letter;
+  console.log(letter.output_text);
+  return letter.output_text;
 }
 
+// generateCoverLetter(
+//   "Cocoa Touch",
+//   "ctouch@gmail.com",
+//   "8445550990",
+//   "Google",
+//   "Software Engineer",
+//   "200",
+//   "examples/example1.pdf",
+//   "",
+//   "",
+//   ""
+// );
+
+
+// ------------------------
+// EXAMPLE
+// ------------------------
 // async function getAnswer(question) {
 //   // STEP 1: Load the vector store
 //   const vectorStore = await HNSWLib.load(

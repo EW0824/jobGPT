@@ -89,7 +89,7 @@ async function splitText(text) {
 }
 
 export async function loadAllDocs(PDFLink, jobLink) {
-
+  
   const resumeDoc = await loadPDFLocally(PDFLink);
   const jobDescriptionDoc = await loadJob(jobLink);
 
@@ -100,25 +100,31 @@ export async function loadAllDocs(PDFLink, jobLink) {
 
 
 
-// To convert resume and job description into text embeddings and retriever
-export async function generateAndStoreEmbeddings(PDFLink, jobLink) {
-  // Load the resume and job description after applying the textsplitting steps
-  const resumeDoc = await loadPDFLocally(PDFLink);
-  const jobDescriptionDoc = await loadJob(jobLink);
+// // To convert resume and job description into text embeddings and retriever
+// export async function generateAndStoreEmbeddings(PDFLink, jobLink) {
+//   // Load the resume and job description after applying the textsplitting steps
+//   const resumeDoc = await loadPDFLocally(PDFLink);
+//   const jobDescriptionDoc = await loadJob(jobLink);
 
-  const combinedDoc = resumeDoc.concat(jobDescriptionDoc);
+//   const combinedDoc = resumeDoc.concat(jobDescriptionDoc);
 
-  //   vectorStore: retrieve embedding vectors most similar to the embedded query
+//   //   Embeddings: storing text in high-dimensional vector space
+//   //   vectorStore: retrieve embedding vectors most similar to the embedded query
 
-  const embeddings = new OpenAIEmbeddings();
+//   const embeddings = new OpenAIEmbeddings();
 
-  const vectorStore = await HNSWLib.fromDocuments(combinedDoc, embeddings);
+//   const vectorStore = await HNSWLib.fromDocuments(combinedDoc, embeddings);
 
-  const vectorStoreRetriever = vectorStore.asRetriever();
-}
+//   const vectorStoreRetriever = vectorStore.asRetriever();
+// }
 
-generateAndStoreEmbeddings("examples/example1.pdf", "");
+// generateAndStoreEmbeddings("examples/example1.pdf", "");
 
+
+
+// ------------------------
+// EXAMPLE
+// ------------------------
 // async function generateAndStoreEmbeddings() {
 //   // STEP 1: Load the data
 //   const trainingText = fs.readFileSync("training-data.txt", "utf8");

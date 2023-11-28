@@ -10,8 +10,7 @@ import { generateAndStoreEmbeddings } from "./preprocessing";
 
 const COVER_LETTER_PROMPT = `Hope you are doing well! You are a recruiter at a large company with experience reading and writing cover letters. I need your help crafting a perfect letter for me, with name {name}, email '{email}' and phone number '{phoneNumber}'. I am applying to work at {company} as a {position} with the following job description: {jobDescription}. I have the following experiences: {experiences}. Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!`;
 
-// BASIC EXAMPLE
-async function test() {
+async function simpleExample() {
   const llm = new OpenAI({
     modelName: "gpt-3.5-turbo-1106",
     temperature: 1.3,
