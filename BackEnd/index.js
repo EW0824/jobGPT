@@ -8,6 +8,7 @@ import { createMongooseConnection } from "./src/db/connect.js";
 import jobRouter from "./src/api/JobController.js";
 import userRouter from "./src/api/UserController.js";
 import sessionRouter from "./src/api/SessionController.js";
+import letterRouter from "./src/api/CoverLetterController.js";
 
 const port = 8080;
 
@@ -50,6 +51,7 @@ app.get("/", (req, res) => {
 app.use("/job", jobRouter);
 app.use("/auth", sessionRouter);
 app.use("/user", userRouter);
+app.use("/letter", letterRouter);
 
 async function startServer() {
   try {

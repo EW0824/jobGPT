@@ -1,33 +1,43 @@
 import express from "express";
 
-import parsePrompt from "../LLM/generator.js"
-import generateCoverLetter from "../LLM/generator.js"
-import { generateAndStoreEmbeddings } from "../LLM/parser.js";
+import generateCoverLetter from "../LLM/main.js";
 
 const router = express.Router();
 
+router.get("/", (req, res) => {
+    res.status(200).send("Welcome to letters page");
+});
+  
 
-// SUBJECT TO A LOT OF MODIFICATION
-router.get("/generate_letter", async (req, res) => {
-    const name = req.params.name
-    const email = req.params.email
-    const phoneNumber = req.params.phoneNumber
-    const company = req.params.company
-    const position = req.params.position
-    const wordLimit = req.params.wordLimit
-    const PDFLink = req.params.PDFLink
-    const jobLink = req.params.jobLink
-    try {
-        const embeddings = generateAndStoreEmbeddings(PDFLink, jobLink)
+router.get("/generate", async (req, res) => {
+  const name = req.params.name;
+  const email = req.params.email;
+  const phoneNumber = req.params.phoneNumber;
+  const company = req.params.company;
+  const position = req.params.position;
+  const wordLimit = req.params.wordLimit;
+  const PDFLink = req.params.PDFLink;
+  const jobLink = req.params.jobLink;
+  const addDescription = req.params.addDescription;
+  const skills = req.params.skills;
+  try {
+    const letter = generateCoverLetter(
+      name,
+      email,
+      phoneNumber,
+      company,
+      position,
+      wordLimit,
+      PDFLink,
+      jobLink,
+      addDescription,
+      skills
+    );
 
-        // Still working on transforming embeddings to experience + jobDescription [trying out a more advanced approach]
-        const jobDescription = ""
-        const experiences = ""
-        const prompt = parsePrompt(name, email, phoneNumber, company, jobDescription, experiences)
-        const letter = generateCoverLetter(prompt, "")
-        res.status(200).send(letter);
-    } catch (error) {
-        res.status(500)
-    }
-})
+    res.status(200).send(letter);
+  } catch (error) {
+    res.status(500);
+  }
+});
 
+export default router;
