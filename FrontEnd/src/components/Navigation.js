@@ -15,24 +15,26 @@ import CoverLetters from "../pages/CoverLetters";
 import Dashboard from "../pages/Dashboard";
 import { SessionContext } from "./SessionContextProvider";
 
-export default function Navigation() {
-  const { sessionToken, setSessionToken } = useContext(SessionContext);
+export default function Navigation({isLoggedIn}) {
 
-  const PrivateRoute = sessionToken ? <Outlet /> : <Navigate to="/sign-in" />;
+    const routes = isLoggedIn ? (
+        <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/job-history" element={<JobHistory />} />
+            <Route path="/jobs/:jobId" element={<DetailedJobs />} />
+            <Route path="/cover-letters" element={<CoverLetters />} />
+            <Route path="/profile" element={<Profile />} />
+        </Routes>
+    ) : (
+        <Routes>
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+        </Routes>
+    )
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={PrivateRoute}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/job-history" element={<JobHistory />} />
-          <Route path="/jobs/:jobId" element={<DetailedJobs />} />
-          <Route path="/cover-letters" element={<CoverLetters />} />
-          <Route path="/profile" element={<Profile />} />
-        </Route>
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-      </Routes>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            {routes}
+        </BrowserRouter>
+    )
 }

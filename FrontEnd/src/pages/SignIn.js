@@ -38,14 +38,13 @@ export default function SignIn() {
     fetch("/auth/login", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify(data),
-      credentials: "include",
     })
       .then((response) => {
         if (response.ok) {
-          console.log(document.cookie);
           return response.json();
         }
         setSuccessMsg("Log in Failed!");
