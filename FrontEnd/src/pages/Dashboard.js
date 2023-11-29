@@ -14,15 +14,13 @@ import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { MainListItems, SecondaryListItems } from "../components/ListItems";
-import Orders from "../components/Orders";
+import Tables from "../components/Tables";
 import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 
-import Drawer from '../styles/Drawer'
+import Drawer from "../styles/Drawer";
 import AppBar from "../styles/AppBar";
 
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
@@ -99,7 +97,6 @@ export default function Dashboard() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {/* Recent Orders */}
             <Grid item xs={12}></Grid>
           </Container>
         </Box>

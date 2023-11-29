@@ -17,7 +17,7 @@ import Drawer from "../styles/Drawer";
 import AppBar from "../styles/AppBar";
 import { useState } from "react";
 import Cookies from "universal-cookie";
-import { validateJobPostForm } from "../gagets/validation";
+import { validateJobPostForm } from "../gagets/Validation";
 
 import {
   CardHeader,
@@ -30,7 +30,6 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
@@ -192,7 +191,6 @@ export default function Dashboard() {
                     <Card>
                       <CardHeader title="Content" />
                       <CardContent>
-                        {/* <Scrollbar> */}
                         <form onSubmit={handleSubmit} noValidate>
                           <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
                             <InputLabel> Position </InputLabel>
@@ -240,7 +238,6 @@ export default function Dashboard() {
                               type="submit"
                               size="large"
                               variant="contained"
-                              // You can apply error style here based on your requirements
                             >
                               Create A New Job Post
                             </LoadingButton>
@@ -270,7 +267,6 @@ export default function Dashboard() {
                             {successMessage}
                           </Alert>
                         )}
-                        {/* </Scrollbar> */}
                       </CardContent>
                     </Card>
                   </Grid>

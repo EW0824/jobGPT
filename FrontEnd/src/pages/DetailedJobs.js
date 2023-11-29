@@ -1,5 +1,4 @@
 import * as React from "react";
-// @mui
 import {
   CssBaseline,
   IconButton,
@@ -15,18 +14,15 @@ import {
 
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import {createTheme, ThemeProvider } from "@mui/material/styles";
-
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { MainListItems, SecondaryListItems } from "../components/ListItems";
 import DetailedJob from "../components/DetailedJob";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Drawer from '../styles/Drawer'
+import Drawer from "../styles/Drawer";
 import AppBar from "../styles/AppBar";
 
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function DetailedJobs() {
@@ -45,7 +41,7 @@ export default function DetailedJobs() {
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: "24px", // keep right padding when drawer closed
+              pr: "24px",
             }}
           >
             <IconButton

@@ -1,12 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import SignIn from "../pages/SignIn";
 import JobHistory from "../pages/JobsHistory";
 import Profile from "../pages/Profile";
 import SignUp from "../pages/SignUp";
 import DetailedJobs from "../pages/DetailedJobs";
 import CoverLetters from "../pages/CoverLetters";
-import Dashboard from "../pages/Profile";
+import Dashboard from "../pages/Dashboard";
+import { SessionContext } from "./SessionContextProvider";
 
 export default function Navigation({isLoggedIn}) {
 

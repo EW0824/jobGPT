@@ -2,23 +2,25 @@
 
 A cover letter generator for the UCLA 35L Project.
 
+Make sure to `yarn add` every time after pull.
+
+(`npm install` also works, but need to do `npm install --force` for langchain)
+
 ## LLM
 
-1. LangChain only supports Node version >= 18
-2. Please run `npm install --force` when installing LangChain
+- LangChain only supports Node version >= 18
 
 ## Backend
 
-To launch the server, run the command `npm run dev`. The server currently runs at `localhost:3000`.
+To launch the server, run the command `npm run dev`. The server currently runs at `localhost:8080`.
 
-Please remember to run `npm install` everytime after pull to ensure all dependencies are met.
 
 ## Frontend
 
 To run:
 
 ```bash
-npm install
+yarn add
 npm start
 ```
 
@@ -28,6 +30,7 @@ Frontend/
 ├── src/
 │ ├── components/ (reusable components for the webpages)
 │ ├── pages/ (implement pages for dashboard, job history etc)
+│ ├── styles/
 │ ├── App.js
 │ ├── index.js
 |

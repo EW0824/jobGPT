@@ -19,7 +19,7 @@ import Label from "../styles/Label";
 import { sentenceCase } from "change-case";
 import Iconify from "../styles/Iconify";
 import Title from "./Title";
-import { fDateTime } from "../gagets/formatTime";
+import { fDateTime } from "../gagets/FormatTime";
 
 export default function DetailedJob({ jobId }) {
   useEffect(() => {
@@ -83,15 +83,26 @@ export default function DetailedJob({ jobId }) {
               <TableRow hover key={key} tabIndex={-1}>
                 <TableCell component="th" scope="row" padding="none">
                   <Stack direction="row" alignItems="center" spacing={2}>
-                    <Typography fontFamily={"Public Sans, sans-serif"} variant="subtitle1" noWrap>
+                    <Typography
+                      fontFamily={"Public Sans, sans-serif"}
+                      variant="subtitle1"
+                      noWrap
+                    >
                       {key !== "jobStatus" ? sentenceCase(key) : "Job status"}
                     </Typography>
                   </Stack>
                 </TableCell>
                 {key !== "jobStatus" ? (
-                  <TableCell> <Typography fontFamily={"Public Sans, sans-serif"} variant="h7" noWrap>
-                    {value}
-                </Typography></TableCell>
+                  <TableCell>
+                    {" "}
+                    <Typography
+                      fontFamily={"Public Sans, sans-serif"}
+                      variant="h7"
+                      noWrap
+                    >
+                      {value}
+                    </Typography>
+                  </TableCell>
                 ) : (
                   <TableCell>
                     <Label
@@ -101,9 +112,13 @@ export default function DetailedJob({ jobId }) {
                         "success"
                       }
                     >
-                        <Typography fontFamily={"Public Sans, sans-serif"} fontSize='subtitle' noWrap>
-                      {sentenceCase(value)}
-                        </Typography>
+                      <Typography
+                        fontFamily={"Public Sans, sans-serif"}
+                        fontSize="subtitle"
+                        noWrap
+                      >
+                        {sentenceCase(value)}
+                      </Typography>
                     </Label>
                   </TableCell>
                 )}

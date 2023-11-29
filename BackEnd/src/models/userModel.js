@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
-import pkg from "bcryptjs"
+import Experience from "./ExperienceModel.js";
+import Skill from "./SkillModel.js";
+import pkg from "bcryptjs";
 
-const { hashSync, compareSync } = pkg
+const { hashSync, compareSync } = pkg;
 
 const userSchema = new mongoose.Schema(
   {
@@ -64,15 +66,20 @@ const userSchema = new mongoose.Schema(
       },
     ],
     experienceList: [
+      // {
+      //   type: mongoose.Schema.Types.ObjectId,
+      //   ref: "Experience",
+      // },
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Experience",
+        company: String,
+        jobTitle: String,
       },
     ],
     skillList: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Skill",
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: "Skill",
+        type: String,
       },
     ],
   },
@@ -88,8 +95,8 @@ userSchema.pre("save", function () {
 });
 
 userSchema.methods.comparePasswords = function (password) {
-  return compareSync(password, this.password)
-}
+  return compareSync(password, this.password);
+};
 
 const User = mongoose.model("User", userSchema);
 
