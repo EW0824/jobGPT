@@ -18,7 +18,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Iconify from "../styles/Iconify";
-import { SessionContext } from "../components/SessionContextProvider";
+import { SessionContext } from "../components/ContextProvider";
 
 const defaultTheme = createTheme();
 
@@ -55,9 +55,7 @@ export default function SignIn() {
         setSuccessMsg("Log in Successfully!");
         setSessionToken(responseData);
         localStorage.setItem("sessionData", JSON.stringify(responseData));
-        setTimeout(() => {
-          navigate("/job-history");
-        }, 1000); // 1 sec wait time
+        navigate("/job-history");
       })
       .catch((error) => {
         console.error("Error:", error);
