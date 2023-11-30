@@ -8,7 +8,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import BadgeIcon from "@mui/icons-material/Badge";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
-import { SessionContext } from "./SessionContextProvider";
+import { SessionContext } from "./ContextProvider";
 import { useNavigate } from "react-router-dom";
 
 export function MainListItems({ navigate }) {
