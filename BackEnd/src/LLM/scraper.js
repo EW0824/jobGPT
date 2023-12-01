@@ -19,7 +19,7 @@ async function splitTextDocuments(docs) {
         chunkOverlap: 20,
     });
     const output = await splitter.splitDocuments([docs]);
-    return output
+    return output;
 }
 
 
