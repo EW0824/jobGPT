@@ -5,9 +5,8 @@ import generateCoverLetter from "../LLM/main.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    res.status(200).send("Welcome to letters page");
+  res.status(200).send("Welcome to letters page");
 });
-  
 
 router.get("/generate", async (req, res) => {
   const name = req.query.name;
@@ -21,8 +20,8 @@ router.get("/generate", async (req, res) => {
   const addDescription = req.query.addDescription;
   const skills = req.query.skills;
   try {
-    console.log(name, email, phoneNumber)
-    console.log(req.query)
+    console.log(name, email, phoneNumber);
+    console.log(req.query);
     const letter = await generateCoverLetter(
       name,
       email,
@@ -37,8 +36,11 @@ router.get("/generate", async (req, res) => {
     );
 
     res.status(200).send(letter);
+    console.log("200");
+    console.log(letter);
   } catch (error) {
     res.status(500);
+    console.log("500");
   }
 });
 

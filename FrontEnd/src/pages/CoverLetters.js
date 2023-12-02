@@ -3,11 +3,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
+import CircularProgress from "@mui/material/CircularProgress";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -18,7 +20,7 @@ import AppBar from "../styles/AppBar";
 import { useState } from "react";
 import Cookies from "universal-cookie";
 import { validateJobPostForm } from "../gagets/Validation";
-
+import ReactModal from "react-modal";
 import {
   CardHeader,
   CardContent,
@@ -38,12 +40,24 @@ export default function Dashboard() {
     setOpen(!open);
   };
   const navigate = useNavigate();
-  const authToken = new Cookies().get("token");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isFormModified, setIsFormModified] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const [openModalNow, setOpenModalNow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Initialize formData state to store form data
+  const openModal = (content) => {
+    setModalContent(content);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setOpenModalNow(false);
+  };
+
   const [formData, setFormData] = useState({
     jobName: "",
     jobCompany: "",
@@ -71,21 +85,20 @@ export default function Dashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate the form fields
+    setIsLoading(true);
+
     const errors = validateJobPostForm(formData);
 
     if (Object.keys(errors).length === 0) {
       if (!isFormModified) {
-        setErrorMessage(
-          "You have already submitted a Referral Job Post with the same content. Please make changes before resubmitting."
-        );
+        setErrorMessage("");
         setSuccessMessage("");
         return;
       }
-      // proceed with form submission
+
       try {
         console.log(formData);
-        const response = await fetch("/job", {
+        const response1 = await fetch("/job", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -93,50 +106,55 @@ export default function Dashboard() {
           body: JSON.stringify(formData),
         });
 
-        const data = await response.json();
-        console.log(data);
-        console.log("Here");
+        const data1 = await response1.json();
+        console.log(data1);
         const response2 = await fetch("/user", {
           method: "GET",
         });
-        console.log("Here");
         const data2 = await response2.json();
-        setCoverLetterData({
+        const updatedCoverLetterData = {
           name: data2.firstName,
           email: "",
           phoneNumber: "",
           company: formData.jobCompany,
           position: formData.jobName,
-          wordLimit: "",
+          wordLimit: "200",
           PDFLink: "",
           jobLink: "",
           addDescription: formData.jobDescription,
           skills: data2.skillList ?? [],
+        };
+
+        setCoverLetterData(updatedCoverLetterData);
+
+        const queryString = new URLSearchParams(
+          updatedCoverLetterData
+        ).toString();
+        const response3 = await fetch(`/letter/generate?${queryString}`, {
+          method: "GET",
         });
 
-        console.log("coverLetterData:", coverLetterData);
+        const data3 = await response3.text();
+        console.log(data3);
+        setOpenModalNow(true);
+        openModal(data3);
 
-        // const queryString = new URLSearchParams(coverLetterData).toString();
-        // const response3 = await fetch(`/letter/generate?${queryString}`, {
-        //   method: "GET",
-        // });
+        setIsLoading(false);
 
-        // const data3 = await response3.json();
-        // print(data3);
-
-        // if (data.success) {
-        //   console.log("success");
-        //   setSuccessMessage("");
-        //   setErrorMessage("");
-        //   setIsFormModified(false);
-        // } else {
-        //   console.log("error");
-        //   setErrorMessage(data.error);
-        // }
+        if (data1.success) {
+          console.log("success");
+          setSuccessMessage("");
+          setErrorMessage("");
+          setIsFormModified(false);
+        } else {
+          console.log("error");
+          setErrorMessage(data1.error);
+        }
       } catch (error) {
         console.log("Error:", error);
       }
     } else {
+      setIsLoading(false);
       setSuccessMessage("");
       setErrorMessage(
         "Please correct the following form errors.\n".concat(
@@ -246,7 +264,7 @@ export default function Dashboard() {
                           </FormControl>
 
                           <FormControl fullWidth sx={{ mb: 3 }}>
-                            <InputLabel>Company</InputLabel>
+                            <InputLabel>Company Name</InputLabel>
                             <Input
                               multiline
                               rows={1}
@@ -280,9 +298,23 @@ export default function Dashboard() {
                               size="large"
                               variant="contained"
                             >
-                              Create A New Job Post
+                              Generate
                             </LoadingButton>
                           </div>
+                          {isLoading ? (
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                marginTop: "20px",
+                              }}
+                            >
+                              <CircularProgress />
+                            </div>
+                          ) : (
+                            <div></div>
+                          )}
                         </form>
                         {errorMessage && (
                           <Alert
@@ -313,6 +345,48 @@ export default function Dashboard() {
                   </Grid>
                 </Grid>
               </Container>
+
+              <ReactModal
+                isOpen={openModalNow}
+                onRequestClose={closeModal}
+                contentLabel="My Modal"
+                style={{
+                  overlay: {
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  },
+                  content: {
+                    top: "50%",
+                    left: "50%",
+                    right: "auto",
+                    bottom: "auto",
+                    marginRight: "-50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "80%",
+                    maxWidth: "600px",
+                  },
+                }}
+              >
+                <h2>
+                  Cover Letter for {coverLetterData.position} at{" "}
+                  {coverLetterData.company}
+                </h2>
+                <pre
+                  style={{
+                    whiteSpace: "pre-wrap",
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
+                    overflow: "auto",
+                    maxWidth: "95%",
+                    maxHeight: "400px",
+                    overflowY: "auto",
+                    margin: "auto",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {modalContent}
+                </pre>
+                <Button onClick={closeModal}>Close</Button>
+              </ReactModal>
             </Grid>
           </Container>
         </Box>
