@@ -51,6 +51,19 @@ export default function Dashboard() {
     jobStatus: "Applying",
   });
 
+  const [coverLetterData, setCoverLetterData] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    company: "",
+    position: "",
+    wordLimit: "",
+    PDFLink: "",
+    jobLink: "",
+    addDescription: "",
+    skills: "",
+  });
+
   const handleFormChange = () => {
     setIsFormModified(true);
   };
@@ -82,16 +95,44 @@ export default function Dashboard() {
 
         const data = await response.json();
         console.log(data);
+        console.log("Here");
+        const response2 = await fetch("/user", {
+          method: "GET",
+        });
+        console.log("Here");
+        const data2 = await response2.json();
+        setCoverLetterData({
+          name: data2.firstName,
+          email: "",
+          phoneNumber: "",
+          company: formData.jobCompany,
+          position: formData.jobName,
+          wordLimit: "",
+          PDFLink: "",
+          jobLink: "",
+          addDescription: formData.jobDescription,
+          skills: data2.skillList ?? [],
+        });
 
-        if (data.success) {
-          console.log("success");
-          setSuccessMessage("Referral Job Post Successfully Submitted");
-          setErrorMessage("");
-          setIsFormModified(false);
-        } else {
-          console.log("error");
-          setErrorMessage(data.error);
-        }
+        console.log("coverLetterData:", coverLetterData);
+
+        // const queryString = new URLSearchParams(coverLetterData).toString();
+        // const response3 = await fetch(`/letter/generate?${queryString}`, {
+        //   method: "GET",
+        // });
+
+        // const data3 = await response3.json();
+        // print(data3);
+
+        // if (data.success) {
+        //   console.log("success");
+        //   setSuccessMessage("");
+        //   setErrorMessage("");
+        //   setIsFormModified(false);
+        // } else {
+        //   console.log("error");
+        //   setErrorMessage(data.error);
+        // }
       } catch (error) {
         console.log("Error:", error);
       }
