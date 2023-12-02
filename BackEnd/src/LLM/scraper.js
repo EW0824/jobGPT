@@ -9,26 +9,10 @@ complicated (python, langchain): https://github.com/vinura/cover_generator_app?s
 complicated article: https://vinuraperera.medium.com/i-decided-to-automate-writing-cover-letters-using-ai-and-you-can-use-what-i-built-be0813ba77e2
 */
 
-import { Document } from "langchain/document";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { CharacterTextSplitter } from "langchain/text_splitter";
-
-async function splitTextDocuments(docs) {
-    const splitter = new CharacterTextSplitter({
-        chunkSize: 1000,
-        chunkOverlap: 20,
-    });
-    const output = await splitter.splitDocuments([docs]);
-    return output;
-}
-
-
+import { textToDocSplitter } from "./splitter"
 
 const axios = require('axios');
 const cheerio = require('cheerio');
-
-// Assuming you have an equivalent of 'text_to_doc_splitter' function in JS
-const textToDocSplitter = require('./textToDocSplitter');
 
 async function extractTextFromUrl(url) {
     try {
