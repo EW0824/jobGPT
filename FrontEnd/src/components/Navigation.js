@@ -14,26 +14,20 @@ import DetailedJobs from "../pages/DetailedJobs";
 import CoverLetters from "../pages/CoverLetters";
 import Dashboard from "../pages/Dashboard";
 
-export default function Navigation({isLoggedIn}) {
+export default function Navigation({ isLoggedIn }) {
+  const routes = isLoggedIn ? (
+    <Routes>
+      <Route path="/" element={<CoverLetters />} />
+      <Route path="/job-history" element={<JobHistory />} />
+      <Route path="/jobs/:jobId" element={<DetailedJobs />} />
+      <Route path="/profile" element={<Profile />} />
+    </Routes>
+  ) : (
+    <Routes>
+      <Route path="/sign-in" element={<SignIn />} />
+      <Route path="/sign-up" element={<SignUp />} />
+    </Routes>
+  );
 
-    const routes = isLoggedIn ? (
-        <Routes>
-            <Route path="/" element={<Dashboard/>} />
-            <Route path="/job-history" element={<JobHistory />} />
-            <Route path="/jobs/:jobId" element={<DetailedJobs />} />
-            <Route path="/cover-letters" element={<CoverLetters />} />
-            <Route path="/profile" element={<Profile />} />
-        </Routes>
-    ) : (
-        <Routes>
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-        </Routes>
-    )
-
-    return (
-        <BrowserRouter>
-            {routes}
-        </BrowserRouter>
-    )
+  return <BrowserRouter>{routes}</BrowserRouter>;
 }
