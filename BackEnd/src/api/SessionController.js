@@ -4,7 +4,27 @@ import session from 'express-session'
 
 const router = express.Router()
 
-const sessionize_user = (user) => ({userId: user._id, username: user.firstName + " " + user.lastName})
+function getCurrentFormattedDateTime() {
+    const now = new Date();
+
+    // Format date and time separately
+    const formattedDate = now.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+    const formattedTime = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false // Change to true if you prefer 12-hour format
+    });
+
+    // Combine date and time
+    return `${formattedDate} ${formattedTime}`;
+}
+
+const sessionize_user = (user) => ({userId: user._id, username: user.firstName + " " + user.lastName, createdAt: getCurrentFormattedDateTime()})
 
 router.post('/signup', async (req, res, next) => {
 
@@ -33,11 +53,7 @@ router.post('/signup', async (req, res, next) => {
 
 router.post("/login", async(req, res, next) => {
     try {
-
-        console.log("received")
-
         const {email, password} = req.body
-
         const user = await User.findOne({ email })
     
         if(!user){
@@ -46,7 +62,7 @@ router.post("/login", async(req, res, next) => {
         if(!user.comparePasswords(password)){
             throw Error("Incorrect password")
         }
-        
+
         const session_user = sessionize_user(user)
         req.session.user = session_user
         res.setHeader('Allow-Control-Allow-Credentials', "true");
@@ -61,6 +77,8 @@ router.delete("/logout", async({session}, res, next) => {
 
     try {
         const user = {...session.user}
+
+        console.log("user", user)
 
         if(user?.userId != undefined) {
             session.destroy((err) => {

@@ -155,7 +155,7 @@ export default async function generateCoverLetter(
     question: formattedPrompt,
   });
 
-  console.log(letter.output_text);
+  // console.log(letter.output_text);
   return letter.output_text;
 }
 

@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react'
 
 export const SessionContext = createContext()
 
-export default function SessionContextProvider({children}) {
+export default function ContextProvider({children}) {
     const [sessionToken, setSessionToken] = useState(null)
 
     return (
