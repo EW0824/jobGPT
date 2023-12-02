@@ -99,8 +99,8 @@ export default function Dashboard() {
         const data2 = await response2.json();
         const updatedCoverLetterData = {
           name: data2.firstName,
-          email: "",
-          phoneNumber: "",
+          email: data2.email,
+          phoneNumber: data2.phoneNumber,
           company: formData.jobCompany,
           position: formData.jobName,
           wordLimit: "200",

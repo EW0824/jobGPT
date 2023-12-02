@@ -12,7 +12,6 @@ import Profile from "../pages/Profile";
 import SignUp from "../pages/SignUp";
 import DetailedJobs from "../pages/DetailedJobs";
 import CoverLetters from "../pages/CoverLetters";
-import Dashboard from "../pages/Dashboard";
 
 export default function Navigation({ isLoggedIn }) {
   const routes = isLoggedIn ? (

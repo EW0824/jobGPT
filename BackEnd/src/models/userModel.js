@@ -48,6 +48,9 @@ const userSchema = new mongoose.Schema(
         message: "Invalid email address",
       },
     },
+    phoneNumber: {
+      type: String,
+    },
     role: {
       type: String,
       enum: ["regularUser", "premiumUser", "admin"],

@@ -9,6 +9,7 @@ import skillsData from "../gagets/Skills.json";
 import { Button } from "@mui/material";
 import ExperienceForm from "../components/ExperienceForm";
 import Layout from "../components/Layout";
+import SaveIcon from "@mui/icons-material/Save";
 
 export default function Profile() {
   const [open, setOpen] = React.useState(true);
@@ -26,6 +27,8 @@ export default function Profile() {
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
+    email: "",
+    phoneNumber: "",
     experienceList: [],
     skillList: [],
   });
@@ -43,9 +46,12 @@ export default function Profile() {
         setUserData({
           firstName: data.firstName,
           lastName: data.lastName,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
           experienceList: data.experienceList ?? [],
           skillList: data.skillList ?? [],
         });
+        console.log("Fetched email:", userData.email);
         console.log("Fetched experienceList:", userData.experienceList);
       })
       .catch((error) => console.log(error));
@@ -121,6 +127,34 @@ export default function Profile() {
             }
           />
         </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            id="email"
+            name="email"
+            label="Email"
+            fullWidth
+            autoComplete="e-mail"
+            variant="standard"
+            value={userData.email}
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            id="phoneNumber"
+            name="phoneNumber"
+            label="Phone Number"
+            fullWidth
+            autoComplete="phone-number"
+            variant="standard"
+            value={userData.phoneNumber}
+            onChange={(e) =>
+              setUserData({ ...userData, phoneNumber: e.target.value })
+            }
+          />
+        </Grid>
       </Grid>
       <Grid item xs={12} sx={{ mt: 3 }}>
         <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
@@ -151,11 +185,17 @@ export default function Profile() {
           />
           <Button
             type="submit"
-            style={{ marginTop: "20px" }}
+            startIcon={<SaveIcon />}
+            style={{
+              marginTop: "40px",
+              backgroundColor: "#007BFF",
+              color: "white",
+              padding: "10px 20px",
+              fontSize: "14px",
+            }}
             onClick={handleSave}
           >
-            {" "}
-            Save
+            Save All
           </Button>
         </form>
       </Grid>

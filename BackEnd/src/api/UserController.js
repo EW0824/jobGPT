@@ -23,6 +23,8 @@ router.get("/", async (req, res) => {
     const response = {
       firstName: user.firstName,
       lastName: user.lastName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
       experienceList: user.experienceList,
       skillList: user.skillList,
     };
