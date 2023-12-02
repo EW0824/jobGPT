@@ -112,7 +112,7 @@ export default async function generateCoverLetter(
   const chain = loadQARefineChain(model);
 
   // STEP 2: Loading the PDF + job listing and split docs
-  const docs = await loadAllDocs(PDFLink, jobLink);
+  const docs = await loadAllDocs(PDFLink, jobLink, addDescription, skills);
 
   // STEP 3: Store promptTemplate
 
