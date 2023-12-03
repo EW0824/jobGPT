@@ -14,6 +14,7 @@ import {
   TableHead,
   TableRow,
   TablePagination,
+  TableFooter,
   IconButton,
   InputAdornment,
 } from "@mui/material";
@@ -294,14 +295,18 @@ export default function Tables() {
             </TableRow>
           </TableBody>
         )}
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          count={filteredJob.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              count={filteredJob.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TableRow>
+        </TableFooter>
       </Table>
       <Popover
         open={Boolean(open)}
