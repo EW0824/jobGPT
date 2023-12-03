@@ -1,7 +1,5 @@
 // React Import
 import React, { useEffect, useState } from "react";
-// @mui Import
-import { styled, alpha } from "@mui/material/styles";
 import {
   Stack,
   Typography,
@@ -10,8 +8,6 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  OutlinedInput,
-  InputAdornment,
 } from "@mui/material";
 
 // component import
@@ -37,6 +33,7 @@ export default function DetailedJob({ jobId }) {
           jobStatus,
           relevantSkills,
           relevantExperience,
+          generatedCoverLetter,
         } = data;
         const selectedFields = {
           jobName,
@@ -47,7 +44,7 @@ export default function DetailedJob({ jobId }) {
         console.log(relevantSkills);
         setJobData(selectedFields);
         setSkill(relevantSkills);
-        setExperience(relevantExperience);
+        setResult(generatedCoverLetter);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -55,7 +52,7 @@ export default function DetailedJob({ jobId }) {
   const [jobData, setJobData] = useState([]);
   const [skill, setSkill] = useState([]);
   const [experience, setExperience] = useState([]);
-  const [result, setResult] = useState([]);
+  const [result, setResult] = useState("");
 
   return (
     <React.Fragment>
@@ -123,7 +120,7 @@ export default function DetailedJob({ jobId }) {
           })}
         </TableBody>
       </Table>
-      <Typography
+      {/* <Typography
         sx={{ mt: 5 }}
         variant="h5"
         fontFamily={"Public Sans, sans-serif"}
@@ -156,15 +153,27 @@ export default function DetailedJob({ jobId }) {
             );
           })}
         </TableBody>
-      </Table>
+      </Table> */}
 
-      <Typography
-        sx={{ mt: 5 }}
-        variant="h5"
-        fontFamily={"Public Sans, sans-serif"}
-      >
-        Result
-      </Typography>
+      {result && (
+        <>
+          <Typography
+            sx={{ mt: 5 }}
+            variant="h5"
+            fontFamily={"Public Sans, sans-serif"}
+          >
+            Result
+          </Typography>
+          <Typography sx={{ mt: 3 }}>
+            {result.split("\n").map((paragraph, index) => (
+              <React.Fragment key={index}>
+                {paragraph}
+                <br />
+              </React.Fragment>
+            ))}
+          </Typography>
+        </>
+      )}
       <Link color="primary" href="/job-history" sx={{ mt: 5 }}>
         See All Jobs
       </Link>
