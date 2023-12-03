@@ -26,6 +26,7 @@ export default function Navigation({isLoggedIn}) {
         </Routes>
     ) : (
         <Routes>
+            <Route path="/" element={<Navigate to="/sign-in" />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
         </Routes>
