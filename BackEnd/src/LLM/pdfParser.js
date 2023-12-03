@@ -17,5 +17,5 @@ async function loadPdf(pdfPath) {
     }
 }
 
-// Usage example
+// Testing:
 // loadPdf('path/to/pdf').then(document => console.log(document));
