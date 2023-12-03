@@ -1,7 +1,9 @@
 {
   "type": "module",
   "dependencies": {
+    "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.12",
     "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -11,7 +13,8 @@
     "langchain": "^0.0.197-rc.1",
     "mongodb": "^6.2.0",
     "mongoose": "^7.6.4",
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "^1.1.1",
+    "yarn": "^1.22.21"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

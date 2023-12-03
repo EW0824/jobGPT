@@ -11,8 +11,8 @@ complicated article: https://vinuraperera.medium.com/i-decided-to-automate-writi
 
 import { textToDocSplitter } from "./splitter"
 
-const axios = require('axios');
-const cheerio = require('cheerio');
+import axios from 'axios';
+import cheerio from 'cheerio';
 
 async function extractTextFromUrl(url) {
     try {
