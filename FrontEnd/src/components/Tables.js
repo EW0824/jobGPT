@@ -55,9 +55,16 @@ export default function Tables() {
   })
   const navigate = useNavigate();
 
-  const getObjFromAttr = (attr, lst) => {
+  const getObjFromAttr = (attr, lst, literal_attr) => {
     const unique = Array.from(new Set(lst.map((job) => job[attr])))
     const obj = unique.reduce((obj, key) => {
+      if(filters?.booleanFilters){
+        if(Object.keys(filters.booleanFilters[literal_attr]).includes(key)){
+          // console.log(literal_attr, key, filters.booleanFilters[literal_attr][key])
+          obj[key] = filters.booleanFilters[literal_attr][key]
+          return obj
+        }
+      }
       obj[key] = false
       return obj
     }, {})
@@ -218,9 +225,10 @@ export default function Tables() {
 
     const initialFilterContent = {
       booleanFilters: {
-        'Favorite': {'Favorite Jobs': false},
-        'Company': getObjFromAttr('jobCompany', jobData),
-        'Job Status': getObjFromAttr('jobStatus', jobData)
+        'Favorite': (Object.keys(filters).length ? 
+        {'Favorite Jobs': filters.booleanFilters['Favorite']['Favorite Jobs']} :{'Favorite Jobs': false}),
+        'Company': getObjFromAttr('jobCompany', jobData, 'Company'),
+        'Job Status': getObjFromAttr('jobStatus', jobData, 'Job Status')
       },
       dateRanges: {
         'Create At': {
@@ -236,7 +244,20 @@ export default function Tables() {
 
     setInitialFilters(initialFilterContent)
     setFilters(initialFilterContent)
+    if(Object.keys(filters).length){
+      setFilteredJob(jobData.filter((job) => filterJob(job)))
+    } else {
+      setFilteredJob(jobData)
+    }
   }, [jobData])
+
+  useEffect(() => {
+    if(filterName === ""){
+      setFilteredJob(jobData.filter((job) => filterJob(job)))
+    } else {
+      setFilteredJob(applySortFilter(filteredJob, compareIncreasing, filterName))
+    }
+  }, [filterName])
 
   const filterJob = (job) => {
     const boolFilters = filters['booleanFilters']
@@ -255,10 +276,7 @@ export default function Tables() {
       const to = dayjs(filters['dateRanges'][attr]['To']).startOf('day')
       const cur = dayjs(job[attr === 'Created At' ? 'createdAt' : 'updatedAt']).startOf('day')
 
-      console.log(from, to)
-
-      fulfilled &= (cur.isAfter(from) || cur.isSame(from))
-      fulfilled &= (cur.isBefore(to) || cur.isSame(to))
+      fulfilled &= ((cur.isAfter(from) || cur.isSame(from)) && (cur.isBefore(to) || cur.isSame(to)))
     })
     return fulfilled
   }
@@ -293,9 +311,7 @@ export default function Tables() {
 
   const handleFilterOnClose = () => {
     setOpenFilter(false)
-    console.log(filters)
-    const result = jobData.filter((job) => filterJob(job))
-    console.log(jobData.length, filters, numBoolFiltersSelected, result.length)
+    const result = applySortFilter(jobData.filter((job) => filterJob(job)), compareIncreasing, filterName)
     setFilteredJob(result)
   }
 
@@ -310,14 +326,6 @@ export default function Tables() {
   };
 
   const [filteredJob, setFilteredJob] = useState(jobData)
-
-  useEffect(() => {
-    setFilteredJob(applySortFilter(jobData, compareIncreasing, filterName))
-  }, [filterName])
-
-  useEffect(() => {
-    setFilteredJob(jobData)
-  }, [jobData])
 
   const filteredJobComponent = (jobList) => jobList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
     <TableRow key={row._id}>
