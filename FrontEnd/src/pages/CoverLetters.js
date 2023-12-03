@@ -77,11 +77,11 @@ export default function Dashboard() {
 
     if (Object.keys(errors).length === 0) {
       if (!isFormModified) {
-        setErrorMessage("");
-        setSuccessMessage("");
+        setErrorMessage("Make some change before submitting again!");
         return;
       }
-
+      setSuccessMessage("We are generating the Cover Letter in the backend and will shortly notify the result!");
+      setErrorMessage("");
       try {
         const response2 = await fetch("/user", {
           method: "GET",
@@ -133,10 +133,10 @@ export default function Dashboard() {
         const data1 = await response1.json();
         console.log("data1:", data1);
 
-        if (data1.success) {
+        if (response1.ok) {
           console.log("success");
-          setSuccessMessage("");
           setErrorMessage("");
+          setSuccessMessage('Please view the result!');
           setIsFormModified(false);
         } else {
           console.log("error");
@@ -158,7 +158,7 @@ export default function Dashboard() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+    setErrorMessage('');
     setFormData({
       ...formData,
       [name]: value,
@@ -262,7 +262,6 @@ export default function Dashboard() {
                     marginTop: "10px",
                   }}
                 >
-                  {" "}
                   {successMessage}
                 </Alert>
               )}
