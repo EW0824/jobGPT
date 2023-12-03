@@ -197,10 +197,6 @@ export default function Tables() {
   }
 
   useEffect(() => {
-    console.log(filters, numBoolFiltersSelected)
-  }, [filters, numBoolFiltersSelected])
-
-  useEffect(() => {
     fetch("/job", {
       method: "GET",
     })
@@ -243,7 +239,6 @@ export default function Tables() {
   }, [jobData])
 
   const filterJob = (job) => {
-    console.log('filtering')
     const boolFilters = filters['booleanFilters']
     let fulfilled = true
     if(boolFilters['Favorite']['Favorite Jobs']){
@@ -256,15 +251,15 @@ export default function Tables() {
       fulfilled &= boolFilters['Company'][job.jobCompany]
     }
     Object.keys(filters['dateRanges']).forEach((attr) => {
-      const from = dayjs(filters['dateRanges'][attr]['from']).startOf('day')
-      const to = dayjs(filters['dateRanges'][attr]['to']).startOf('day')
+      const from = dayjs(filters['dateRanges'][attr]['From']).startOf('day')
+      const to = dayjs(filters['dateRanges'][attr]['To']).startOf('day')
       const cur = dayjs(job[attr === 'Created At' ? 'createdAt' : 'updatedAt']).startOf('day')
+
+      console.log(from, to)
 
       fulfilled &= (cur.isAfter(from) || cur.isSame(from))
       fulfilled &= (cur.isBefore(to) || cur.isSame(to))
-
     })
-
     return fulfilled
   }
 
@@ -298,7 +293,10 @@ export default function Tables() {
 
   const handleFilterOnClose = () => {
     setOpenFilter(false)
-    setFilteredJob(jobData.filter((job) => filterJob(job)))
+    console.log(filters)
+    const result = jobData.filter((job) => filterJob(job))
+    console.log(jobData.length, filters, numBoolFiltersSelected, result.length)
+    setFilteredJob(result)
   }
 
   const changeJobStatus = () => {};
