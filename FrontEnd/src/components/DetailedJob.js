@@ -62,7 +62,6 @@ export default function DetailedJob({ jobId }) {
       <Title>Detailed View of Job</Title>
       {/* Table of Job-related information */}
       <Typography variant="h5" fontFamily={"Public Sans, sans-serif"}>
-        {" "}
         Basic Job Information
       </Typography>
       <Table size="medium">
@@ -73,12 +72,10 @@ export default function DetailedJob({ jobId }) {
         <TableBody>
           {Object.keys(jobData).map((key) => {
             let value = jobData[key];
-
             // Exclude specific keys
             if (key === "createdAt") {
               value = fDateTime(value);
             }
-
             return (
               <TableRow hover key={key} tabIndex={-1}>
                 <TableCell component="th" scope="row" padding="none">
@@ -94,7 +91,6 @@ export default function DetailedJob({ jobId }) {
                 </TableCell>
                 {key !== "jobStatus" ? (
                   <TableCell>
-                    {" "}
                     <Typography
                       fontFamily={"Public Sans, sans-serif"}
                       variant="h7"
@@ -127,7 +123,6 @@ export default function DetailedJob({ jobId }) {
           })}
         </TableBody>
       </Table>
-
       {/* Table of Skill-related information*/}
       <Typography
         sx={{ mt: 5 }}
@@ -144,7 +139,6 @@ export default function DetailedJob({ jobId }) {
         <TableBody>
           {Object.keys(jobData).map((key) => {
             let value = jobData[key];
-
             // Exclude specific keys
             if (key === "createdAt") {
               value = fDateTime(value);
@@ -158,13 +152,12 @@ export default function DetailedJob({ jobId }) {
                     </Typography>
                   </Stack>
                 </TableCell>
-                <TableCell>{value}</TableCell>{" "}
+                <TableCell>{value}</TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
-
       {/* Table of Experience-related information*/}
       <Typography
         sx={{ mt: 5 }}
@@ -181,7 +174,6 @@ export default function DetailedJob({ jobId }) {
         <TableBody>
           {Object.keys(jobData).map((key) => {
             let value = jobData[key];
-
             // Exclude specific keys
             if (key === "createdAt") {
               value = fDateTime(value);
@@ -195,7 +187,7 @@ export default function DetailedJob({ jobId }) {
                     </Typography>
                   </Stack>
                 </TableCell>
-                <TableCell>{value}</TableCell>{" "}
+                <TableCell>{value}</TableCell>
               </TableRow>
             );
           })}

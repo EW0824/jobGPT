@@ -92,7 +92,7 @@ export default function Dashboard() {
         });
 
         const data1 = await response1.json();
-        console.log(data1);
+        console.log("data1:", data1);
         const response2 = await fetch("/user", {
           method: "GET",
         });
@@ -109,7 +109,7 @@ export default function Dashboard() {
           addDescription: formData.jobDescription,
           skills: data2.skillList ?? [],
         };
-
+        console.log("updatedCoverLetterData:", updatedCoverLetterData);
         setCoverLetterData(updatedCoverLetterData);
 
         const queryString = new URLSearchParams(
@@ -120,7 +120,7 @@ export default function Dashboard() {
         });
 
         const data3 = await response3.text();
-        console.log(data3);
+        console.log("data3:", data3);
         setOpenModalNow(true);
         openModal(data3);
 
