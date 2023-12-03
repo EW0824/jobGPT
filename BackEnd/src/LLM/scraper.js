@@ -35,5 +35,5 @@ async function extractTextFromUrl(url) {
     }
 }
 
-// Usage example
+// Testing:
 // extractTextFromUrl('http://example.com').then(document => console.log(document));
