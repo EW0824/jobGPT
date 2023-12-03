@@ -440,7 +440,7 @@ export default function Tables() {
             const title = (<Typography variant='button' key={nanoid()} sx={{mb: '0.5rem', mt: '0.5rem'}}>{attr}</Typography>)
             const rawPickers = Object.keys(filters['dateRanges'][attr]).map((key) => {
               return (
-                <div style={{margin: '1rem'}}>
+                <div style={{margin: '1rem'}} key={nanoid()}>
                 <LocalizationProvider dateAdapter={AdapterDayjs} key={nanoid()}>
                   <DatePicker label={key} key={nanoid()} onChange={(value) => handleFilterSelection('dateRanges', attr, key, value.format('YYYY-MM-DD'))} 
                     value={dayjs(filters['dateRanges'][attr][key]).startOf('day')}
