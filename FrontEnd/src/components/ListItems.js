@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -12,18 +12,11 @@ import { SessionContext } from "./ContextProvider";
 import { useNavigate } from "react-router-dom";
 
 export function MainListItems({ navigate }) {
-
   return (
     <React.Fragment>
       <ListItemButton onClick={() => navigate("/")}>
         <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItemButton>
-      <ListItemButton onClick={() => navigate("/cover-letters")}>
-        <ListItemIcon>
-          <HistoryEduIcon/>
+          <AssignmentIcon />
         </ListItemIcon>
         <ListItemText primary="Cover Letters" />
       </ListItemButton>
@@ -37,31 +30,35 @@ export function MainListItems({ navigate }) {
         <ListItemIcon>
           <BadgeIcon />
         </ListItemIcon>
-        <ListItemText primary="Profile" onClick={()=>{navigate("/profile")}}/>
+        <ListItemText
+          primary="Profile"
+          onClick={() => {
+            navigate("/profile");
+          }}
+        />
       </ListItemButton>
     </React.Fragment>
   );
 }
 
 export function SecondaryListItems({ navigate }) {
-
-  const {sessionToken, setSessionToken} = useContext(SessionContext)
+  const { sessionToken, setSessionToken } = useContext(SessionContext);
 
   const handleClick = async () => {
     try {
-      await fetch('/auth/logout', {
-        method: 'DELETE',
+      await fetch("/auth/logout", {
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        credentials: 'include'
-      })
-      setSessionToken({ userId: null })
-      navigate('/sign-in')
-    } catch(error) {
-      console.error(error)
+        credentials: "include",
+      });
+      setSessionToken({ userId: null });
+      navigate("/sign-in");
+    } catch (error) {
+      console.error(error);
     }
-  }
+  };
 
   return (
     <React.Fragment>
@@ -72,7 +69,7 @@ export function SecondaryListItems({ navigate }) {
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="Log Out"/>
+        <ListItemText primary="Log Out" />
       </ListItemButton>
     </React.Fragment>
   );

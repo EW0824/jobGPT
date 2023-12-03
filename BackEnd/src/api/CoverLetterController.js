@@ -5,23 +5,24 @@ import generateCoverLetter from "../LLM/main.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    res.status(200).send("Welcome to letters page");
+  res.status(200).send("Welcome to letters page");
 });
-  
 
 router.get("/generate", async (req, res) => {
-  const name = req.params.name;
-  const email = req.params.email;
-  const phoneNumber = req.params.phoneNumber;
-  const company = req.params.company;
-  const position = req.params.position;
-  const wordLimit = req.params.wordLimit;
-  const PDFLink = req.params.PDFLink;
-  const jobLink = req.params.jobLink;
-  const addDescription = req.params.addDescription;
-  const skills = req.params.skills;
+  const name = req.query.name;
+  const email = req.query.email;
+  const phoneNumber = req.query.phoneNumber;
+  const company = req.query.company;
+  const position = req.query.position;
+  const wordLimit = req.query.wordLimit;
+  const PDFLink = req.query.PDFLink;
+  const jobLink = req.query.jobLink;
+  const addDescription = req.query.addDescription;
+  const skills = req.query.skills;
   try {
-    const letter = generateCoverLetter(
+    console.log(name, email, phoneNumber);
+    console.log(req.query);
+    const letter = await generateCoverLetter(
       name,
       email,
       phoneNumber,
@@ -35,8 +36,11 @@ router.get("/generate", async (req, res) => {
     );
 
     res.status(200).send(letter);
+    console.log("200");
+    console.log(letter);
   } catch (error) {
     res.status(500);
+    console.log("500");
   }
 });
 

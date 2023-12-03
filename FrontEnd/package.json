@@ -25,11 +25,13 @@
     "react": "latest",
     "react-dom": "latest",
     "react-helmet-async": "^2.0.1",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.19.0",
     "react-scripts": "latest",
     "react-select": "^5.8.0",
     "recharts": "^2.9.3",
-    "universal-cookie": "^6.1.1"
+    "universal-cookie": "^6.1.1",
+    "yarn": "^1.22.21"
   },
   "browserslist": {
     "production": [
