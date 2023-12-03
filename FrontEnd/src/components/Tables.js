@@ -79,8 +79,43 @@ export default function Tables() {
       .catch((error) => console.log(error));
   };
 
-  //TODO: USE ENDPOINTS for Fav Job creation
-  const hanldeFavJob = () => {};
+  const hanldeFavJob = async () => {
+    try {
+
+      const jobIsFav = jobData.find(job => job._id === selectedJob)?.isFavorite
+
+      const response_user = await fetch(`/user/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jobIsFav ? {$pull: {favoriteJobList: selectedJob}} 
+          : {$push: {favoriteJobList: selectedJob}})
+      })
+
+      const response_job = await fetch(`/job/${selectedJob}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({isFavorite: !jobIsFav})
+      })
+
+      if(! response_job.ok || ! response_user.ok){
+        throw Error("Response not ok")
+      }
+      
+      const updated_job = await response_job.json()
+
+      console.log(updated_job)
+      setJobData((prevData) =>
+          prevData.map((job) => (job._id === selectedJob ? updated_job : job))
+      );
+
+    } catch(error) {
+      console.error(error)
+    }
+  };
 
   const handleStatusUpdate = (status) => {
     // Perform PUT request with the selected status ('Applying', 'Accepted', 'Rejected')
@@ -109,6 +144,7 @@ export default function Tables() {
         console.error("Error updating job status:", error);
       });
   };
+
   useEffect(() => {
     fetch("/job", {
       method: "GET",
@@ -323,11 +359,10 @@ export default function Tables() {
             icon={"material-symbols-light:favorite-outline"}
             sx={{ mr: 2 }}
           />
-          Mark as favorite
+          {jobData.find(job => job._id === selectedJob)?.isFavorite ? "Remove from favorite" : "Mark as favorite"}
         </MenuItem>
       </Popover>
-
-      <Link align="right" color="primary" href="#" sx={{ mt: 2 }}>
+      <Link align="right" color="primary" href="/cover-letters" sx={{ mt: 2 }}>
         Create A new Job
       </Link>
     </React.Fragment>
