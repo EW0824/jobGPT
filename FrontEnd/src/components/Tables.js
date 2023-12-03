@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 // @mui Import
 import { styled, alpha } from "@mui/material/styles";
 import {
-  Paper,
   Typography,
   Link,
   Table,
   TableBody,
+  TableFooter,
   TableCell,
   Popover,
   MenuItem,
@@ -294,14 +294,18 @@ export default function Tables() {
             </TableRow>
           </TableBody>
         )}
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          count={filteredJob.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              count={filteredJob.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TableRow>
+        </TableFooter>
       </Table>
       <Popover
         open={Boolean(open)}

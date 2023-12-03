@@ -62,7 +62,6 @@ export default function DetailedJob({ jobId }) {
       <Title>Detailed View of Job</Title>
       {/* Table of Job-related information */}
       <Typography variant="h5" fontFamily={"Public Sans, sans-serif"}>
-        {" "}
         Basic Job Information
       </Typography>
       <Table size="medium">
@@ -94,7 +93,6 @@ export default function DetailedJob({ jobId }) {
                 </TableCell>
                 {key !== "jobStatus" ? (
                   <TableCell>
-                    {" "}
                     <Typography
                       fontFamily={"Public Sans, sans-serif"}
                       variant="h7"
@@ -128,7 +126,6 @@ export default function DetailedJob({ jobId }) {
         </TableBody>
       </Table>
 
-      {/* Table of Skill-related information*/}
       <Typography
         sx={{ mt: 5 }}
         variant="h5"
@@ -142,7 +139,7 @@ export default function DetailedJob({ jobId }) {
           <col style={{ width: "60%" }} />
         </colgroup>
         <TableBody>
-          {Object.keys(jobData).map((key) => {
+          {Object.keys(skill).map((key) => {
             let value = jobData[key];
 
             // Exclude specific keys
@@ -158,49 +155,21 @@ export default function DetailedJob({ jobId }) {
                     </Typography>
                   </Stack>
                 </TableCell>
-                <TableCell>{value}</TableCell>{" "}
+                <TableCell>{value}</TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
 
-      {/* Table of Experience-related information*/}
       <Typography
         sx={{ mt: 5 }}
         variant="h5"
         fontFamily={"Public Sans, sans-serif"}
       >
-        Experience Information
+        Result
       </Typography>
-      <Table size="medium">
-        <colgroup>
-          <col style={{ width: "40%" }} />
-          <col style={{ width: "60%" }} />
-        </colgroup>
-        <TableBody>
-          {Object.keys(jobData).map((key) => {
-            let value = jobData[key];
 
-            // Exclude specific keys
-            if (key === "createdAt") {
-              value = fDateTime(value);
-            }
-            return (
-              <TableRow hover key={key} tabIndex={-1}>
-                <TableCell component="th" scope="row" padding="none">
-                  <Stack direction="row" alignItems="center" spacing={2}>
-                    <Typography variant="subtitle2" noWrap>
-                      {key !== "linkedIn" ? sentenceCase(key) : key}
-                    </Typography>
-                  </Stack>
-                </TableCell>
-                <TableCell>{value}</TableCell>{" "}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
       <Link color="primary" href="/job-history" sx={{ mt: 5 }}>
         See All Jobs
       </Link>
