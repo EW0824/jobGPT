@@ -116,16 +116,19 @@ export default function Dashboard() {
         openModal(data3);
 
         setIsLoading(false);
-        setFormData({
+        const updatedFormData = {
+          ...formData,
           generatedCoverLetter: data3,
-        });
-        console.log("formData:", formData);
+        };
+        setFormData(updatedFormData);
+
+        console.log("updatedFormData:", updatedFormData);
         const response1 = await fetch("/job", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(updatedFormData),
         });
         const data1 = await response1.json();
         console.log("data1:", data1);
