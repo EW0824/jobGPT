@@ -16,7 +16,7 @@ export function MainListItems({ navigate }) {
     <React.Fragment>
       <ListItemButton onClick={() => navigate("/")}>
         <ListItemIcon>
-          <DashboardIcon />
+          <AssignmentIcon />
         </ListItemIcon>
         <ListItemText primary="Cover Letters" />
       </ListItemButton>

@@ -171,7 +171,7 @@ export default function Dashboard() {
       <Grid container spacing={3}>
         <Grid item xs={32} md={16} lg={16}>
           <Card>
-            <CardHeader title="Content" />
+            <CardHeader title="Enter Job Information" />
             <CardContent>
               <form onSubmit={handleSubmit} noValidate>
                 <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
@@ -217,7 +217,7 @@ export default function Dashboard() {
                   }}
                 >
                   <LoadingButton type="submit" size="large" variant="contained">
-                    Generate
+                    Log and Generate!
                   </LoadingButton>
                 </div>
                 {isLoading ? (
