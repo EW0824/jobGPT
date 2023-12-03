@@ -123,7 +123,6 @@ export default function DetailedJob({ jobId }) {
           })}
         </TableBody>
       </Table>
-      {/* Table of Skill-related information*/}
       <Typography
         sx={{ mt: 5 }}
         variant="h5"
@@ -137,7 +136,7 @@ export default function DetailedJob({ jobId }) {
           <col style={{ width: "60%" }} />
         </colgroup>
         <TableBody>
-          {Object.keys(jobData).map((key) => {
+          {Object.keys(skill).map((key) => {
             let value = jobData[key];
             // Exclude specific keys
             if (key === "createdAt") {
@@ -158,13 +157,13 @@ export default function DetailedJob({ jobId }) {
           })}
         </TableBody>
       </Table>
-      {/* Table of Experience-related information*/}
+
       <Typography
         sx={{ mt: 5 }}
         variant="h5"
         fontFamily={"Public Sans, sans-serif"}
       >
-        Experience Information
+        Result
       </Typography>
       <Table size="medium">
         <colgroup>
