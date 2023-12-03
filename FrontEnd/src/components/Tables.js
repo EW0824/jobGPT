@@ -6,6 +6,7 @@ import {
   Link,
   Table,
   TableBody,
+  TableFooter,
   TableCell,
   Popover,
   MenuItem,

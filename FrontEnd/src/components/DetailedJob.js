@@ -165,33 +165,6 @@ export default function DetailedJob({ jobId }) {
       >
         Result
       </Typography>
-      <Table size="medium">
-        <colgroup>
-          <col style={{ width: "40%" }} />
-          <col style={{ width: "60%" }} />
-        </colgroup>
-        <TableBody>
-          {Object.keys(jobData).map((key) => {
-            let value = jobData[key];
-            // Exclude specific keys
-            if (key === "createdAt") {
-              value = fDateTime(value);
-            }
-            return (
-              <TableRow hover key={key} tabIndex={-1}>
-                <TableCell component="th" scope="row" padding="none">
-                  <Stack direction="row" alignItems="center" spacing={2}>
-                    <Typography variant="subtitle2" noWrap>
-                      {key !== "linkedIn" ? sentenceCase(key) : key}
-                    </Typography>
-                  </Stack>
-                </TableCell>
-                <TableCell>{value}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
       <Link color="primary" href="/job-history" sx={{ mt: 5 }}>
         See All Jobs
       </Link>
