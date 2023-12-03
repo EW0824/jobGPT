@@ -26,7 +26,8 @@
     "react-scripts": "latest",
     "react-select": "^5.8.0",
     "recharts": "^2.9.3",
-    "universal-cookie": "^6.1.1"
+    "universal-cookie": "^6.1.1",
+    "yarn": "^1.22.21"
   },
   "browserslist": {
     "production": [
