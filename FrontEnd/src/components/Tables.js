@@ -1,7 +1,6 @@
 // React Import
 import React, { useEffect, useState } from "react";
 // @mui Import
-import { styled, alpha } from "@mui/material/styles";
 import {
   Paper,
   Typography,
@@ -17,7 +16,14 @@ import {
   TableFooter,
   IconButton,
   InputAdornment,
+  Button,
+  Dialog,
+  DialogTitle,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
+
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // component import
 import Label from "../styles/Label";
@@ -27,6 +33,10 @@ import Title from "./Title";
 import { fDateTime } from "../gagets/FormatTime";
 import { useNavigate } from "react-router-dom";
 import StyledSearch from "../styles/StyledSearch";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { nanoid } from 'nanoid'
+import dayjs from "dayjs";
 
 export default function Tables() {
   const [open, setOpen] = useState(null);
@@ -36,12 +46,42 @@ export default function Tables() {
   const [jobData, setJobData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [filters, setFilters] = useState({})
+  const [initialFilters, setInitialFilters] = useState({})
+  const [openFilter, setOpenFilter] = useState(false)
+  const [numBoolFiltersSelected, setNumBoolFiltersSelected] = useState({
+    'Company': 0,
+    'Job Status': 0,
+    'Favorite': 0
+  })
   const navigate = useNavigate();
+
+  const getObjFromAttr = (attr, lst) => {
+    const unique = Array.from(new Set(lst.map((job) => job[attr])))
+    const obj = unique.reduce((obj, key) => {
+      obj[key] = false
+      return obj
+    }, {})
+    return obj
+  }
+
+  const getMaxMinDateFromAttr = (attr, lst) => {
+    const rawDates = lst.map((job) => job[attr])
+
+    const dates = rawDates.map(rawDate => {
+      const date = new Date(rawDate);
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate()); 
+    });
+    
+    const minDate = new Date(Math.min(...dates));
+    const maxDate = new Date(Math.max(...dates));
+
+    return [dayjs(minDate).startOf('day').format('YYYY-MM-DD'), dayjs(maxDate).startOf('day').format('YYYY-MM-DD')]
+  }
 
   const handleOpenMenu = (event, jobId) => {
     setOpen(event.currentTarget);
     setSelectedJob(jobId);
-    console.log("selected job id", jobId);
   };
 
   const handleCloseMenu = () => {
@@ -51,7 +91,6 @@ export default function Tables() {
   const handleStatusOpenMenu = (event, jobId) => {
     setOpenStatus(event.currentTarget);
     setSelectedJob(jobId);
-    console.log("selected job id", jobId);
   };
 
   const handleStatusClose = () => {
@@ -75,13 +114,46 @@ export default function Tables() {
           );
           setSelectedJob("");
         }
-        console.log(data);
       })
       .catch((error) => console.log(error));
   };
 
-  //TODO: USE ENDPOINTS for Fav Job creation
-  const hanldeFavJob = () => {};
+  const hanldeFavJob = async () => {
+    try {
+
+      const jobIsFav = jobData.find(job => job._id === selectedJob)?.isFavorite
+
+      const response_user = await fetch(`/user/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jobIsFav ? {$pull: {favoriteJobList: selectedJob}} 
+          : {$push: {favoriteJobList: selectedJob}})
+      })
+
+      const response_job = await fetch(`/job/${selectedJob}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({isFavorite: !jobIsFav})
+      })
+
+      if(! response_job.ok || ! response_user.ok){
+        throw Error("Response not ok")
+      }
+      
+      const updated_job = await response_job.json()
+
+      setJobData((prevData) =>
+          prevData.map((job) => (job._id === selectedJob ? updated_job : job))
+      );
+
+    } catch(error) {
+      console.error(error)
+    }
+  };
 
   const handleStatusUpdate = (status) => {
     // Perform PUT request with the selected status ('Applying', 'Accepted', 'Rejected')
@@ -100,7 +172,6 @@ export default function Tables() {
       .then((data) => {
         //update the useState variable JobData using returned Job
         //re-render the page
-        console.log(data);
         setJobData((prevData) =>
           prevData.map((job) => (job._id === selectedJob ? data : job))
         );
@@ -110,6 +181,26 @@ export default function Tables() {
         console.error("Error updating job status:", error);
       });
   };
+
+  const handleFilterSelection = (type, attr, key, value) => {
+    if(type === 'booleanFilters'){
+      setNumBoolFiltersSelected((prev) => {
+        const inc = value ? 1 : -1
+        return {
+          ...prev,
+          [attr]: prev[attr] + inc
+        }
+      })
+    }
+    let copy = JSON.parse(JSON.stringify(filters))
+    copy[type][attr][key] = value
+    setFilters(copy)
+  }
+
+  useEffect(() => {
+    console.log(filters, numBoolFiltersSelected)
+  }, [filters, numBoolFiltersSelected])
+
   useEffect(() => {
     fetch("/job", {
       method: "GET",
@@ -119,11 +210,64 @@ export default function Tables() {
         else throw Error("Response not okay");
       })
       .then((data) => {
-        console.log(data);
         setJobData(data);
       })
       .catch((error) => console.log(error));
   }, []);
+
+  useEffect(() => {
+
+    if(jobData.length === 0){
+      return
+    }
+
+    const initialFilterContent = {
+      booleanFilters: {
+        'Favorite': {'Favorite Jobs': false},
+        'Company': getObjFromAttr('jobCompany', jobData),
+        'Job Status': getObjFromAttr('jobStatus', jobData)
+      },
+      dateRanges: {
+        'Create At': {
+          'From': getMaxMinDateFromAttr('createdAt', jobData)[0],
+          'To': getMaxMinDateFromAttr('createdAt', jobData)[1],
+        },
+        'Updated At': {
+          'From': getMaxMinDateFromAttr('updatedAt', jobData)[0],
+          'To': getMaxMinDateFromAttr('updatedAt', jobData)[1],
+        }
+      }
+    }
+
+    setInitialFilters(initialFilterContent)
+    setFilters(initialFilterContent)
+  }, [jobData])
+
+  const filterJob = (job) => {
+    console.log('filtering')
+    const boolFilters = filters['booleanFilters']
+    let fulfilled = true
+    if(boolFilters['Favorite']['Favorite Jobs']){
+      fulfilled &= job.isFavorite
+    }
+    if(numBoolFiltersSelected['Job Status']){
+      fulfilled &= boolFilters['Job Status'][job.jobStatus]
+    }
+    if(numBoolFiltersSelected['Company']){
+      fulfilled &= boolFilters['Company'][job.jobCompany]
+    }
+    Object.keys(filters['dateRanges']).forEach((attr) => {
+      const from = dayjs(filters['dateRanges'][attr]['from']).startOf('day')
+      const to = dayjs(filters['dateRanges'][attr]['to']).startOf('day')
+      const cur = dayjs(job[attr === 'Created At' ? 'createdAt' : 'updatedAt']).startOf('day')
+
+      fulfilled &= (cur.isAfter(from) || cur.isSame(from))
+      fulfilled &= (cur.isBefore(to) || cur.isSame(to))
+
+    })
+
+    return fulfilled
+  }
 
   function applySortFilter(array, comparator, query) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -153,6 +297,11 @@ export default function Tables() {
     return 0;
   }
 
+  const handleFilterOnClose = () => {
+    setOpenFilter(false)
+    setFilteredJob(jobData.filter((job) => filterJob(job)))
+  }
+
   const changeJobStatus = () => {};
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -163,7 +312,89 @@ export default function Tables() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  let filteredJob = applySortFilter(jobData, compareIncreasing, filterName);
+  const [filteredJob, setFilteredJob] = useState(jobData)
+
+  useEffect(() => {
+    setFilteredJob(applySortFilter(jobData, compareIncreasing, filterName))
+  }, [filterName])
+
+  useEffect(() => {
+    setFilteredJob(jobData)
+  }, [jobData])
+
+  const filteredJobComponent = (jobList) => jobList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+    <TableRow key={row._id}>
+      <TableCell onClick={() => navigate(`/jobs/${row._id}`)}>
+        {index + 1}
+      </TableCell>
+      <TableCell>{fDateTime(row.createdAt)}</TableCell>
+      <TableCell>{row.jobName}</TableCell>
+      <TableCell>{row.jobCompany}</TableCell>
+      <TableCell>
+        {" "}
+        <Popover
+          open={Boolean(openStatus)}
+          anchorEl={openStatus}
+          onClose={handleStatusClose}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }} // Align the top of the popover with the anchor
+          // transformOrigin={{ vertical: "down", horizontal: "left" }}
+        >
+          <MenuItem
+            sx={{ color: "info.main" }}
+            onClick={() => handleStatusUpdate("Applying")}
+          >
+            <Iconify
+              icon={"healthicons:i-documents-accepted-negative"}
+              sx={{ mr: 2 }}
+            />
+            <Typography>Applying</Typography>
+          </MenuItem>
+          <MenuItem
+            sx={{ color: "success.main" }}
+            onClick={() => handleStatusUpdate("Accepted")}
+          >
+            <Iconify
+              icon={"icon-park-outline:file-success"}
+              sx={{ mr: 2 }}
+            />
+            <Typography>Accepted</Typography>
+          </MenuItem>
+          <MenuItem
+            sx={{ color: "error.main" }}
+            onClick={() => handleStatusUpdate("Rejected")}
+          >
+            <Iconify icon={"pajamas:error"} sx={{ mr: 2 }} />
+            <Typography>Rejected</Typography>
+          </MenuItem>
+        </Popover>
+        <Label
+          onClick={(clickEvent) =>
+            handleStatusOpenMenu(clickEvent, row._id)
+          }
+          color={
+            (row.jobStatus === "Applying" && "info") ||
+            (row.jobStatus === "Rejected" && "error") ||
+            "success"
+          }
+        >
+          {sentenceCase(row.jobStatus)}
+        </Label>
+      </TableCell>
+      <TableCell>{row.jobDescription}</TableCell>
+      <TableCell align="right">
+        <IconButton
+          size="large"
+          color="inherit"
+          onClick={(clickEvent) =>
+            handleOpenMenu(clickEvent, row._id)
+          }
+        >
+          <Iconify icon={"eva:more-vertical-fill"} />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  ))
+
   const isNotFound = !filteredJob.length && !!filterName;
   return (
     <React.Fragment>
@@ -180,8 +411,63 @@ export default function Tables() {
             />
           </InputAdornment>
         }
-        sx={{ mb: 1 }}
+        sx={{ mb: 1}}
       />
+      <Button variant="contained" sx={{}} onClick={() => {setOpenFilter(true)}} >Filters</Button>
+      <Dialog open={openFilter} onClose={handleFilterOnClose} sx={{'.MuiPaper-root': {padding: 4, width: 1}}}>
+        <DialogTitle style={{'alignSelf': 'center'}}>Select filters</DialogTitle>
+        {
+          Object.keys(filters).length ?
+          Object.keys(filters?.booleanFilters).map((attr) => {
+            const title = (<Typography variant='button' key={nanoid()}>{attr}</Typography>)
+            const filter = Object.keys(filters['booleanFilters'][attr]).map((key) => {
+              return (
+                <FormControlLabel key={nanoid()} label={key} control={<Checkbox />} onChange={(e) => handleFilterSelection('booleanFilters', attr, key, e.target.checked)} 
+                  checked={filters['booleanFilters'][attr][key]}
+                />
+              )
+            })
+            const formattedFilter = (<div style={{flexDirection: 'row'}} key={nanoid()}>
+              {filter}
+            </div>)
+
+            return [title, formattedFilter]
+          }) : (<></>)
+        }
+        {
+          Object.keys(filters).length ?
+          Object.keys(filters?.dateRanges).map((attr) => {
+            const title = (<Typography variant='button' key={nanoid()} sx={{mb: '0.5rem', mt: '0.5rem'}}>{attr}</Typography>)
+            const rawPickers = Object.keys(filters['dateRanges'][attr]).map((key) => {
+              return (
+                <div style={{margin: '1rem'}}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} key={nanoid()}>
+                  <DatePicker label={key} key={nanoid()} onChange={(value) => handleFilterSelection('dateRanges', attr, key, value.format('YYYY-MM-DD'))} 
+                    value={dayjs(filters['dateRanges'][attr][key]).startOf('day')}
+                  />
+                </LocalizationProvider>
+                </div>
+              )
+            })
+            const formattedPicker = (<div style={{display: 'flex', flexDirection: 'row'}} key={nanoid()}>
+              {rawPickers}
+            </div>)
+
+            return [title, formattedPicker]
+            
+          }) : (<></>)
+        }
+        <Link align="right" color="primary" sx={{ mt: 2, cursor: "pointer" }} onClick={() => {
+          setFilters(initialFilters)
+          setNumBoolFiltersSelected({'Company': 0,'Job Status': 0,'Favorite': 0})
+          }}>
+          Clear Filter
+        </Link>
+        <Button variant="contained" onClick={() => {
+          setOpenFilter(false)
+          handleFilterOnClose()
+        }} sx={{width: '0.5', alignSelf: 'center', margin: '1rem'}} >Set Filters</Button>
+      </Dialog>
       <Table size="medium">
         <colgroup>
           <col style={{ width: "5%" }} />
@@ -204,80 +490,7 @@ export default function Tables() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredJob
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((row, index) => (
-              <TableRow key={row._id}>
-                <TableCell onClick={() => navigate(`/jobs/${row._id}`)}>
-                  {index + 1}
-                </TableCell>
-                <TableCell>{fDateTime(row.createdAt)}</TableCell>
-                <TableCell>{row.jobName}</TableCell>
-                <TableCell>{row.jobCompany}</TableCell>
-                <TableCell>
-                  {" "}
-                  <Popover
-                    open={Boolean(openStatus)}
-                    anchorEl={openStatus}
-                    onClose={handleStatusClose}
-                    anchorOrigin={{ vertical: "top", horizontal: "right" }} // Align the top of the popover with the anchor
-                    // transformOrigin={{ vertical: "down", horizontal: "left" }}
-                  >
-                    <MenuItem
-                      sx={{ color: "info.main" }}
-                      onClick={() => handleStatusUpdate("Applying")}
-                    >
-                      <Iconify
-                        icon={"healthicons:i-documents-accepted-negative"}
-                        sx={{ mr: 2 }}
-                      />
-                      <Typography>Applying</Typography>
-                    </MenuItem>
-                    <MenuItem
-                      sx={{ color: "success.main" }}
-                      onClick={() => handleStatusUpdate("Accepted")}
-                    >
-                      <Iconify
-                        icon={"icon-park-outline:file-success"}
-                        sx={{ mr: 2 }}
-                      />
-                      <Typography>Accepted</Typography>
-                    </MenuItem>
-                    <MenuItem
-                      sx={{ color: "error.main" }}
-                      onClick={() => handleStatusUpdate("Rejected")}
-                    >
-                      <Iconify icon={"pajamas:error"} sx={{ mr: 2 }} />
-                      <Typography>Rejected</Typography>
-                    </MenuItem>
-                  </Popover>
-                  <Label
-                    onClick={(clickEvent) =>
-                      handleStatusOpenMenu(clickEvent, row._id)
-                    }
-                    color={
-                      (row.jobStatus === "Applying" && "info") ||
-                      (row.jobStatus === "Rejected" && "error") ||
-                      "success"
-                    }
-                  >
-                    {sentenceCase(row.jobStatus)}
-                  </Label>
-                </TableCell>
-                <TableCell>{row.jobDescription}</TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    size="large"
-                    color="inherit"
-                    onClick={(clickEvent) =>
-                      handleOpenMenu(clickEvent, row._id)
-                    }
-                  >
-                    <Iconify icon={"eva:more-vertical-fill"} />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+          {filteredJobComponent(filteredJob)}
         </TableBody>
         {isNotFound && (
           <TableBody>
@@ -328,11 +541,10 @@ export default function Tables() {
             icon={"material-symbols-light:favorite-outline"}
             sx={{ mr: 2 }}
           />
-          Mark as favorite
+          {jobData.find(job => job._id === selectedJob)?.isFavorite ? "Remove from favorite" : "Mark as favorite"}
         </MenuItem>
       </Popover>
-
-      <Link align="right" color="primary" href="#" sx={{ mt: 2 }}>
+      <Link align="right" color="primary" href="/cover-letters" sx={{ mt: 2 }}>
         Create A new Job
       </Link>
     </React.Fragment>

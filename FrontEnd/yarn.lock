@@ -1734,7 +1734,7 @@
   resolved "https://registry.npmjs.org/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@mui/base@5.0.0-beta.25":
+"@mui/base@5.0.0-beta.25", "@mui/base@^5.0.0-beta.22":
   version "5.0.0-beta.25"
   resolved "https://registry.npmjs.org/@mui/base/-/base-5.0.0-beta.25.tgz"
   integrity sha512-Iiv+IcappRRv6IBlknIVmLkXxfp51NEX1+l9f+dIbBuPU4PaRULegr1lCeHKsC45KU5ruxM5xMg4R/de03aJQg==
@@ -1828,7 +1828,7 @@
   resolved "https://registry.npmjs.org/@mui/types/-/types-7.2.10.tgz"
   integrity sha512-wX1vbDC+lzF7FlhT6A3ffRZgEoKWPF8VqRoTu4lZwouFX2t90KyCMsgepMw5DxLak1BSp/KP86CmtZttikb/gQ==
 
-"@mui/utils@^5.14.19":
+"@mui/utils@^5.14.16", "@mui/utils@^5.14.19":
   version "5.14.19"
   resolved "https://registry.npmjs.org/@mui/utils/-/utils-5.14.19.tgz"
   integrity sha512-qAHvTXzk7basbyqPvhgWqN6JbmI2wLB/mf97GkSlz5c76MiKYV6Ffjvw9BjKZQ1YRb8rDX9kgdjRezOcoB91oQ==
@@ -1837,6 +1837,19 @@
     "@types/prop-types" "^15.7.11"
     prop-types "^15.8.1"
     react-is "^18.2.0"
+
+"@mui/x-date-pickers@^6.18.2":
+  version "6.18.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-6.18.2.tgz#07f76c4a9ba022b8916607d9b3501c39160787c2"
+  integrity sha512-HJq4uoFQSu5isa/mesWw2BKh8KBRYUQb+KaSlVlWfJNgP3YhPvWZ6yqCNYyxOAiPMxb0n3nBjS9ErO27OHjFMA==
+  dependencies:
+    "@babel/runtime" "^7.23.2"
+    "@mui/base" "^5.0.0-beta.22"
+    "@mui/utils" "^5.14.16"
+    "@types/react-transition-group" "^4.4.8"
+    clsx "^2.0.0"
+    prop-types "^15.8.1"
+    react-transition-group "^4.4.5"
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
@@ -2347,7 +2360,7 @@
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.7.tgz"
   integrity sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==
 
-"@types/react-transition-group@^4.4.0", "@types/react-transition-group@^4.4.9":
+"@types/react-transition-group@^4.4.0", "@types/react-transition-group@^4.4.8", "@types/react-transition-group@^4.4.9":
   version "4.4.9"
   resolved "https://registry.npmjs.org/@types/react-transition-group/-/react-transition-group-4.4.9.tgz"
   integrity sha512-ZVNmWumUIh5NhH8aMD9CR2hdW0fNuYInlocZHaZ+dgk/1K49j1w/HoAuK1ki+pgscQrOFRTlXeoURtuzEkV3dg==
@@ -4017,7 +4030,12 @@ date-fns@^2.30.0:
   dependencies:
     "@babel/runtime" "^7.21.0"
 
-debug@^2.6.0:
+dayjs@^1.11.10:
+  version "1.11.10"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.10.tgz#68acea85317a6e164457d6d6947564029a6a16a0"
+  integrity sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==
+
+debug@2.6.9, debug@^2.6.0:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz"
   integrity sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
@@ -7017,6 +7035,11 @@ nanoid@^3.3.6:
   version "3.3.7"
   resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.7.tgz"
   integrity sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==
+
+nanoid@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-5.0.4.tgz#d2b608d8169d7da669279127615535705aa52edf"
+  integrity sha512-vAjmBf13gsmhXSgBrtIclinISzFFy22WwCYoyilZlsrRXNIHSwgFQ1bEdjRwMT3aoadeIF6HMuDRlOxzfXV8ig==
 
 natural-compare-lite@^1.4.0:
   version "1.4.0"
