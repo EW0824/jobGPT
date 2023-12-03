@@ -48,6 +48,7 @@ export default function Dashboard() {
     jobCompany: "",
     jobDescription: "",
     jobStatus: "Applying",
+    generatedCoverLetter: "",
   });
 
   const [coverLetterData, setCoverLetterData] = useState({
@@ -82,21 +83,11 @@ export default function Dashboard() {
       }
 
       try {
-        console.log(formData);
-        const response1 = await fetch("/job", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-
-        const data1 = await response1.json();
-        console.log("data1:", data1);
         const response2 = await fetch("/user", {
           method: "GET",
         });
         const data2 = await response2.json();
+
         const updatedCoverLetterData = {
           name: data2.firstName,
           email: data2.email,
@@ -125,6 +116,19 @@ export default function Dashboard() {
         openModal(data3);
 
         setIsLoading(false);
+        setFormData({
+          generatedCoverLetter: data3,
+        });
+        console.log("formData:", formData);
+        const response1 = await fetch("/job", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+        const data1 = await response1.json();
+        console.log("data1:", data1);
 
         if (data1.success) {
           console.log("success");
