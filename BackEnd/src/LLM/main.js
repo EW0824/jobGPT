@@ -45,7 +45,7 @@ Please use information about what recruiters like to write a perfect cover lette
 
 const COVER_LETTER_PROMPT = `
 
-Hope you are doing well! You are a recruiter at a large company with experience reading and writing cover letters. I need your help crafting a perfect letter for me. My name is {name}, with email {email} and phoneNumber {phoneNumber}.
+Hope you are doing well! You are a recruiter at a large company with experience reading and writing cover letters. I need your help crafting a perfect letter for me. My name is {name}, with email {email}.
 
 I am applying to work at {company} as a {position}. Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position using information from the job description. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!
 `;
@@ -80,7 +80,6 @@ const generate_cover_letter_prompt = ({skills, experiences}) => {
 export default async function generateCoverLetter(
   name,
   email,
-  phoneNumber,
   company,
   position,
   wordLimit,
@@ -150,7 +149,6 @@ export default async function generateCoverLetter(
   const formattedPrompt = await promptTemplate.format({
     name: name,
     email: email,
-    phoneNumber: phoneNumber,
     company: company,
     position: position,
     wordLimit: wordLimit,
@@ -159,7 +157,8 @@ export default async function generateCoverLetter(
 
   console.log(formattedPrompt)
 
-  // console.log(formattedPrompt)
+  console.log(formattedPrompt)
+
 
   // STEP 4: generate embeddings and vector store
 

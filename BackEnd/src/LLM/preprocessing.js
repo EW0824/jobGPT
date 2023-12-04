@@ -148,10 +148,14 @@ export async function loadAllDocs(PDFLink, jobLink, addDescription, skills) {
   // const resumeDoc = await loadPDFLocally(PDFLink);
   const resumeDoc = await loadPDF(PDFLink);
   const jobDescriptionDoc = await loadJob(jobLink);
-  const addDescriptionSplit = splitText(addDescription)
-  const skillsSplit = splitText(skills)
+  const addDescriptionSplit = await splitText(addDescription);
+  const skillsSplit = await splitText(skills);
 
-  const combinedDoc = resumeDoc.concat(jobDescriptionDoc, addDescriptionSplit, skillsSplit);
+  const combinedDoc = resumeDoc.concat(
+    jobDescriptionDoc,
+    addDescriptionSplit,
+    skillsSplit
+  );
   return combinedDoc;
 }
 
