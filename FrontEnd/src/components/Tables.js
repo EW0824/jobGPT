@@ -29,7 +29,7 @@ import Label from "../styles/Label";
 import { sentenceCase } from "change-case";
 import Iconify from "../styles/Iconify";
 import Title from "./Title";
-import { fDateTime } from "../gagets/FormatTime";
+import { fDateTime } from "../gagets/formatTime";
 import { useNavigate } from "react-router-dom";
 import StyledSearch from "../styles/StyledSearch";
 import { LocalizationProvider } from "@mui/x-date-pickers";
