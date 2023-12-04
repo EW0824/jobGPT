@@ -12,15 +12,25 @@ Make sure to `yarn add` every time after pull.
 
 ## Backend
 
-To launch the server, run the command `npm run dev`. The server currently runs at `localhost:8080`.
-
-
-## Frontend
-
-To run:
-
+First, run yarn add to acquire all the required packages. 
 ```bash
 yarn add
+```
+To launch the server, run the command `npm run dev`. The server currently runs at `http://localhost:8080`.
+```bash
+npm run dev
+```
+## Frontend
+
+First, run npm instal (or yarn add) to acquire all the required packages. 
+
+```bash
+npm install
+```
+
+Then, start the app by npm start, which is running on `http://localhost:3000`
+
+```bash 
 npm start
 ```
 
@@ -29,21 +39,17 @@ Frontend/
 ├── node_modules/
 ├── src/
 │ ├── components/ (reusable components for the webpages)
-│ ├── pages/ (implement pages for dashboard, job history etc)
-│ ├── styles/
+│ ├── pages/ (implement frontend pages, such as job history, generate new cover letter, personal profile)
+│ ├── styles/ (customize the style of Material-UI elements)
+│ ├── hooks/ (detect the session-cookie for security purpose)
+│ ├── Gadgets/ (define some helper functions, such as format DateTime and Validate Form)
 │ ├── App.js
 │ ├── index.js
 |
 ├── public/
 │ ├── index.html
-│ └── ...
+│ └── favicon.ico (logo)
 ├── .gitignore
 ├── package.json
 └── package-lock.json
 ```
-
-To contribute:
-
-1. Implement pages
-2. Design a better favicon
-3. Utilize Redux for state management
