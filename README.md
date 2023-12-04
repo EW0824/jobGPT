@@ -12,15 +12,20 @@ Make sure to `yarn add` every time after pull.
 
 ## Backend
 
-To launch the server, run the command `npm run dev`. The server currently runs at `localhost:8080`.
-
+First, run yarn add to acquire all the required packages. 
+To launch the server, run the command `npm run dev`. The server currently runs at `http://localhost:8080`.
 
 ## Frontend
 
-To run:
+First, run npm instal (or yarn add) to acquire all the required packages. 
 
 ```bash
-yarn add
+npm install
+```
+
+Then, start the app by npm start, which is running on `http://localhost:3000`
+
+```bash 
 npm start
 ```
 
