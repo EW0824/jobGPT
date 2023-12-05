@@ -20,6 +20,19 @@ To launch the server, run the command `npm run dev`. The server currently runs a
 ```bash
 npm run dev
 ```
+
+```bash
+BackEnd/
+├── node_modules/
+├── src/
+│ ├── api/ (implement RESTful API calls for User, Job, CoverLetter, etc)
+│ ├── db/ (connect to MongoDB database)
+│ ├── LLM/ (LangChain for OpenAI API)
+│ ├── models/ (define MongoDB Schemas and Forms)
+│ ├── index.js (configure CORS and middleware; registers all for all API)
+├── .env (hidden for security purpose, contains connection to Database, and also sceret key of OpenAI API, etc.)
+```
+
 ## Frontend
 
 First, run npm instal (or yarn add) to acquire all the required packages. 
@@ -35,7 +48,7 @@ npm start
 ```
 
 ```bash
-Frontend/
+FrontEnd/
 ├── node_modules/
 ├── src/
 │ ├── components/ (reusable components for the webpages)
