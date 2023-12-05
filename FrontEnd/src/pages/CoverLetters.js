@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { validateJobPostForm } from "../gagets/validation";
+import { validateJobPostForm } from "../gagets/Validation";
 import ReactModal from "react-modal";
 import {
   CardHeader,
