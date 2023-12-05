@@ -9,6 +9,6 @@ export default function App() {
   const {loading, error} = useFetchAndSetSessionToken('/auth/get_session', 'GET', setSessionToken)
 
   return (
-      <Navigation isLoggedIn={Boolean(sessionToken?.userId)}/>
+      <Navigation isLoggedIn={Boolean(sessionToken?.userId)} loading={loading}/>
   );
 }
