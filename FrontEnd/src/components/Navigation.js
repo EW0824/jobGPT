@@ -12,8 +12,14 @@ import Profile from "../pages/Profile";
 import SignUp from "../pages/SignUp";
 import DetailedJobs from "../pages/DetailedJobs";
 import CoverLetters from "../pages/CoverLetters";
+import { SessionContext } from "./ContextProvider";
 
-export default function Navigation({ isLoggedIn }) {
+export default function Navigation({ isLoggedIn, loading }) {
+
+  useEffect(() => {
+    console.log(loading, isLoggedIn, routes.type)
+  }, [loading])
+  
   const routes = isLoggedIn ? (
     <Routes>
       <Route path="/" element={<CoverLetters />} />
@@ -23,11 +29,11 @@ export default function Navigation({ isLoggedIn }) {
     </Routes>
   ) : (
     <Routes>
-      <Route path="/" element={<Navigate to="/sign-in" />} />
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
+      <Route path="*" element={<Navigate to="/sign-in" replace />} />
     </Routes>
-  );
+  )
 
-  return <BrowserRouter>{routes}</BrowserRouter>;
+  return loading ? <></> : <BrowserRouter>{routes}</BrowserRouter>;
 }

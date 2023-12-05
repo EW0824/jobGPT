@@ -17,6 +17,7 @@ import Drawer from "../styles/Drawer";
 import AppBar from "../styles/AppBar";
 
 const defaultTheme = createTheme();
+
 const Layout = ({ open, toggleDrawer, navigate, tabName, children }) => {
   return (
     <ThemeProvider theme={defaultTheme}>
