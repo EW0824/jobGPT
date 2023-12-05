@@ -29,7 +29,7 @@ import Label from "../styles/Label";
 import { sentenceCase } from "change-case";
 import Iconify from "../styles/Iconify";
 import Title from "./Title";
-import { fDateTime } from "../gagets/formatTime";
+import { fDateTime } from "../gagets/FormatTime";
 import { useNavigate } from "react-router-dom";
 import StyledSearch from "../styles/StyledSearch";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -152,10 +152,14 @@ export default function Tables() {
       
       const updated_job = await response_job.json()
 
+      
       setJobData((prevData) =>
           prevData.map((job) => (job._id === selectedJob ? updated_job : job))
       );
-
+      setTimeout(() => {
+        setOpen(null)
+      }, numBoolFiltersSelected['Favorite'] ? 0 : 500);
+      
     } catch(error) {
       console.error(error)
     }
@@ -301,6 +305,10 @@ export default function Tables() {
     }
     return stabilizedThis.map((el) => el[0]);
   }
+
+  useEffect(() => {
+    console.log(jobData)
+  }, [jobData])
 
   function compareIncreasing(a, b) {
     // Assuming a and b are numbers or strings that can be compared directly
