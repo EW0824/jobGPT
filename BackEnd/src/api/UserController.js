@@ -43,6 +43,7 @@ router.patch("/", async (req, res) => {
       return;
     }
     console.log("doing PATCH method");
+    console.log(req.body);
     const updatedUser = await User.findByIdAndUpdate(
       req.session.user.userId,
       req.body

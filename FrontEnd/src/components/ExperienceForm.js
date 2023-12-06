@@ -16,6 +16,7 @@ const ExperienceForm = (props) => {
       {
         company: "",
         jobTitle: "",
+        jobDescription: "",
       },
     ]);
     props.onExperiencesChange([
@@ -23,6 +24,7 @@ const ExperienceForm = (props) => {
       {
         company: "",
         jobTitle: "",
+        jobDescription: "",
       },
     ]);
   };
@@ -69,9 +71,20 @@ const ExperienceForm = (props) => {
               style={{
                 marginBottom: "20px",
                 marginLeft: "20px",
-                width: "350px",
+                width: "300px",
               }}
               placeholder="Job Title"
+            />
+            <TextField
+              name="jobDescription"
+              value={exp.jobDescription}
+              onChange={(e) => handleExperienceChange(index, e)}
+              style={{
+                marginBottom: "20px",
+                marginLeft: "20px",
+                width: "400px",
+              }}
+              placeholder="Description (Copy from your resume...)"
             />
             <Button
               type="button"
