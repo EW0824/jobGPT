@@ -57,33 +57,35 @@ const ExperienceForm = (props) => {
       <form onSubmit={handleSubmit}>
         {experiences.map((exp, index) => (
           <div key={index}>
-            <TextField
-              name="company"
-              value={exp.company}
-              onChange={(e) => handleExperienceChange(index, e)}
-              style={{ marginBottom: "20px", width: "300px" }}
-              placeholder="Company"
-            />
-            <TextField
-              name="jobTitle"
-              value={exp.jobTitle}
-              onChange={(e) => handleExperienceChange(index, e)}
+            <div
               style={{
+                display: "flex",
                 marginBottom: "20px",
-                marginLeft: "20px",
-                width: "300px",
+                marginTop: "20px",
               }}
-              placeholder="Job Title"
-            />
+            >
+              <TextField
+                name="company"
+                value={exp.company}
+                onChange={(e) => handleExperienceChange(index, e)}
+                style={{ marginRight: "20px", width: "300px" }}
+                placeholder="Company"
+              />
+              <TextField
+                name="jobTitle"
+                value={exp.jobTitle}
+                onChange={(e) => handleExperienceChange(index, e)}
+                style={{ width: "300px" }}
+                placeholder="Job Title"
+              />
+            </div>
             <TextField
               name="jobDescription"
               value={exp.jobDescription}
               onChange={(e) => handleExperienceChange(index, e)}
-              style={{
-                marginBottom: "20px",
-                marginLeft: "20px",
-                width: "400px",
-              }}
+              multiline
+              rows={4}
+              style={{ width: "80%", boxSizing: "border-box" }}
               placeholder="Description (Copy from your resume...)"
             />
             <Button
