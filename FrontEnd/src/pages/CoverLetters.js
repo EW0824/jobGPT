@@ -101,8 +101,6 @@ export default function Dashboard() {
           skills: data2.skillList ?? [],
           experiences: data2.experienceList ?? [],
         };
-        console.log("SKILLS: ", updatedCoverLetterData.skills);
-        console.log("Experiences: ", updatedCoverLetterData.experiences);
         console.log("updatedCoverLetterData:", updatedCoverLetterData);
         setCoverLetterData(updatedCoverLetterData);
 
