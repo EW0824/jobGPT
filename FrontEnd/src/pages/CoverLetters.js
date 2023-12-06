@@ -184,10 +184,30 @@ export default function Dashboard() {
   //Auto Form
   const [isAutoModified, setIsAutoModified] = useState(false);
   const [autoErrorMessage, setAutoErrorMessage] = useState("");
+  const [isAutoLoading, setIsAutoLoading] = useState(false);
+  const [autoSuccessMessage, setAutoSuccessMessage] = useState("");
+  const [autoModalIsOpen, setAutoModalIsOpen] = useState(false);
+  const [autoModalContent, setAutoModalContent] = useState("");
+  const [autoOpenModalNow, setAutoOpenModalNow] = useState(false);
+
+  const openAutoModal = (content) => {
+    setAutoModalContent(content);
+    setAutoModalIsOpen(true);
+  };
+
+  const closeAutoModal = () => {
+    setAutoModalIsOpen(false);
+    setAutoOpenModalNow(false);
+  };
 
   const [autoData, setAutoData] = useState({
     jobLink: "",
-    CV: "",
+    pdfLink: "",
+    jobName: "(Job Position In Doc)",
+    jobCompany: "(Company Position In Doc)",
+    jobDescription: "(Job Description In Doc)",
+    jobStatus: "Applying",
+    generatedCoverLetter: "",
   })
 
   const handleAutoChange = () => {
@@ -204,6 +224,95 @@ export default function Dashboard() {
     handleAutoChange();
   }
 
+  const handleAutoSubmit = async (e) => {
+    e.preventDefault();
+
+    setIsAutoLoading(true);
+
+    const errors = validateAutoJobPostForm(autoData);
+
+    if (Object.keys(errors).length === 0) {
+      if (!isAutoModified) {
+        setAutoErrorMessage("Make some change before submitting again!");
+        return;
+      }
+      setAutoSuccessMessage("We are generating the Cover Letter in the backend and will shortly notify the result!");
+      setAutoErrorMessage("");
+      try {
+        const response2 = await fetch("/user", {
+          method: "GET",
+        });
+        const data2 = await response2.json();
+
+        const updatedCoverLetterData = {
+          name: data2.firstName,
+          email: data2.email,
+          phoneNumber: data2.phoneNumber,
+          company: autoData.jobCompany,
+          position: autoData.jobName,
+          wordLimit: "200",
+          PDFLink: autoData.pdfLink,
+          jobLink: autoData.jobLink,
+          addDescription: autoData.jobDescription,
+          skills: data2.skillList ?? [],
+        };
+        console.log("updatedCoverLetterData:", updatedCoverLetterData);
+        setCoverLetterData(updatedCoverLetterData);
+
+        const queryString = new URLSearchParams(
+          updatedCoverLetterData
+        ).toString();
+        const response3 = await fetch(`/letter/generate?${queryString}`, {
+          method: "GET",
+        });
+
+        const data3 = await response3.text();
+        console.log("data3:", data3);
+        setAutoOpenModalNow(true);
+        openAutoModal(data3);
+
+        setIsAutoLoading(false);
+        const updatedFormData = {
+          ...autoData,
+          generatedCoverLetter: data3,
+        };
+        setAutoData(updatedFormData);
+
+        console.log("updatedFormData:", updatedFormData);
+        const response1 = await fetch("/job", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedFormData),
+        });
+        const data1 = await response1.json();
+        console.log("data1:", data1);
+
+        if (response1.ok) {
+          console.log("success");
+          setAutoErrorMessage("");
+          setAutoSuccessMessage('Please view the result!');
+          setIsAutoFormModified(false);
+        } else {
+          console.log("error");
+          setAutoErrorMessage(data1.error);
+        }
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    } else {
+      setIsAutoLoading(false);
+      setAutoSuccessMessage("");
+      setAutoErrorMessage(
+        "Please correct the following form errors.\n".concat(
+          Object.values(errors).join("\n")
+        )
+      );
+    }
+  };
+
+  /*
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file && file.type === "application/pdf") {
@@ -212,6 +321,8 @@ export default function Dashboard() {
         const typedArray = new Uint8Array(e.target.result);
         try {
           // Load the PDF file
+          console.log(pdfjsLib.GlobalWorkerOptions.workerSrc);
+
           const pdfDoc = await pdfjsLib.getDocument({ data: typedArray }).promise;
 
           console.log("Reader Loaded!")
@@ -243,6 +354,7 @@ export default function Dashboard() {
       setAutoErrorMessage("File not in pdf format or does not exist.")
     }
   }
+  */
 
   return (
     <Layout
@@ -257,9 +369,9 @@ export default function Dashboard() {
       <Grid container spacing={3}>
         <Grid item xs={32} md={16} lg={16}>
           <Card>
-            <CardHeader title="Enter Job URL & Upload a CV" />
+            <CardHeader title="Enter Job URL" />
             <CardContent>
-              <form onSubmit={handleSubmit} noValidate>
+              <form onSubmit={handleAutoSubmit} noValidate>
                 <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
                   <InputLabel> Job Link </InputLabel>
                   <Input
@@ -272,17 +384,14 @@ export default function Dashboard() {
                   />
                 </FormControl>
 
-                <div>
-                  <p style={{color: "grey"}}>
-                    &nbsp;&nbsp;&nbsp;CV Upload
-                  </p>
-                </div>
-
-                <FormControl fullWidth sx={{ mb: 3 }}>
+                <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
+                  <InputLabel> CV Link </InputLabel>
                   <Input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={handleFileUpload}
+                    multiline
+                    rows={1}
+                    name="pdfLink"
+                    value={autoData.pdfLink}
+                    onChange={handleAuto}
                     required
                   />
                 </FormControl>
@@ -298,7 +407,7 @@ export default function Dashboard() {
                     Log and Generate!
                   </LoadingButton>
                 </div>
-                {isLoading ? (
+                {isAutoLoading ? (
                   <div
                     style={{
                       display: "flex",
@@ -313,7 +422,7 @@ export default function Dashboard() {
                   <div></div>
                 )}
               </form>
-              {errorMessage && (
+              {autoErrorMessage && (
                 <Alert
                   sx={{
                     justifyContent: "center",
@@ -323,17 +432,17 @@ export default function Dashboard() {
                   severity="error"
                 >
                   {" "}
-                  {errorMessage}
+                  {autoErrorMessage}
                 </Alert>
               )}
-              {successMessage && (
+              {autoSuccessMessage && (
                 <Alert
                   sx={{
                     justifyContent: "center",
                     marginTop: "10px",
                   }}
                 >
-                  {successMessage}
+                  {autoSuccessMessage}
                 </Alert>
               )}
             </CardContent>
@@ -345,7 +454,7 @@ export default function Dashboard() {
       <Grid container spacing={3}>
         <Grid item xs={32} md={16} lg={16}>
           <Card>
-            <CardHeader title="Manually Enter Job Information" />
+            <CardHeader title="Enter Job Information" />
             <CardContent>
               <form onSubmit={handleSubmit} noValidate>
                 <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>

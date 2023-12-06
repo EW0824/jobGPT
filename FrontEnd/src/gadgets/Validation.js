@@ -32,6 +32,17 @@ export function validateJobPostForm(formData) {
   return errors;
 }
 
+export function validateAutoJobPostForm(autoData) {
+  const errors = {};
+
+  // Validate jobLink
+  if (!autoData.jobLink) {
+    errors.jobLink = "Job Link is required";
+  }
+  
+  return errors;
+}
+
 export const validateSignUpForm = (formData) => {
   const errors = {};
   console.log(formData);

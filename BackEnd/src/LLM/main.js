@@ -110,6 +110,8 @@ export default async function generateCoverLetter(
     position: position,
     skills: skills,
     wordLimit: wordLimit,
+    addDescription: addDescription,
+    skills: skills,
   });
 
   // console.log(formattedPrompt)
