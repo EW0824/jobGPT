@@ -22,10 +22,11 @@ LLM/
 
 ## Backend
 
-First, run yarn add to acquire all the required packages. 
+First, run the following to acquire all the required packages. 
 ```
-yarn add
+npm install
 ```
+If error occured during installation and npm prompted to use the `--force` option, execute `npm install --force` instead.
 To launch the server, run the command `npm run dev`. The server currently runs at `http://localhost:8080`.
 ```
 npm run dev
