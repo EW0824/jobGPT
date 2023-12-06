@@ -9,23 +9,27 @@ complicated (python, langchain): https://github.com/vinura/cover_generator_app?s
 complicated article: https://vinuraperera.medium.com/i-decided-to-automate-writing-cover-letters-using-ai-and-you-can-use-what-i-built-be0813ba77e2
 */
 
-import { textToDocSplitter } from "./splitter"
+import { textToDocSplitter } from "./splitter.js"
 
 import axios from 'axios';
 import cheerio from 'cheerio';
 
-async function extractTextFromUrl(url) {
+export async function extractTextFromUrl(url) {
     try {
-        const response = await axios.get(url);
-        const html = response.data;
-        const $ = cheerio.load(html);
-        const textLines = [];
+        let text = "";
+        if (url) {
+            const response = await axios.get(url);
+            const html = response.data;
+            const $ = cheerio.load(html);
+            const textLines = [];
 
-        $('div.description__text').each((i, element) => {
-            textLines.push($(element).text().trim());
-        });
+            $('div.description__text').each((i, element) => {
+                textLines.push($(element).text().trim());
+            });
 
-        const text = textLines.filter(line => line).join('\n');
+            text = textLines.filter(line => line).join('\n');
+        }
+        
         const document = textToDocSplitter(text);
 
         return document;

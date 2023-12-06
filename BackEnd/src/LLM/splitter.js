@@ -2,7 +2,7 @@ import { Document } from "langchain/document";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { CharacterTextSplitter } from "langchain/text_splitter";
 
-async function splitTextDocuments(docs) {
+export async function splitTextDocuments(docs) {
     const splitter = new CharacterTextSplitter({
         chunkSize: 1000,
         chunkOverlap: 20,
@@ -11,7 +11,7 @@ async function splitTextDocuments(docs) {
     return output;
 }
 
-async function textToDocSplitter(text) {
+export async function textToDocSplitter(text) {
     const splitter = new RecursiveCharacterTextSplitter({
         chunkSize: 10000,
         chunkOverlap: 0,

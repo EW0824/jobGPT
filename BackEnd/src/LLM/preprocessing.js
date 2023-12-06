@@ -6,6 +6,8 @@ import {
 } from "langchain/text_splitter";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
+import { loadPdf } from "./pdfParser.js";
+import { extractTextFromUrl } from "./scraper.js";
 
 // const SYSTEM_TEMPLATE = `
 // Please use the following information about the user to answer.
@@ -34,6 +36,7 @@ async function loadPDFLocally(path) {
 
 // Loading PDF from a link -> implementation unfinished
 async function loadPDF(path) {
+  /*
   let example = `
     MACK CROLANGUAGE
 
@@ -83,13 +86,15 @@ async function loadPDF(path) {
 
     • Developed a priority-based auctioning algorithm for task allocation in a multi-agent environment. Using a modified A* algorithm, tasks were prioritized based on proximity to the location of the fire resulting in an efficient evacuation.
   `;
+  */
 
-  const textOutput = splitText(example);
+  const textOutput = loadPdf(path);
   return textOutput;
 }
 
 // To load the job description
 async function loadJob(link) {
+  /*
   let example = `
     Job Title
 
@@ -120,8 +125,9 @@ async function loadJob(link) {
     • 2 years of experience with data structures or algorithms in either an academic or industry setting.
 
     We're excited for you to apply`;
+  */
 
-  const textOutput = splitText(example);
+  const textOutput = extractTextFromUrl(link);
   return textOutput;
 }
 

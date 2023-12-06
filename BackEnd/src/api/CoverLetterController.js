@@ -40,7 +40,8 @@ router.get("/generate", async (req, res) => {
     console.log(letter);
   } catch (error) {
     res.status(500);
-    console.log("500");
+    console.log("500\n");
+    console.log(error);
   }
 });
 

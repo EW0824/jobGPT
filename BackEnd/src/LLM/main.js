@@ -29,15 +29,14 @@ email: {email}
 phoneNumber: {phoneNumber}
 --------
 
-My experiences and skills:
+My skills:
 --------
-{experiences}
 {skills}
 --------
 
 I am applying to work at {company} as a {position} with the following job description:
 --------
-{jobDescription}
+{addDescription}
 --------
 
 Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!
@@ -117,7 +116,7 @@ export default async function generateCoverLetter(
   call chain on query
   `;
 
-  const promptTemplate = PromptTemplate.fromTemplate(COVER_LETTER_PROMPT);
+  const promptTemplate = PromptTemplate.fromTemplate(COVER_LETTER_PROMPT_FULL);
   const formattedPrompt = await promptTemplate.format({
     name: name,
     email: email,
@@ -125,6 +124,8 @@ export default async function generateCoverLetter(
     company: company,
     position: position,
     wordLimit: wordLimit,
+    addDescription: addDescription,
+    skills: skills,
   });
 
   // console.log(formattedPrompt)
