@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { validateJobPostForm } from "../gagets/validation";
 import ReactModal from "react-modal";
+import * as pdfjsLib from 'pdfjs-dist';
+
 import {
   CardHeader,
   CardContent,
@@ -15,6 +17,7 @@ import {
   InputLabel,
   Input,
   Alert,
+  colors,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import Layout from "../components/Layout";
@@ -165,6 +168,70 @@ export default function Dashboard() {
     });
     handleFormChange();
   };
+
+  //Auto Form
+  const [isAutoModified, setIsAutoModified] = useState(false);
+  const [autoErrorMessage, setAutoErrorMessage] = useState("");
+
+  const [autoData, setAutoData] = useState({
+    jobLink: "",
+    CV: "",
+  })
+
+  const handleAutoChange = () => {
+    setIsAutoModified(true);
+  };
+
+  const handleAuto = (e) => {
+    const { name, value } = e.target;
+    setAutoErrorMessage('');
+    setAutoData({
+      ...autoData,
+      [name]: value,
+    });
+    handleAutoChange();
+  }
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === "application/pdf") {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const typedArray = new Uint8Array(e.target.result);
+        try {
+          // Load the PDF file
+          const pdfDoc = await pdfjsLib.getDocument({ data: typedArray }).promise;
+
+          console.log("Reader Loaded!")
+
+          let textContent = '';
+          
+          // Loop through each page
+          for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+              const page = await pdfDoc.getPage(pageNum);
+              const text = await page.getTextContent();
+              textContent += text.items.map(item => item.str).join(' ');
+          }
+
+          // Update state with the extracted text
+          setAutoData({
+            ...autoData,
+            CV: textContent,
+          })
+          handleAutoChange();
+          console.log(autoData.CV);
+        } catch (error) {
+          setAutoErrorMessage(error)
+        }
+      }
+      
+      reader.readAsArrayBuffer(file);
+
+    } else {
+      setAutoErrorMessage("File not in pdf format or does not exist.")
+    }
+  }
+
   return (
     <Layout
       open={open}
@@ -178,7 +245,95 @@ export default function Dashboard() {
       <Grid container spacing={3}>
         <Grid item xs={32} md={16} lg={16}>
           <Card>
-            <CardHeader title="Enter Job Information" />
+            <CardHeader title="Enter Job URL & Upload a CV" />
+            <CardContent>
+              <form onSubmit={handleSubmit} noValidate>
+                <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
+                  <InputLabel> Job Link </InputLabel>
+                  <Input
+                    multiline
+                    rows={1}
+                    name="jobLink"
+                    value={autoData.jobLink}
+                    onChange={handleAuto}
+                    required
+                  />
+                </FormControl>
+
+                <div>
+                  <p style={{color: "grey"}}>
+                    &nbsp;&nbsp;&nbsp;CV Upload
+                  </p>
+                </div>
+
+                <FormControl fullWidth sx={{ mb: 3 }}>
+                  <Input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handleFileUpload}
+                    required
+                  />
+                </FormControl>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "20px",
+                  }}
+                >
+                  <LoadingButton type="submit" size="large" variant="contained">
+                    Log and Generate!
+                  </LoadingButton>
+                </div>
+                {isLoading ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+              </form>
+              {errorMessage && (
+                <Alert
+                  sx={{
+                    justifyContent: "center",
+                    marginTop: "10px",
+                    whiteSpace: "pre-wrap",
+                  }}
+                  severity="error"
+                >
+                  {" "}
+                  {errorMessage}
+                </Alert>
+              )}
+              {successMessage && (
+                <Alert
+                  sx={{
+                    justifyContent: "center",
+                    marginTop: "10px",
+                  }}
+                >
+                  {successMessage}
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <div style={{ height: '50px' }}>
+      </div>
+      <Grid container spacing={3}>
+        <Grid item xs={32} md={16} lg={16}>
+          <Card>
+            <CardHeader title="Manually Enter Job Information" />
             <CardContent>
               <form onSubmit={handleSubmit} noValidate>
                 <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
