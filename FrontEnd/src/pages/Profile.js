@@ -74,6 +74,7 @@ export default function Profile() {
   };
 
   const handleSave = () => {
+    console.log("saving", userData)
     fetch("/user", {
       method: "PATCH",
       headers: {

@@ -50,6 +50,32 @@ Hope you are doing well! You are a recruiter at a large company with experience 
 I am applying to work at {company} as a {position}. Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position using information from the job description. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!
 `;
 
+const generate_cover_letter_prompt = ({skills, experiences}) => {
+
+    const intorduction = `Hope you are doing well! You are a recruiter at a large company with experience reading and writing cover letters. I need your help crafting a perfect letter for me. My name is {name}, with email {email} and phoneNumber {phoneNumber}.`
+
+    const company_section = `I am applying to {company} for the role {position}. The detailed description for the role is: {description}`
+
+    const skills_and_experiences = `The following lists the skills and experiences that I have. Please thoroughly analyze the content below and select the skills and experiences that you reckon to be relevant for the application of this role.`
+
+    const get_skills_and_experiences_prompt = (skills, experiences) => {
+      const skills_string = `Skills: \n` + skills.map((skill, idx) => {
+        return `${idx}.${skill}`
+      }).join('\n')
+
+      const experiences_string = `Experiences: \n` + experiences.map((experience, idx) => {
+        return `${idx}.${experience.jobTitle} at ${experience.company}: ${experience.jobDescription}`
+      }).join('\n')
+
+      return [skills_string, experiences_string].join('\n')
+    }
+
+    const skills_and_experiences_detail = get_skills_and_experiences_prompt(skills, experiences)
+
+    const ending = `According to the provided experiences, skills, and job description, please generate an individualized cover letter with a word limit of {wordLimist}. Please ONLY display the content of the generated cover letter in your response.`
+  
+    return [intorduction, company_section, skills_and_experiences, skills_and_experiences_detail, ending].join('\n')
+}
 
 export default async function generateCoverLetter(
   name,
@@ -61,7 +87,8 @@ export default async function generateCoverLetter(
   PDFLink,
   jobLink,
   addDescription,
-  skills
+  skills,
+  experiences
 ) {
   `
     PIPELINE:
@@ -117,7 +144,9 @@ export default async function generateCoverLetter(
   call chain on query
   `;
 
-  const promptTemplate = PromptTemplate.fromTemplate(COVER_LETTER_PROMPT);
+  const cover_letter_prompt = generate_cover_letter_prompt({skills, experiences})
+
+  const promptTemplate = PromptTemplate.fromTemplate(cover_letter_prompt);
   const formattedPrompt = await promptTemplate.format({
     name: name,
     email: email,
@@ -125,7 +154,10 @@ export default async function generateCoverLetter(
     company: company,
     position: position,
     wordLimit: wordLimit,
+    description: addDescription
   });
+
+  console.log(formattedPrompt)
 
   // console.log(formattedPrompt)
 

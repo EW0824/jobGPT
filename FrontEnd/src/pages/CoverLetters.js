@@ -99,16 +99,26 @@ export default function Dashboard() {
           jobLink: "",
           addDescription: formData.jobDescription,
           skills: data2.skillList ?? [],
+          experiences: data2.experienceList ?? [],
         };
         console.log("updatedCoverLetterData:", updatedCoverLetterData);
         setCoverLetterData(updatedCoverLetterData);
 
-        const queryString = new URLSearchParams(
-          updatedCoverLetterData
-        ).toString();
-        const response3 = await fetch(`/letter/generate?${queryString}`, {
-          method: "GET",
-        });
+        // const queryString = new URLSearchParams(
+        //   updatedCoverLetterData
+        // ).toString();
+        // const response3 = await fetch(`/letter/generate?${queryString}`, {
+        //   method: "GET",
+        // });
+
+        const response3 = await fetch('/letter/generate', {
+          method: 'POST',
+          body: JSON.stringify(updatedCoverLetterData),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+        })
 
         const data3 = await response3.text();
         console.log("data3:", data3);
