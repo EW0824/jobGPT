@@ -91,7 +91,6 @@ export default function DetailedJob({ jobId }) {
                     <Typography
                       fontFamily={"Public Sans, sans-serif"}
                       variant="h7"
-                      noWrap
                     >
                       {value}
                     </Typography>

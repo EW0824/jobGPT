@@ -8,20 +8,20 @@ router.get("/", (req, res) => {
   res.status(200).send("Welcome to letters page");
 });
 
-router.get("/generate", async (req, res) => {
-  const name = req.query.name;
-  const email = req.query.email;
-  const phoneNumber = req.query.phoneNumber;
-  const company = req.query.company;
-  const position = req.query.position;
-  const wordLimit = req.query.wordLimit;
-  const PDFLink = req.query.PDFLink;
-  const jobLink = req.query.jobLink;
-  const addDescription = req.query.addDescription;
-  const skills = req.query.skills;
+router.post("/generate", async (req, res) => {
+  const {
+    name,
+    email,
+    phoneNumber,
+    company,
+    position,
+    wordLimit,
+    PDFLink,
+    jobLink,
+    addDescription,
+    skills,
+    experiences} = req.body;
   try {
-    console.log(name, email, phoneNumber);
-    console.log(req.query);
     const letter = await generateCoverLetter(
       name,
       email,
@@ -32,7 +32,8 @@ router.get("/generate", async (req, res) => {
       PDFLink,
       jobLink,
       addDescription,
-      skills
+      skills,
+      experiences
     );
 
     res.status(200).send(letter);
