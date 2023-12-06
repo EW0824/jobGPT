@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 
 export const useFetchAndSetSessionToken = (url, method, setToken) => {
-    const [loading, setLoading] = useState(null)
+    const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
   
     useEffect(() => {

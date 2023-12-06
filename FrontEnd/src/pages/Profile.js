@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import skillsData from "../gagets/skills.json";
+import skillsData from "../gagets/Skills.json";
 import { Button } from "@mui/material";
 import ExperienceForm from "../components/ExperienceForm";
 import Layout from "../components/Layout";

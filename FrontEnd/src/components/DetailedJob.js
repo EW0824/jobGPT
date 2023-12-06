@@ -15,7 +15,7 @@ import Label from "../styles/Label";
 import { sentenceCase } from "change-case";
 import Iconify from "../styles/Iconify";
 import Title from "./Title";
-import { fDateTime } from "../gagets/formatTime";
+import { fDateTime } from "../gagets/FormatTime";
 
 export default function DetailedJob({ jobId }) {
   useEffect(() => {
