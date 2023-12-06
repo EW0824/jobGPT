@@ -7,7 +7,7 @@ Hope you are doing well! You are a recruiter at a large company with experience 
 
 I am applying to work at {company} as a {position}. Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience which are relevant to the job, and explain why I am a great fit for the position using information from the job description. Also highlight my skills: '{skills}' when you see fit! Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!
 
-Please only output the cover letter and nothing else.
+Please only output the cover letter and nothing else. If the cover letter has been generated before, let me know.
 `;
 
 

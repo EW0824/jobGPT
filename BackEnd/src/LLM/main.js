@@ -110,6 +110,8 @@ export default async function generateCoverLetter(
     position: position,
     skills: skills,
     wordLimit: wordLimit,
+    addDescription: addDescription,
+    skills: skills,
   });
 
   // console.log(formattedPrompt)
@@ -138,6 +140,7 @@ export default async function generateCoverLetter(
   const letter = await chain.call({
     input_documents: relevantDocs,
     question: formattedPrompt,
+    timeout: 30000
   });
 
   // console.log(letter.output_text);
