@@ -13,9 +13,8 @@ export async function splitTextDocuments(docs) {
 
 export async function textToDocSplitter(text) {
     const splitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 10000,
-        chunkOverlap: 0,
-        lengthFunction: length,
+        chunkSize: 1000,
+        chunkOverlap: 200,
     });
 
     const docOutput = await splitter.createDocuments([text])

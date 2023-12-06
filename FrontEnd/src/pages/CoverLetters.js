@@ -191,9 +191,9 @@ export default function Dashboard() {
   const [autoData, setAutoData] = useState({
     jobLink: "",
     pdfLink: "",
-    jobName: "(Job Position In Doc)",
-    jobCompany: "(Company Position In Doc)",
-    jobDescription: "(Job Description In Doc)",
+    jobName: "Unspecified Job Position",
+    jobCompany: "Unspecified Company Position",
+    jobDescription: "Unspecified Job Description",
     jobStatus: "Applying",
     generatedCoverLetter: "",
   })
@@ -380,7 +380,6 @@ export default function Dashboard() {
                     name="pdfLink"
                     value={autoData.pdfLink}
                     onChange={handleAuto}
-                    required
                   />
                 </FormControl>
 

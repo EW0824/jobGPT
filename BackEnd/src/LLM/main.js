@@ -39,7 +39,7 @@ I am applying to work at {company} as a {position} with the following job descri
 {addDescription}
 --------
 
-Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!
+Please fill the unspecified fields with the information provided. Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!
 `;
 
 const COVER_LETTER_PROMPT = `
