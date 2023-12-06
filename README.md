@@ -11,6 +11,7 @@ Make sure to `yarn add` every time after pull.
 - LangChain only supports Node version >= 18
 
 Within the LLM folder:
+
 ```
 LLM/
 ├── examples/ (example PDFs for local parsing)
@@ -22,12 +23,15 @@ LLM/
 
 ## Backend
 
-First, run the following to acquire all the required packages. 
+First, run the following to acquire all the required packages.
+
 ```
 npm install
 ```
+
 If error occured during installation and npm prompted to use the `--force` option, execute `npm install --force` instead.
 To launch the server, run the command `npm run dev`. The server currently runs at `http://localhost:8080`.
+
 ```
 npm run dev
 ```
@@ -46,7 +50,7 @@ BackEnd/
 
 ## Frontend
 
-First, run npm instal (or yarn add) to acquire all the required packages. 
+First, run npm instal (or yarn add) to acquire all the required packages.
 
 ```bash
 npm install
@@ -54,7 +58,7 @@ npm install
 
 Then, start the app by npm start, which is running on `http://localhost:3000`
 
-```bash 
+```bash
 npm start
 ```
 
@@ -66,7 +70,7 @@ FrontEnd/
 │ ├── pages/ (implement frontend pages, e.g. job history, generate new cover letter, personal profile)
 │ ├── styles/ (customize Material-UI element styles)
 │ ├── hooks/ (detect the session-cookie for security purpose)
-│ ├── Gadgets/ (define helper functions such as format DateTime and Validate Form)
+│ ├── gadgets/ (define helper functions such as format DateTime and Validate Form)
 │ ├── App.js
 │ ├── index.js
 |
