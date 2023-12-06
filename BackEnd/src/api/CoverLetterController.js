@@ -25,7 +25,6 @@ router.post("/generate", async (req, res) => {
     const letter = await generateCoverLetter(
       name,
       email,
-      phoneNumber,
       company,
       position,
       wordLimit,
@@ -37,11 +36,11 @@ router.post("/generate", async (req, res) => {
     );
 
     res.status(200).send(letter);
-    console.log("200");
+    // console.log("200");
     console.log(letter);
   } catch (error) {
     res.status(500);
-    console.log("500");
+    console.error(error)
   }
 });
 

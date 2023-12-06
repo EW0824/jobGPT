@@ -14,7 +14,7 @@ import { textToDocSplitter } from "./splitter"
 import axios from 'axios';
 import cheerio from 'cheerio';
 
-async function extractTextFromUrl(url) {
+export async function extractTextFromUrl(url) {
     try {
         const response = await axios.get(url);
         const html = response.data;
@@ -34,6 +34,8 @@ async function extractTextFromUrl(url) {
         return null;
     }
 }
+
+extractTextFromUrl("")
 
 // Testing:
 // extractTextFromUrl('http://example.com').then(document => console.log(document));

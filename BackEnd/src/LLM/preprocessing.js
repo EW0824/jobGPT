@@ -23,6 +23,42 @@ import { HNSWLib } from "langchain/vectorstores/hnswlib";
 // --------
 // `;
 
+
+async function splitDocs(docs) {
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 1000,
+    chunkOverlap: 200,
+  });
+  const output = await splitter.splitDocuments(docs);
+  return output;
+}
+
+async function splitText(text) {
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 1000,
+    chunkOverlap: 200,
+  });
+
+  const output = await splitter.createDocuments([text]);
+  return output;
+}
+
+function parseExperiencesAsText(experiences) {
+
+  return experiences.map((experience) => {
+    return `${experience.jobTitle} at ${experience.company}: ${experience.jobDescription}`
+  }).join('\n')
+
+      // const get_skills_and_experiences_prompt = (skills, experiences) => {
+      // const skills_string = `Skills: \n` + skills.map((skill, idx) => {
+      //   return `${idx}.${skill}`
+      // }).join('\n')
+
+      // const experiences_string = `Experiences: \n` + experiences.map((experience, idx) => {
+      //   return `${idx}.${experience.jobTitle} at ${experience.company}: ${experience.jobDescription}`
+      // }).join('\n')
+}
+
 // To load the PDF from user
 async function loadPDFLocally(path) {
   const loader = new PDFLoader(path);
@@ -84,7 +120,8 @@ async function loadPDF(path) {
     • Developed a priority-based auctioning algorithm for task allocation in a multi-agent environment. Using a modified A* algorithm, tasks were prioritized based on proximity to the location of the fire resulting in an efficient evacuation.
   `;
 
-  const textOutput = splitText(example);
+  const textOutput = splitText("");
+
   return textOutput;
 }
 
@@ -121,35 +158,29 @@ async function loadJob(link) {
 
     We're excited for you to apply`;
 
-  const textOutput = splitText(example);
+  const textOutput = splitText("");
   return textOutput;
 }
 
-async function splitDocs(docs) {
-  const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
-    chunkOverlap: 200,
-  });
-  const output = await splitter.splitDocuments(docs);
-  return output;
-}
 
-async function splitText(text) {
-  const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
-    chunkOverlap: 200,
-  });
-
-  const output = await splitter.createDocuments([text]);
-  return output;
-}
-
-export async function loadAllDocs(PDFLink, jobLink) {
+export async function loadAllDocs(PDFLink, jobLink, addDescription, experiences) {
   // const resumeDoc = await loadPDFLocally(PDFLink);
-  const resumeDoc = await loadPDF(PDFLink);
   const jobDescriptionDoc = await loadJob(jobLink);
+  const resumeDoc = await loadPDF(PDFLink);
+  const addDescriptionDoc = await splitText(addDescription);
+  const experiencesDoc = await splitText(parseExperiencesAsText(experiences));
+  // console.log(experiencesDoc);
 
-  const combinedDoc = resumeDoc.concat(jobDescriptionDoc);
+  // console.log("Additional description: ", addDescriptionSplit, "\n\n");
+
+  const combinedDoc = jobDescriptionDoc.concat(
+    resumeDoc,
+    addDescriptionDoc,
+    experiencesDoc
+    // skillsSplit
+  );
+
+  console.log("Generating with the following info: ", combinedDoc);
   return combinedDoc;
 }
 
