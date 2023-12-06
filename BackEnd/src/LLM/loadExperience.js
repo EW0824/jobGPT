@@ -1,9 +1,7 @@
 import pdfParse from "pdf-parse/lib/pdf-parse.js";
 import { readFileSync } from "fs";
-import { textToDocSplitter } from "./splitter.js";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { splitText } from "./preprocessing.js";
-import { parse } from "path";
 
 async function loadPDFFromPath(pdfPath) {
   try {

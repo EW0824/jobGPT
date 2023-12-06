@@ -140,6 +140,7 @@ export default async function generateCoverLetter(
   const letter = await chain.call({
     input_documents: relevantDocs,
     question: formattedPrompt,
+    timeout: 30000
   });
 
   // console.log(letter.output_text);
