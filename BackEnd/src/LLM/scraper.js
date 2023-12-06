@@ -12,7 +12,7 @@ complicated article: https://vinuraperera.medium.com/i-decided-to-automate-writi
 import { textToDocSplitter } from "./splitter.js"
 
 import axios from 'axios';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 
 export async function extractTextFromUrl(url) {
     try {
@@ -21,13 +21,12 @@ export async function extractTextFromUrl(url) {
             const response = await axios.get(url);
             const html = response.data;
             const $ = cheerio.load(html);
-            const textLines = [];
 
-            $('div.description__text').each((i, element) => {
-                textLines.push($(element).text().trim());
-            });
+            text = $('html *').contents().map(function() {
+                return (this.type === 'text') ? $(this).text() : '';
+            }).get().join('\n');
 
-            text = textLines.filter(line => line).join('\n');
+            console.log(text);
         }
         
         const document = textToDocSplitter(text);
