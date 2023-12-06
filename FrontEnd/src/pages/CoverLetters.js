@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { validateJobPostForm } from "../gadgets/Validation";
 import ReactModal from "react-modal";
+import * as pdfjsLib from 'pdfjs-dist';
+
 import {
   CardHeader,
   CardContent,
@@ -15,6 +17,7 @@ import {
   InputLabel,
   Input,
   Alert,
+  colors,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import Layout from "../components/Layout";
@@ -99,7 +102,7 @@ export default function Dashboard() {
           wordLimit: "200",
           PDFLink: "",
           jobLink: "",
-          addDescription: formData.jobDescription,
+          addDescription: formData.jobDescription ?? "",
           skills: data2.skillList ?? [],
           experiences: data2.experienceList ?? [],
         };
@@ -177,6 +180,182 @@ export default function Dashboard() {
     });
     handleFormChange();
   };
+
+  //Auto Form
+  const [isAutoModified, setIsAutoModified] = useState(false);
+  const [autoErrorMessage, setAutoErrorMessage] = useState("");
+  const [isAutoLoading, setIsAutoLoading] = useState(false);
+  const [autoSuccessMessage, setAutoSuccessMessage] = useState("");
+  const [autoModalIsOpen, setAutoModalIsOpen] = useState(false);
+  const [autoModalContent, setAutoModalContent] = useState("");
+  const [autoOpenModalNow, setAutoOpenModalNow] = useState(false);
+
+  const openAutoModal = (content) => {
+    setAutoModalContent(content);
+    setAutoModalIsOpen(true);
+  };
+
+  const closeAutoModal = () => {
+    setAutoModalIsOpen(false);
+    setAutoOpenModalNow(false);
+  };
+
+  const [autoData, setAutoData] = useState({
+    jobLink: "",
+    pdfLink: "",
+    jobName: "Unspecified Job Position",
+    jobCompany: "Unspecified Company Position",
+    jobDescription: "Unspecified Job Description",
+    jobStatus: "Applying",
+    generatedCoverLetter: "",
+  })
+
+  const handleAutoChange = () => {
+    setIsAutoModified(true);
+  };
+
+  const handleAuto = (e) => {
+    const { name, value } = e.target;
+    setAutoErrorMessage('');
+    setAutoData({
+      ...autoData,
+      [name]: value,
+    });
+    handleAutoChange();
+  }
+
+  const handleAutoSubmit = async (e) => {
+    e.preventDefault();
+
+    setIsAutoLoading(true);
+
+    const errors = validateAutoJobPostForm(autoData);
+
+    if (Object.keys(errors).length === 0) {
+      if (!isAutoModified) {
+        setAutoErrorMessage("Make some change before submitting again!");
+        return;
+      }
+      setAutoSuccessMessage("We are generating the Cover Letter in the backend and will shortly notify the result!");
+      setAutoErrorMessage("");
+      try {
+        const response2 = await fetch("/user", {
+          method: "GET",
+        });
+        const data2 = await response2.json();
+
+        const updatedCoverLetterData = {
+          name: data2.firstName,
+          email: data2.email,
+          phoneNumber: data2.phoneNumber,
+          company: autoData.jobCompany,
+          position: autoData.jobName,
+          wordLimit: "200",
+          PDFLink: autoData.pdfLink,
+          jobLink: autoData.jobLink,
+          addDescription: autoData.jobDescription,
+          skills: data2.skillList ?? [],
+        };
+        console.log("updatedCoverLetterData:", updatedCoverLetterData);
+        setCoverLetterData(updatedCoverLetterData);
+
+        const queryString = new URLSearchParams(
+          updatedCoverLetterData
+        ).toString();
+        const response3 = await fetch(`/letter/generate?${queryString}`, {
+          method: "GET",
+        });
+
+        const data3 = await response3.text();
+        console.log("data3:", data3);
+        setAutoOpenModalNow(true);
+        openAutoModal(data3);
+
+        setIsAutoLoading(false);
+        const updatedFormData = {
+          ...autoData,
+          generatedCoverLetter: data3,
+        };
+        setAutoData(updatedFormData);
+
+        console.log("updatedFormData:", updatedFormData);
+        const response1 = await fetch("/job", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedFormData),
+        });
+        const data1 = await response1.json();
+        console.log("data1:", data1);
+
+        if (response1.ok) {
+          console.log("success");
+          setAutoErrorMessage("");
+          setAutoSuccessMessage('Please view the result!');
+          setIsAutoFormModified(false);
+        } else {
+          console.log("error");
+          setAutoErrorMessage(data1.error);
+        }
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    } else {
+      setIsAutoLoading(false);
+      setAutoSuccessMessage("");
+      setAutoErrorMessage(
+        "Please correct the following form errors.\n".concat(
+          Object.values(errors).join("\n")
+        )
+      );
+    }
+  };
+
+  /*
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type === "application/pdf") {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const typedArray = new Uint8Array(e.target.result);
+        try {
+          // Load the PDF file
+          console.log(pdfjsLib.GlobalWorkerOptions.workerSrc);
+
+          const pdfDoc = await pdfjsLib.getDocument({ data: typedArray }).promise;
+
+          console.log("Reader Loaded!")
+
+          let textContent = '';
+          
+          // Loop through each page
+          for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+              const page = await pdfDoc.getPage(pageNum);
+              const text = await page.getTextContent();
+              textContent += text.items.map(item => item.str).join(' ');
+          }
+
+          // Update state with the extracted text
+          setAutoData({
+            ...autoData,
+            CV: textContent,
+          })
+          handleAutoChange();
+          console.log(autoData.CV);
+        } catch (error) {
+          setAutoErrorMessage(error)
+        }
+      }
+      
+      reader.readAsArrayBuffer(file);
+
+    } else {
+      setAutoErrorMessage("File not in pdf format or does not exist.")
+    }
+  }
+  */
+
   return (
     <Layout
       open={open}
@@ -187,6 +366,90 @@ export default function Dashboard() {
       <Typography variant="h4" sx={{ mb: 5 }}>
         Generate New Cover Letter
       </Typography>
+      <Grid container spacing={3}>
+        <Grid item xs={32} md={16} lg={16}>
+          <Card>
+            <CardHeader title="Enter Job URL" />
+            <CardContent>
+              <form onSubmit={handleAutoSubmit} noValidate>
+                <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
+                  <InputLabel> Job Link </InputLabel>
+                  <Input
+                    multiline
+                    rows={1}
+                    name="jobLink"
+                    value={autoData.jobLink}
+                    onChange={handleAuto}
+                    required
+                  />
+                </FormControl>
+
+                <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
+                  <InputLabel> CV Link </InputLabel>
+                  <Input
+                    multiline
+                    rows={1}
+                    name="pdfLink"
+                    value={autoData.pdfLink}
+                    onChange={handleAuto}
+                  />
+                </FormControl>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "20px",
+                  }}
+                >
+                  <LoadingButton type="submit" size="large" variant="contained">
+                    Log and Generate!
+                  </LoadingButton>
+                </div>
+                {isAutoLoading ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+              </form>
+              {autoErrorMessage && (
+                <Alert
+                  sx={{
+                    justifyContent: "center",
+                    marginTop: "10px",
+                    whiteSpace: "pre-wrap",
+                  }}
+                  severity="error"
+                >
+                  {" "}
+                  {autoErrorMessage}
+                </Alert>
+              )}
+              {autoSuccessMessage && (
+                <Alert
+                  sx={{
+                    justifyContent: "center",
+                    marginTop: "10px",
+                  }}
+                >
+                  {autoSuccessMessage}
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <div style={{ height: '50px' }}>
+      </div>
       <Grid container spacing={3}>
         <Grid item xs={32} md={16} lg={16}>
           <Card>

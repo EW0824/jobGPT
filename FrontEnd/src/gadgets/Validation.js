@@ -7,7 +7,7 @@ export function validateJobPostForm(formData) {
     errors.jobName = "Position is required";
   } else if (!jobNameValidator.test(formData.jobName)) {
     errors.jobName =
-      "Position should be 10-50 characters long and may only contain letters, numbers, spaces, and hyphens.";
+      "Position: 10-50 characters. Allowed: letters, numbers, spaces, and hyphens.";
   }
 
   // Validate jobCompany
@@ -16,19 +16,30 @@ export function validateJobPostForm(formData) {
     errors.jobCompany = "Company Name is required";
   } else if (!jobCompanyValidator.test(formData.jobCompany)) {
     errors.jobCompany =
-      "Company Name should be 3-40 characters, including letters, numbers, spaces, and some special symbols";
+      "Company Name: 3-64 characters. Allowed: letters, numbers, spaces, and special symbols";
   }
 
   if (!formData.jobDescription.trim()) {
     errors.jobDescription = "Job Description is required";
   } else if (
     formData.jobDescription.trim().length < 10 ||
-    formData.jobDescription.trim().length > 1000
+    formData.jobDescription.trim().length > 2500
   ) {
     errors.jobDescription =
-      "Job Description should be between 10 and 1000 characters.";
+      "Job Description: 10-2500 characters.";
   }
   // console.log(errors);
+  return errors;
+}
+
+export function validateAutoJobPostForm(autoData) {
+  const errors = {};
+
+  // Validate jobLink
+  if (!autoData.jobLink) {
+    errors.jobLink = "Job Link is required";
+  }
+  
   return errors;
 }
 

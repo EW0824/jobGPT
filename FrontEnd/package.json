@@ -22,6 +22,7 @@
     "dayjs": "^1.11.10",
     "iconify": "^1.4.0",
     "nanoid": "^5.0.4",
+    "pdfjs-dist": "^4.0.269",
     "react": "latest",
     "react-dom": "latest",
     "react-helmet-async": "^2.0.1",

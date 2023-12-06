@@ -4,6 +4,7 @@ import { loadQARefineChain } from "langchain/chains";
 import { loadAllDocs } from "./preprocessing.js";
 import { PromptTemplate } from "langchain/prompts";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { COVER_LETTER_PROMPT } from "./prompt.js";
 
 /*
 Useful Resources:
@@ -19,68 +20,9 @@ complicated (python, langchain): https://github.com/vinura/cover_generator_app?s
 complicated article: https://vinuraperera.medium.com/i-decided-to-automate-writing-cover-letters-using-ai-and-you-can-use-what-i-built-be0813ba77e2
 */
 
-const COVER_LETTER_PROMPT_FULL = `
-
-Hope you are doing well! You are a recruiter at a large company with experience reading and writing cover letters. I need your help crafting a perfect letter for me. Here's information about me:
-
---------
-name: {name}
-email: {email}
-phoneNumber: {phoneNumber}
---------
-
-My experiences and skills:
---------
-{experiences}
-{skills}
---------
-
-I am applying to work at {company} as a {position} with the following job description:
---------
-{jobDescription}
---------
-
-Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!
-`;
-
-const COVER_LETTER_PROMPT = `
-
-Hope you are doing well! You are a recruiter at a large company with experience reading and writing cover letters. I need your help crafting a perfect letter for me. My name is {name}, with email {email} and phoneNumber {phoneNumber}.
-
-I am applying to work at {company} as a {position}. Please use information about what recruiters like to write a perfect cover letter. Make sure to highlight my experience and skills which are relevant to the job, and explain why I am a great fit for the position using information from the job description. Please keep it engaging, persuasive, and also professional. Keep it short, within {wordLimit} words. Thanks a lot for your help!
-`;
-
-const generate_cover_letter_prompt = ({skills, experiences}) => {
-
-    const intorduction = `Hope you are doing well! You are a recruiter at a large company with experience reading and writing cover letters. I need your help crafting a perfect letter for me. My name is {name}, with email {email} and phoneNumber {phoneNumber}.`
-
-    const company_section = `I am applying to {company} for the role {position}. The detailed description for the role is: {description}`
-
-    const skills_and_experiences = `The following lists the skills and experiences that I have. Please thoroughly analyze the content below and select the skills and experiences that you reckon to be relevant for the application of this role.`
-
-    const get_skills_and_experiences_prompt = (skills, experiences) => {
-      const skills_string = `Skills: \n` + skills.map((skill, idx) => {
-        return `${idx}.${skill}`
-      }).join('\n')
-
-      const experiences_string = `Experiences: \n` + experiences.map((experience, idx) => {
-        return `${idx}.${experience.jobTitle} at ${experience.company}: ${experience.jobDescription}`
-      }).join('\n')
-
-      return [skills_string, experiences_string].join('\n')
-    }
-
-    const skills_and_experiences_detail = get_skills_and_experiences_prompt(skills, experiences)
-
-    const ending = `According to the provided experiences, skills, and job description, please generate an individualized cover letter with a word limit of {wordLimist}. Please ONLY display the content of the generated cover letter in your response.`
-  
-    return [intorduction, company_section, skills_and_experiences, skills_and_experiences_detail, ending].join('\n')
-}
-
 export default async function generateCoverLetter(
   name,
   email,
-  phoneNumber,
   company,
   position,
   wordLimit,
@@ -100,6 +42,20 @@ export default async function generateCoverLetter(
     Step 6: call the chain on the relevant documents + question
   `;
 
+  // console.log(
+  //   "Generating with the following metrics:",
+  //   name,
+  //   email,
+  //   company,
+  //   position,
+  //   wordLimit,
+  //   PDFLink,
+  //   jobLink,
+  //   addDescription,
+  //   skills,
+  //   experiences
+  // );
+
   // STEP 1: Creating model and chain
   const model = new OpenAI({
     modelName: "gpt-3.5-turbo-1106",
@@ -112,7 +68,7 @@ export default async function generateCoverLetter(
   const chain = loadQARefineChain(model);
 
   // STEP 2: Loading the PDF + job listing and split docs
-  const docs = await loadAllDocs(PDFLink, jobLink);
+  const docs = await loadAllDocs(PDFLink, jobLink, addDescription, experiences);
 
   // STEP 3: Store promptTemplate
 
@@ -144,28 +100,27 @@ export default async function generateCoverLetter(
   call chain on query
   `;
 
-  const cover_letter_prompt = generate_cover_letter_prompt({skills, experiences})
+  // const cover_letter_prompt = generate_cover_letter_prompt({skills, experiences})
 
-  const promptTemplate = PromptTemplate.fromTemplate(cover_letter_prompt);
+  const promptTemplate = PromptTemplate.fromTemplate(COVER_LETTER_PROMPT);
   const formattedPrompt = await promptTemplate.format({
     name: name,
     email: email,
-    phoneNumber: phoneNumber,
     company: company,
     position: position,
+    skills: skills,
     wordLimit: wordLimit,
-    description: addDescription
+    addDescription: addDescription,
+    skills: skills,
   });
-
-  console.log(formattedPrompt)
 
   // console.log(formattedPrompt)
 
   // STEP 4: generate embeddings and vector store
 
   // Embeddings: storing text in high-dimensional vector space
-  const embeddings = new OpenAIEmbeddings({  
-    // openAIApiKey: API_KEY 
+  const embeddings = new OpenAIEmbeddings({
+    // openAIApiKey: API_KEY
   });
 
   // vectorStore: database to efficiently store and search for embeddings
@@ -175,16 +130,17 @@ export default async function generateCoverLetter(
   const vectorStoreRetriever = vectorStore.asRetriever();
 
   // STEP 5: retrieve relevant documents given the prompt
-  const relevantDocs =
-    await vectorStoreRetriever.getRelevantDocuments(formattedPrompt);
+  const relevantDocs = await vectorStoreRetriever.getRelevantDocuments(
+    formattedPrompt
+  );
 
   // console.log(relevantDocs)
-
 
   // STEP 6: CALL
   const letter = await chain.call({
     input_documents: relevantDocs,
     question: formattedPrompt,
+    timeout: 30000
   });
 
   // console.log(letter.output_text);
@@ -203,7 +159,6 @@ export default async function generateCoverLetter(
 //   "",
 //   ""
 // );
-
 
 // ------------------------
 // EXAMPLE
