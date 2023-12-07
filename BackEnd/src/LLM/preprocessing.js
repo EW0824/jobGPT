@@ -33,8 +33,7 @@ export async function loadAllDocs(addDescription, experiences) {
 
   // console.log("Additional description: ", addDescriptionSplit, "\n\n");
 
-  const combinedDoc = jobDescriptionDoc.concat(
-    addDescriptionDoc,
+  const combinedDoc = addDescriptionDoc.concat(
     experiencesDoc
     // skillsSplit
   );

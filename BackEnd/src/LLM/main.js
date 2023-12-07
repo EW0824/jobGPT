@@ -154,7 +154,12 @@ export default async function generateCoverLetter(
   });
 
   // console.log(letter.output_text);
-  return letter.output_text;
+  return {
+    letter: letter.output_text,
+    position: position,
+    company: company,
+    description: addDescription,
+  };
 }
 
 // generateCoverLetter(
