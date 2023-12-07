@@ -387,7 +387,7 @@ export default function Dashboard() {
             <CardContent>
               <form onSubmit={handleAutoSubmit} noValidate>
                 <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
-                  <InputLabel> Job Link </InputLabel>
+                  <InputLabel> LinkedIn Job Link </InputLabel>
                   <Input
                     multiline
                     rows={1}
