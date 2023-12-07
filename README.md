@@ -2,35 +2,35 @@
 
 A cover letter generator for the UCLA 35L Project.
 
-Make sure to `yarn add` every time after pull.
+Make sure to run `yarn` every time after pull.
 
-(`npm install` also works, but need to do `npm install --force` for langchain)
+(`npm install` also works, but need to do `npm install --force` for the backend)
 
 ## LLM
 
-- LangChain only supports Node version >= 18
+- NOTE: LangChain only supports Node version >= 18. Make sure the node environment is supported with `node -v`. 
 
 Within the LLM folder:
 
 ```
 LLM/
 ├── examples/ (example PDFs for local parsing)
+├── loadExperience.js (loading the resume or a list of user passed in experiences)
+├── loadJob.js (loading the job from user link)
 ├── preprocessing.js (handles loading PDF/job description into documents, using a recursive character text splitter
-├── scraper.js (scrapping the job information)
-├── pdfParser.js (loading the PDF passed from the frontend)
 ├── main.js (main pipeline, involving 1. model/chain creation, 2. document loading, 3. storing template into chain, 4. generate embeddings/vector store, 5. retrieve docs from prompt, 6. call the chain
+├── prompt.js (template for the prompt)
 ```
 
 ## Backend
 
-First, run the following to acquire all the required packages.
+First, add all required packages.
 
 ```
-npm install
+yarn
 ```
 
-If error occured during installation and npm prompted to use the `--force` option, execute `npm install --force` instead.
-To launch the server, run the command `npm run dev`. The server currently runs at `http://localhost:8080`.
+To launch the server, run the command `npm run dev`. The server runs at `http://localhost:8080`.
 
 ```
 npm run dev
@@ -50,13 +50,13 @@ BackEnd/
 
 ## Frontend
 
-First, run npm instal (or yarn add) to acquire all the required packages.
+First, add all required packages.
 
 ```bash
-npm install
+yarn
 ```
 
-Then, start the app by npm start, which is running on `http://localhost:3000`
+Then, start the app which runs on `http://localhost:3000`.
 
 ```bash
 npm start
