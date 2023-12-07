@@ -5,9 +5,8 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { validateJobPostForm, validateAutoJobPostForm } from "../gagets/Validation";
+import { validateJobPostForm, validateAutoJobPostForm } from "../gadgets/Validation";
 import ReactModal from "react-modal";
-import * as pdfjsLib from 'pdfjs-dist';
 
 import {
   CardHeader,
@@ -83,7 +82,9 @@ export default function Dashboard() {
         setErrorMessage("Make some change before submitting again!");
         return;
       }
-      setSuccessMessage("We are generating the Cover Letter in the backend and will shortly notify the result!");
+      setSuccessMessage(
+        "We are generating the Cover Letter in the backend and will shortly notify the result!"
+      );
       setErrorMessage("");
       try {
         const response2 = await fetch("/user", {
@@ -100,17 +101,27 @@ export default function Dashboard() {
           wordLimit: "200",
           PDFLink: "",
           jobLink: "",
-          addDescription: formData.jobDescription,
+          addDescription: formData.jobDescription ?? "",
           skills: data2.skillList ?? [],
+          experiences: data2.experienceList ?? [],
         };
         console.log("updatedCoverLetterData:", updatedCoverLetterData);
         setCoverLetterData(updatedCoverLetterData);
 
-        const queryString = new URLSearchParams(
-          updatedCoverLetterData
-        ).toString();
-        const response3 = await fetch(`/letter/generate?${queryString}`, {
-          method: "GET",
+        // const queryString = new URLSearchParams(
+        //   updatedCoverLetterData
+        // ).toString();
+        // const response3 = await fetch(`/letter/generate?${queryString}`, {
+        //   method: "GET",
+        // });
+
+        const response3 = await fetch("/letter/generate", {
+          method: "POST",
+          body: JSON.stringify(updatedCoverLetterData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
         });
 
         const data3 = await response3.text();
@@ -139,7 +150,7 @@ export default function Dashboard() {
         if (response1.ok) {
           console.log("success");
           setErrorMessage("");
-          setSuccessMessage('Please view the result!');
+          setSuccessMessage("Please view the result!");
           setIsFormModified(false);
         } else {
           console.log("error");
@@ -161,7 +172,7 @@ export default function Dashboard() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setErrorMessage('');
+    setErrorMessage("");
     setFormData({
       ...formData,
       [name]: value,
@@ -191,9 +202,9 @@ export default function Dashboard() {
   const [autoData, setAutoData] = useState({
     jobLink: "",
     pdfLink: "",
-    jobName: "Unspecified Job Position",
-    jobCompany: "Unspecified Company Position",
-    jobDescription: "Unspecified Job Description",
+    jobName: "",
+    jobCompany: "",
+    jobDescription: "",
     jobStatus: "Applying",
     generatedCoverLetter: "",
   })
@@ -247,11 +258,22 @@ export default function Dashboard() {
         console.log("updatedCoverLetterData:", updatedCoverLetterData);
         setCoverLetterData(updatedCoverLetterData);
 
+        /*
         const queryString = new URLSearchParams(
           updatedCoverLetterData
         ).toString();
         const response3 = await fetch(`/letter/generate?${queryString}`, {
           method: "GET",
+        });
+        */
+
+        const response3 = await fetch("/letter/generate", {
+          method: "POST",
+          body: JSON.stringify(updatedCoverLetterData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
         });
 
         const data3 = await response3.text();
@@ -369,17 +391,6 @@ export default function Dashboard() {
                     value={autoData.jobLink}
                     onChange={handleAuto}
                     required
-                  />
-                </FormControl>
-
-                <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
-                  <InputLabel> CV Link </InputLabel>
-                  <Input
-                    multiline
-                    rows={1}
-                    name="pdfLink"
-                    value={autoData.pdfLink}
-                    onChange={handleAuto}
                   />
                 </FormControl>
 

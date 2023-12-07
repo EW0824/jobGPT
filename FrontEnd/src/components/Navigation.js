@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import {
   BrowserRouter,
   Navigate,
-  Outlet,
+  Outlet, 
   Route,
   Routes,
 } from "react-router-dom";

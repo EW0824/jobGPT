@@ -76,6 +76,7 @@ const userSchema = new mongoose.Schema(
       {
         company: String,
         jobTitle: String,
+        jobDescription: String,
       },
     ],
     skillList: [

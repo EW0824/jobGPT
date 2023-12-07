@@ -15,7 +15,7 @@ import Label from "../styles/Label";
 import { sentenceCase } from "change-case";
 import Iconify from "../styles/Iconify";
 import Title from "./Title";
-import { fDateTime } from "../gagets/FormatTime";
+import { fDateTime } from "../gadgets/FormatTime";
 
 export default function DetailedJob({ jobId }) {
   useEffect(() => {
@@ -91,7 +91,6 @@ export default function DetailedJob({ jobId }) {
                     <Typography
                       fontFamily={"Public Sans, sans-serif"}
                       variant="h7"
-                      noWrap
                     >
                       {value}
                     </Typography>
