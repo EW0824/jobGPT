@@ -1,25 +1,5 @@
-import pdfParse from "pdf-parse/lib/pdf-parse.js";
-import { readFileSync } from "fs";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { splitText } from "./preprocessing.js";
-
-async function loadPDFFromPath(pdfPath) {
-  try {
-    let text = "";
-    if (pdfPath) {
-      const dataBuffer = readFileSync(pdfPath);
-      const data = await pdfParse(dataBuffer);
-
-      text = data.text;
-    }
-
-    let document = textToDocSplitter(text);
-    return document;
-  } catch (error) {
-    console.error("Error loading PDF:", error);
-    return null;
-  }
-}
 
 // To load the PDF from user
 async function loadPDFLocally(path) {

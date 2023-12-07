@@ -4,7 +4,6 @@ import {
   TextSplitter,
 } from "langchain/text_splitter";
 import { loadExperiences, loadResume } from "./loadExperience.js";
-import { loadJob } from "./loadJob.js";
 
 
 export async function splitDocs(docs) {
@@ -28,17 +27,13 @@ export async function splitText(text) {
 
 
 
-export async function loadAllDocs(PDFLink, jobLink, addDescription, experiences) {
-  const jobDescriptionDoc = await loadJob("");
-  const resumeDoc = await loadResume("");
+export async function loadAllDocs(addDescription, experiences) {
   const addDescriptionDoc = await splitText(addDescription);
   const experiencesDoc = await loadExperiences(experiences);
 
   // console.log("Additional description: ", addDescriptionSplit, "\n\n");
 
-  const combinedDoc = jobDescriptionDoc.concat(
-    resumeDoc,
-    addDescriptionDoc,
+  const combinedDoc = addDescriptionDoc.concat(
     experiencesDoc
     // skillsSplit
   );

@@ -13,24 +13,48 @@ complicated article: https://vinuraperera.medium.com/i-decided-to-automate-writi
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { splitText } from './preprocessing.js';
+import * as fs from 'fs';
 
-async function extractTextFromUrl(url) {
+export async function extractTextFromUrl(url) {
     try {
-        let text = "";
+        let jobTitle = "";
+        let jobCompany = "";
+        let jobDescription = "";
         if (url) {
             const response = await axios.get(url);
             const html = response.data;
             const $ = cheerio.load(html);
 
-            text = $('html *').contents().map(function() {
-                return (this.type === 'text') ? $(this).text() : '';
-            }).get().join('\n');
+            /*
+            function getTextWithNewlines(element) {
+              let text = '';
+              $(element).contents().each(function(i, elem) {
+                  if (elem.type === 'text') {
+                      // Direct text children of the current element
+                      text += $(elem).text().trim() + '\n';
+                  } else if (elem.type === 'tag') {
+                      // Recurse into child elements
+                      text += getTextWithNewlines(elem);
+                  }
+              });
+              return text;
+            }
+            */
 
-            console.log(text);
+            jobTitle = $('.topcard__title').first().text().trim();
+            jobCompany = $('.topcard__org-name-link').first().text().trim();
+            jobDescription = $('.show-more-less-html__markup').first().text().trim();
+
+            console.log(jobTitle);
+            console.log(jobCompany);
+            console.log(jobDescription);
         }
-        // const document = textToDocSplitter(text);
 
-        return "";
+        return {
+          jobTitle: jobTitle,
+          jobCompany: jobCompany,
+          jobDescription: jobDescription,
+        };
     } catch (error) {
         console.error('Error during extraction:', error);
         return "";

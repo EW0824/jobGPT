@@ -5,6 +5,7 @@ import { loadAllDocs } from "./preprocessing.js";
 import { PromptTemplate } from "langchain/prompts";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { COVER_LETTER_PROMPT } from "./prompt.js";
+import { extractTextFromUrl } from "./loadJob.js";
 
 /*
 Useful Resources:
@@ -68,7 +69,14 @@ export default async function generateCoverLetter(
   const chain = loadQARefineChain(model);
 
   // STEP 2: Loading the PDF + job listing and split docs
-  const docs = await loadAllDocs(PDFLink, jobLink, addDescription, experiences);
+  if (jobLink) {
+    const jobInfo = await extractTextFromUrl(jobLink);
+    position = jobInfo.jobTitle;
+    company = jobInfo.jobCompany;
+    addDescription = jobInfo.jobDescription;
+  }
+
+  const docs = await loadAllDocs(addDescription, experiences);
 
   // STEP 3: Store promptTemplate
 
@@ -99,6 +107,8 @@ export default async function generateCoverLetter(
   RetrievalQAChain(model, retriever, stuff type)
   call chain on query
   `;
+
+  // const cover_letter_prompt = generate_cover_letter_prompt({skills, experiences})
 
   // const cover_letter_prompt = generate_cover_letter_prompt({skills, experiences})
 
@@ -144,7 +154,12 @@ export default async function generateCoverLetter(
   });
 
   // console.log(letter.output_text);
-  return letter.output_text;
+  return {
+    letter: letter.output_text,
+    position: position,
+    company: company,
+    description: addDescription,
+  };
 }
 
 // generateCoverLetter(

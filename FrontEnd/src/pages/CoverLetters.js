@@ -5,9 +5,8 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { validateJobPostForm } from "../gadgets/Validation";
+import { validateJobPostForm, validateAutoJobPostForm } from "../gadgets/Validation";
 import ReactModal from "react-modal";
-import * as pdfjsLib from 'pdfjs-dist';
 
 import {
   CardHeader,
@@ -125,15 +124,15 @@ export default function Dashboard() {
           credentials: "include",
         });
 
-        const data3 = await response3.text();
-        console.log("data3:", data3);
+        const data3 = await response3.json();
+        console.log("data3:", data3.letter);
         setOpenModalNow(true);
-        openModal(data3);
+        openModal(data3.letter);
 
         setIsLoading(false);
         const updatedFormData = {
           ...formData,
-          generatedCoverLetter: data3,
+          generatedCoverLetter: data3.letter,
         };
         setFormData(updatedFormData);
 
@@ -203,9 +202,9 @@ export default function Dashboard() {
   const [autoData, setAutoData] = useState({
     jobLink: "",
     pdfLink: "",
-    jobName: "Unspecified Job Position",
-    jobCompany: "Unspecified Company Position",
-    jobDescription: "Unspecified Job Description",
+    jobName: "",
+    jobCompany: "",
+    jobDescription: "",
     jobStatus: "Applying",
     generatedCoverLetter: "",
   })
@@ -255,26 +254,41 @@ export default function Dashboard() {
           jobLink: autoData.jobLink,
           addDescription: autoData.jobDescription,
           skills: data2.skillList ?? [],
+          experiences: data2.experienceList ?? [],
         };
         console.log("updatedCoverLetterData:", updatedCoverLetterData);
         setCoverLetterData(updatedCoverLetterData);
 
+        /*
         const queryString = new URLSearchParams(
           updatedCoverLetterData
         ).toString();
         const response3 = await fetch(`/letter/generate?${queryString}`, {
           method: "GET",
         });
+        */
 
-        const data3 = await response3.text();
-        console.log("data3:", data3);
+        const response3 = await fetch("/letter/generate", {
+          method: "POST",
+          body: JSON.stringify(updatedCoverLetterData),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        const data3 = await response3.json();
+        console.log("data3:", data3.letter);
         setAutoOpenModalNow(true);
-        openAutoModal(data3);
+        openAutoModal(data3.letter);
 
         setIsAutoLoading(false);
         const updatedFormData = {
-          ...autoData,
-          generatedCoverLetter: data3,
+          jobName: data3.position,
+          jobCompany: data3.company,
+          jobDescription: data3.description,
+          jobStatus: "Applying",
+          generatedCoverLetter: data3.letter,
         };
         setAutoData(updatedFormData);
 
@@ -293,7 +307,7 @@ export default function Dashboard() {
           console.log("success");
           setAutoErrorMessage("");
           setAutoSuccessMessage('Please view the result!');
-          setIsAutoFormModified(false);
+          setIsAutoModified(false);
         } else {
           console.log("error");
           setAutoErrorMessage(data1.error);
@@ -381,17 +395,6 @@ export default function Dashboard() {
                     value={autoData.jobLink}
                     onChange={handleAuto}
                     required
-                  />
-                </FormControl>
-
-                <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
-                  <InputLabel> CV Link </InputLabel>
-                  <Input
-                    multiline
-                    rows={1}
-                    name="pdfLink"
-                    value={autoData.pdfLink}
-                    onChange={handleAuto}
                   />
                 </FormControl>
 
@@ -544,6 +547,48 @@ export default function Dashboard() {
           </Card>
         </Grid>
       </Grid>
+
+      <ReactModal
+        isOpen={autoOpenModalNow}
+        onRequestClose={closeAutoModal}
+        contentLabel="My Modal"
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+            width: "80%",
+            maxWidth: "600px",
+          },
+        }}
+      >
+        <h2>
+          Cover Letter for {coverLetterData.position} at{" "}
+          {coverLetterData.company}
+        </h2>
+        <pre
+          style={{
+            whiteSpace: "pre-wrap",
+            wordWrap: "break-word",
+            overflowWrap: "break-word",
+            overflow: "auto",
+            maxWidth: "95%",
+            maxHeight: "400px",
+            overflowY: "auto",
+            margin: "auto",
+            lineHeight: 1.5,
+          }}
+        >
+          {autoModalContent}
+        </pre>
+        <Button onClick={closeAutoModal}>Close</Button>
+      </ReactModal>
 
       <ReactModal
         isOpen={openModalNow}
