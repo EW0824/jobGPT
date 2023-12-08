@@ -30,6 +30,7 @@ First, add all required packages.
 yarn
 ```
 
+Then, check if the .env file is placed in the correct position (privately shared; at the level as index.js at the BackEnd folder).
 To launch the server, run the command `npm run dev`. The server runs at `http://localhost:8080`.
 
 ```
@@ -43,8 +44,10 @@ BackEnd/
 │ ├── api/ (implement RESTful API calls for User, Job, CoverLetter, etc)
 │ ├── db/ (connect to MongoDB database)
 │ ├── LLM/ (LangChain backend with OpenAI API)
-│ ├── models/ (define MongoDB Schema and Form)
-│ ├── index.js (configure CORS and middleware; registers for all API)
+| |── models/ (define MongoDB Schema and Form)
+├── index.js (configure CORS and middleware; registers for all API)
+├── package.json (track dependencies)
+├── yarn.lock (track dependencies)
 ├── .env (hidden for security purpose; contains connection to Database, and also OpenAI API KEY, etc.)
 ```
 
