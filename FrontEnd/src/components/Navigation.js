@@ -26,6 +26,7 @@ export default function Navigation({ isLoggedIn, loading }) {
       <Route path="/job-history" element={<JobHistory />} />
       <Route path="/jobs/:jobId" element={<DetailedJobs />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   ) : (
     <Routes>

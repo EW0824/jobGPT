@@ -60,7 +60,6 @@ export default function Tables() {
     const obj = unique.reduce((obj, key) => {
       if(filters?.booleanFilters){
         if(Object.keys(filters.booleanFilters[literal_attr]).includes(key)){
-          // console.log(literal_attr, key, filters.booleanFilters[literal_attr][key])
           obj[key] = filters.booleanFilters[literal_attr][key]
           return obj
         }
@@ -256,11 +255,10 @@ export default function Tables() {
   }, [jobData])
 
   useEffect(() => {
-    if(filterName === ""){
-      setFilteredJob(jobData.filter((job) => filterJob(job)))
-    } else {
-      setFilteredJob(applySortFilter(filteredJob, compareIncreasing, filterName))
-    }
+
+    setFilteredJob(applySortFilter(jobData, compareIncreasing, 
+      filterName).filter((job) => filterJob(job)))
+
   }, [filterName])
 
   const filterJob = (job) => {
@@ -286,6 +284,7 @@ export default function Tables() {
   }
 
   function applySortFilter(array, comparator, query) {
+    console.log('query', query, 'array', array)
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
       const order = comparator(a[0], b[0]); // Using the provided comparator function
@@ -305,10 +304,6 @@ export default function Tables() {
     }
     return stabilizedThis.map((el) => el[0]);
   }
-
-  useEffect(() => {
-    console.log(jobData)
-  }, [jobData])
 
   function compareIncreasing(a, b) {
     // Assuming a and b are numbers or strings that can be compared directly
