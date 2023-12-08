@@ -35,9 +35,12 @@ export function validateJobPostForm(formData) {
 export function validateAutoJobPostForm(autoData) {
   const errors = {};
 
+  const jobLinkRegEx = /https:\/\/www\.linkedin\.com\/jobs\/view\/[0-9]+/i;
   // Validate jobLink
   if (!autoData.jobLink) {
-    errors.jobLink = "Job Link is required";
+    errors.jobLink = "LinkedIn job link is required";
+  } else if (!autoData.jobLink.match(jobLinkRegEx)) {
+    errors.jobLink = "Invalid LinkedIn job link, please use: https://www.linkedin.com/jobs/view/[jobID]";
   }
   
   return errors;
