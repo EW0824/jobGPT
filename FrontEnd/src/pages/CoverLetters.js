@@ -5,7 +5,10 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { validateJobPostForm, validateAutoJobPostForm } from "../gadgets/Validation";
+import {
+  validateJobPostForm,
+  validateAutoJobPostForm,
+} from "../gadgets/Validation";
 import ReactModal from "react-modal";
 
 import {
@@ -17,6 +20,7 @@ import {
   Input,
   Alert,
   colors,
+  Chip,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import Layout from "../components/Layout";
@@ -308,7 +312,7 @@ export default function Dashboard() {
         if (response1.ok) {
           console.log("success");
           setAutoErrorMessage("");
-          setAutoSuccessMessage('Please view the result!');
+          setAutoSuccessMessage("Please view the result!");
           setIsAutoModified(false);
         } else {
           console.log("error");
@@ -382,21 +386,21 @@ export default function Dashboard() {
       <Typography variant="h4" sx={{ mb: 5 }}>
         Generate New Cover Letter
       </Typography>
-      <Typography variant="body1" sx={{}}>
+
+      <Alert severity="info" style={{ fontSize: "16px" }} sx={{ mb: 2 }}>
         Please either enter either the job URL or manually fill in relevant
         information about the job (if you want more fine-grailed control or the
-        job is not available on LinkedIn). <br /> <br />
-      </Typography>
-      <Typography variant="h6">NOTE:</Typography>
-      <Typography variant="body1" sx={{ mb: 4 }}>
+        job is not available on LinkedIn).
+      </Alert>
+      <Alert severity="warning" style={{ fontSize: "16px" }} sx={{ mb: 4 }}>
         Please don't generate with the exact same experience + job multiple
-        times!<br></br> The LLM will give the same response (i.e. not offer
+        times! <br></br>The LLM will give the same response (i.e. not offer
         anything new) if given the same inputs.
-      </Typography>
+      </Alert>
       <Grid container spacing={3}>
         <Grid item xs={32} md={16} lg={16}>
           <Card>
-            <CardHeader title="Enter Job URL (LinkedIn)" sx={{ml: 2}} />
+            <CardHeader title="Enter Job URL (LinkedIn)" sx={{ ml: 2 }} />
             <CardContent>
               <Typography variant="body1" sx={{ ml: 2, mb: 4 }}>
                 Right now, we only support LinkedIn job scrapping.

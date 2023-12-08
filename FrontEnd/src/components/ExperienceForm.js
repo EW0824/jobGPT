@@ -91,7 +91,13 @@ const ExperienceForm = (props) => {
             <Button
               type="button"
               onClick={() => handleDeleteExperience(index)}
-              style={{ marginTop: "10px", marginLeft: "20px" }}
+              style={{
+                marginTop: "10px",
+                marginLeft: "20px",
+                backgroundColor: "#00aaaa",
+                color: "white",
+                padding: "10px 15px",
+              }}
             >
               Delete
             </Button>
@@ -100,7 +106,12 @@ const ExperienceForm = (props) => {
         <Button
           type="button"
           onClick={addNewExperience}
-          style={{ marginTop: "20px" }}
+          style={{
+            marginTop: "20px",
+            backgroundColor: "#00aaaa",
+            color: "white",
+            padding: "10px 15px",
+          }}
         >
           Add Another Experience
         </Button>

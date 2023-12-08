@@ -12,15 +12,14 @@ import {
   Button,
   CssBaseline,
   TextField,
-  FormControlLabel,
-  Checkbox,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import Iconify from "../styles/Iconify";
 import { SessionContext } from "../components/ContextProvider";
+import theme from "../components/Theme";
 
-const defaultTheme = createTheme();
+const defaultTheme = theme;
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -72,7 +71,30 @@ export default function SignIn() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            maxWidth: 600,
+            margin: "auto",
+            mt: 10,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            variant="h2"
+            component="h1"
+            gutterBottom
+            style={{
+              whiteSpace: "nowrap",
+              fontWeight: "bold",
+            }}
+          >
+            Welcome to jobGPT
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            marginTop: 4,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -137,7 +159,7 @@ export default function SignIn() {
               Sign In
             </Button>
             <Grid container justifyContent="center">
-              <Link href="/sign-up" variant="body2">
+              <Link href="/sign-up" variant="body2" color="#556cd6">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
