@@ -42,8 +42,8 @@ router.patch("/", async (req, res) => {
       res.status(401).send({ error: "Please sign in to view this page" }); // 401 for unauthorized
       return;
     }
-    console.log("doing PATCH method");
-    console.log(req.body);
+    // console.log("doing PATCH method");
+    // console.log(req.body);
     const updatedUser = await User.findByIdAndUpdate(
       req.session.user.userId,
       req.body

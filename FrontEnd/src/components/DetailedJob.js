@@ -25,7 +25,7 @@ export default function DetailedJob({ jobId }) {
       })
       .then((data) => {
         // Extracting specific fields from the fetched JSON object
-        console.log(data);
+        // console.log(data);
         const {
           jobName,
           jobCompany,
@@ -41,7 +41,7 @@ export default function DetailedJob({ jobId }) {
           jobDescription,
           jobStatus,
         };
-        console.log(relevantSkills);
+        // console.log(relevantSkills);
         setJobData(selectedFields);
         setSkill(relevantSkills);
         setResult(generatedCoverLetter);
