@@ -368,7 +368,7 @@ export default function Tables() {
               anchorEl={openStatus}
               onClose={handleStatusClose}
               anchorOrigin={{ vertical: "top", horizontal: "right" }} // Align the top of the popover with the anchor
-              // transformOrigin={{ vertical: "down", horizontal: "left" }}
+              transformOrigin={{ vertical: "down", horizontal: "left" }}
             >
               <MenuItem
                 sx={{ color: "info.main" }}
