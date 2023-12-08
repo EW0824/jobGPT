@@ -39,9 +39,9 @@ export default function SignUp() {
       formDataObject[key] = value;
     }
     formDataObject["role"] = "regularUser";
-    console.log(formDataObject);
+    // console.log(formDataObject);
     const errors = validateSignUpForm(formDataObject);
-    console.log(errors);
+    // console.log(errors);
     if (Object.keys(errors).length !== 0) {
       const errorMessage = Object.values(errors)
         .map((error) => `    - ${error}`) // Four spaces before the hyphen
@@ -167,10 +167,6 @@ export default function SignUp() {
                 ),
               }}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
@@ -179,13 +175,10 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
-            <Grid container>
-              <Grid item xs></Grid>
-              <Grid item>
+            <Grid container justifyContent='center'>
                 <Link href="/sign-in" variant="body2" align="right">
                   {"Already have an account? Sign In"}
                 </Link>
-              </Grid>
             </Grid>
 
             {errMsg && (

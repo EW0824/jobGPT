@@ -38,9 +38,9 @@ export default function SignIn() {
     fetch("/auth/login", {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(data),
     })
       .then((response) => {
@@ -51,7 +51,7 @@ export default function SignIn() {
         throw new Error("Network response was not ok.");
       })
       .then((responseData) => {
-        console.log(responseData);
+        // console.log(responseData);
         setSuccessMsg("Log in Successfully!");
         setSessionToken(responseData);
         localStorage.setItem("sessionData", JSON.stringify(responseData));
@@ -128,10 +128,6 @@ export default function SignIn() {
               }}
               onChange={handleInputChange}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
@@ -140,17 +136,10 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/sign-up" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
+            <Grid container justifyContent="center">
+              <Link href="/sign-up" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
             </Grid>
           </Box>
           {successMsg && (

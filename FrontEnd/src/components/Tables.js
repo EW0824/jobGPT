@@ -176,7 +176,7 @@ export default function Tables() {
       .then((response) => {
         // Handle response here if needed
         if (response.ok) return response.json();
-        console.log("Job status updated successfully!");
+        // console.log("Job status updated successfully!");
       })
       .then((data) => {
         //update the useState variable JobData using returned Job
@@ -284,7 +284,7 @@ export default function Tables() {
   }
 
   function applySortFilter(array, comparator, query) {
-    console.log('query', query, 'array', array)
+    // console.log('query', query, 'array', array)
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
       const order = comparator(a[0], b[0]); // Using the provided comparator function
@@ -503,7 +503,7 @@ export default function Tables() {
         {isNotFound && (
           <TableBody>
             <TableRow>
-              <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+              <TableCell align="center" colSpan={8} sx={{ py: 3 }}>
                 <Typography variant="h5" paragraph>
                   Not found
                 </Typography>
