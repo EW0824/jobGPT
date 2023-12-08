@@ -393,7 +393,11 @@ export default function Tables() {
           {sentenceCase(row.jobStatus)}
         </Label>
       </TableCell>
-      <TableCell>{row.jobDescription}</TableCell>
+      {row.jobDescription.length > 100 ? (
+            <TableCell>{row.jobDescription.slice(0, 100)}...</TableCell>
+          ) : (
+            <TableCell>{row.jobDescription}</TableCell>
+          )}
       <TableCell align="right">
         <IconButton
           size="large"
