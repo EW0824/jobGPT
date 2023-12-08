@@ -43,20 +43,6 @@ export default async function generateCoverLetter(
     Step 6: call the chain on the relevant documents + question
   `;
 
-  // console.log(
-  //   "Generating with the following metrics:",
-  //   name,
-  //   email,
-  //   company,
-  //   position,
-  //   wordLimit,
-  //   PDFLink,
-  //   jobLink,
-  //   addDescription,
-  //   skills,
-  //   experiences
-  // );
-
   // STEP 1: Creating model and chain
   const model = new OpenAI({
     modelName: "gpt-3.5-turbo-1106",
@@ -121,7 +107,6 @@ export default async function generateCoverLetter(
     skills: skills,
     wordLimit: wordLimit,
     addDescription: addDescription,
-    skills: skills,
   });
 
   // console.log(formattedPrompt)
@@ -144,13 +129,11 @@ export default async function generateCoverLetter(
     formattedPrompt
   );
 
-  // console.log(relevantDocs)
-
   // STEP 6: CALL
   const letter = await chain.call({
     input_documents: relevantDocs,
     question: formattedPrompt,
-    timeout: 30000
+    timeout: 45000
   });
 
   // console.log(letter.output_text);
