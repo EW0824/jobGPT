@@ -85,6 +85,16 @@ FrontEnd/
 └── package-lock.json
 ```
 
+To obtain the correct format of LinkedIn job link for cover letter generation, goto https://www.linkedin.com/jobs/ and search for desired jobs.
+
+Press the share button on the top-right of the job window and select copy link to copy the correct format of job link.
+
+The job link should match the following regular expression in grep:
+
+```bash
+grep -E '^https://www\.linkedin\.com/jobs/view/[0-9]+$'
+```
+
 ## Acknowledgments
 
 * [MUI](https://mui.com)
