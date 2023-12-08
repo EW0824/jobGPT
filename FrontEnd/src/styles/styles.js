@@ -12,13 +12,12 @@ export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
 
   const defaultStyle = {
     ...(ownerState.color === "default" && {
-      // OUTLINED
       ...(outlinedVariant && {
         backgroundColor: "transparent",
         color: theme.palette.text.primary,
         border: `1px solid ${alpha(theme.palette.grey[500], 0.32)}`,
       }),
-      // SOFT
+
       ...(softVariant && {
         color: isLight
           ? theme.palette.text.primary
@@ -30,18 +29,17 @@ export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
 
   const colorStyle = {
     ...(ownerState.color !== "default" && {
-      // FILLED
       ...(filledVariant && {
         color: theme.palette[ownerState.color].contrastText,
         backgroundColor: theme.palette[ownerState.color].main,
       }),
-      // OUTLINED
+
       ...(outlinedVariant && {
         backgroundColor: "transparent",
         color: theme.palette[ownerState.color].main,
         border: `1px solid ${theme.palette[ownerState.color].main}`,
       }),
-      // SOFT
+
       ...(softVariant && {
         color: theme.palette[ownerState.color][isLight ? "dark" : "light"],
         backgroundColor: alpha(theme.palette[ownerState.color].main, 0.16),
