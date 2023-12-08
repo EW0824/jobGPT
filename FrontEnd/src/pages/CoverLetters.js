@@ -207,7 +207,7 @@ export default function Dashboard() {
     jobDescription: "",
     jobStatus: "Applying",
     generatedCoverLetter: "",
-  })
+  });
 
   const handleAutoChange = () => {
     setIsAutoModified(true);
@@ -215,13 +215,13 @@ export default function Dashboard() {
 
   const handleAuto = (e) => {
     const { name, value } = e.target;
-    setAutoErrorMessage('');
+    setAutoErrorMessage("");
     setAutoData({
       ...autoData,
       [name]: value,
     });
     handleAutoChange();
-  }
+  };
 
   const handleAutoSubmit = async (e) => {
     e.preventDefault();
@@ -235,7 +235,9 @@ export default function Dashboard() {
         setAutoErrorMessage("Make some change before submitting again!");
         return;
       }
-      setAutoSuccessMessage("We are generating the Cover Letter in the backend and will shortly notify the result!");
+      setAutoSuccessMessage(
+        "We are generating the Cover Letter in the backend and will shortly notify the result!"
+      );
       setAutoErrorMessage("");
       try {
         const response2 = await fetch("/user", {
@@ -380,14 +382,28 @@ export default function Dashboard() {
       <Typography variant="h4" sx={{ mb: 5 }}>
         Generate New Cover Letter
       </Typography>
+      <Typography variant="body1" sx={{}}>
+        Please either enter either the job URL or manually fill in relevant
+        information about the job (if you want more fine-grailed control or the
+        job is not available on LinkedIn). <br /> <br />
+      </Typography>
+      <Typography variant="h6">NOTE:</Typography>
+      <Typography variant="body1" sx={{ mb: 4 }}>
+        Please don't generate with the exact same experience + job multiple
+        times!<br></br> The LLM will give the same response (i.e. not offer
+        anything new) if given the same inputs.
+      </Typography>
       <Grid container spacing={3}>
         <Grid item xs={32} md={16} lg={16}>
           <Card>
-            <CardHeader title="Enter Job URL" />
+            <CardHeader title="Enter Job URL (LinkedIn)" sx={{ml: 2}} />
             <CardContent>
+              <Typography variant="body1" sx={{ ml: 2, mb: 4 }}>
+                Right now, we only support LinkedIn job scrapping.
+              </Typography>
               <form onSubmit={handleAutoSubmit} noValidate>
-                <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
-                  <InputLabel> LinkedIn Job Link </InputLabel>
+                <FormControl fullWidth sx={{ paddingLeft: 1.5, mb: 4 }}>
+                  <InputLabel> Job Link </InputLabel>
                   <Input
                     multiline
                     rows={1}
@@ -398,6 +414,17 @@ export default function Dashboard() {
                   />
                 </FormControl>
 
+                {/* <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
+                  <InputLabel> CV Link </InputLabel>
+                  <Input
+                    multiline
+                    rows={1}
+                    name="pdfLink"
+                    value={autoData.pdfLink}
+                    onChange={handleAuto}
+                  />
+                </FormControl> */}
+
                 <div
                   style={{
                     display: "flex",
@@ -406,7 +433,7 @@ export default function Dashboard() {
                   }}
                 >
                   <LoadingButton type="submit" size="large" variant="contained">
-                    Log and Generate!
+                    Generate
                   </LoadingButton>
                 </div>
                 {isAutoLoading ? (
@@ -451,16 +478,15 @@ export default function Dashboard() {
           </Card>
         </Grid>
       </Grid>
-      <div style={{ height: '50px' }}>
-      </div>
+      <div style={{ height: "50px" }}></div>
       <Grid container spacing={3}>
         <Grid item xs={32} md={16} lg={16}>
           <Card>
-            <CardHeader title="Enter Job Information" />
+            <CardHeader title="Enter Job Information" sx={{ ml: 2, mt: 1 }} />
             <CardContent>
               <form onSubmit={handleSubmit} noValidate>
-                <FormControl fullWidth sx={{ mt: 0.75, mb: 3 }}>
-                  <InputLabel> Position </InputLabel>
+                <FormControl fullWidth sx={{ paddingLeft: 1.5, mb: 4 }}>
+                  <InputLabel>Position</InputLabel>
                   <Input
                     multiline
                     rows={1}
@@ -471,7 +497,7 @@ export default function Dashboard() {
                   />
                 </FormControl>
 
-                <FormControl fullWidth sx={{ mb: 3 }}>
+                <FormControl fullWidth sx={{ paddingLeft: 1.5, mb: 4 }}>
                   <InputLabel>Company Name</InputLabel>
                   <Input
                     multiline
@@ -482,12 +508,11 @@ export default function Dashboard() {
                     required
                   />
                 </FormControl>
-
-                <FormControl fullWidth sx={{ mb: 3 }}>
+                <FormControl fullWidth sx={{ paddingLeft: 1.5, mb: 4 }}>
                   <InputLabel>Description</InputLabel>
                   <Input
                     multiline
-                    rows={4}
+                    rows={8}
                     name="jobDescription"
                     value={formData.jobDescription}
                     onChange={handleChange}
@@ -502,7 +527,7 @@ export default function Dashboard() {
                   }}
                 >
                   <LoadingButton type="submit" size="large" variant="contained">
-                    Log and Generate!
+                    Generate
                   </LoadingButton>
                 </div>
                 {isLoading ? (
