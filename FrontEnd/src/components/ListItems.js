@@ -2,14 +2,10 @@ import React, { useContext } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import BadgeIcon from "@mui/icons-material/Badge";
-import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import { SessionContext } from "./ContextProvider";
-import { useNavigate } from "react-router-dom";
 
 export function MainListItems({ navigate }) {
   return (
@@ -62,9 +58,6 @@ export function SecondaryListItems({ navigate }) {
 
   return (
     <React.Fragment>
-      {/* <ListSubheader component="div" inset>
-        Authentication
-      </ListSubheader> */}
       <ListItemButton onClick={handleClick}>
         <ListItemIcon>
           <AssignmentIcon />

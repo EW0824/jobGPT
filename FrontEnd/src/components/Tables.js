@@ -22,7 +22,7 @@ import {
   Checkbox,
 } from "@mui/material";
 
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 // component import
 import Label from "../styles/Label";
@@ -33,8 +33,8 @@ import { fDateTime } from "../gadgets/FormatTime";
 import { useNavigate } from "react-router-dom";
 import StyledSearch from "../styles/StyledSearch";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { nanoid } from 'nanoid'
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { nanoid } from "nanoid";
 import dayjs from "dayjs";
 
 export default function Tables() {
@@ -45,44 +45,47 @@ export default function Tables() {
   const [jobData, setJobData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [filters, setFilters] = useState({})
-  const [initialFilters, setInitialFilters] = useState({})
-  const [openFilter, setOpenFilter] = useState(false)
+  const [filters, setFilters] = useState({});
+  const [initialFilters, setInitialFilters] = useState({});
+  const [openFilter, setOpenFilter] = useState(false);
   const [numBoolFiltersSelected, setNumBoolFiltersSelected] = useState({
-    'Company': 0,
-    'Job Status': 0,
-    'Favorite': 0
-  })
+    Company: 0,
+    "Job Status": 0,
+    Favorite: 0,
+  });
   const navigate = useNavigate();
 
   const getObjFromAttr = (attr, lst, literal_attr) => {
-    const unique = Array.from(new Set(lst.map((job) => job[attr])))
+    const unique = Array.from(new Set(lst.map((job) => job[attr])));
     const obj = unique.reduce((obj, key) => {
-      if(filters?.booleanFilters){
-        if(Object.keys(filters.booleanFilters[literal_attr]).includes(key)){
-          obj[key] = filters.booleanFilters[literal_attr][key]
-          return obj
+      if (filters?.booleanFilters) {
+        if (Object.keys(filters.booleanFilters[literal_attr]).includes(key)) {
+          obj[key] = filters.booleanFilters[literal_attr][key];
+          return obj;
         }
       }
-      obj[key] = false
-      return obj
-    }, {})
-    return obj
-  }
+      obj[key] = false;
+      return obj;
+    }, {});
+    return obj;
+  };
 
   const getMaxMinDateFromAttr = (attr, lst) => {
-    const rawDates = lst.map((job) => job[attr])
+    const rawDates = lst.map((job) => job[attr]);
 
-    const dates = rawDates.map(rawDate => {
+    const dates = rawDates.map((rawDate) => {
       const date = new Date(rawDate);
-      return new Date(date.getFullYear(), date.getMonth(), date.getDate()); 
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     });
-    
+
     const minDate = new Date(Math.min(...dates));
     const maxDate = new Date(Math.max(...dates));
 
-    return [dayjs(minDate).startOf('day').format('YYYY-MM-DD'), dayjs(maxDate).startOf('day').format('YYYY-MM-DD')]
-  }
+    return [
+      dayjs(minDate).startOf("day").format("YYYY-MM-DD"),
+      dayjs(maxDate).startOf("day").format("YYYY-MM-DD"),
+    ];
+  };
 
   const handleOpenMenu = (event, jobId) => {
     setOpen(event.currentTarget);
@@ -125,42 +128,47 @@ export default function Tables() {
 
   const hanldeFavJob = async () => {
     try {
-
-      const jobIsFav = jobData.find(job => job._id === selectedJob)?.isFavorite
+      const jobIsFav = jobData.find(
+        (job) => job._id === selectedJob
+      )?.isFavorite;
 
       const response_user = await fetch(`/user/`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(jobIsFav ? {$pull: {favoriteJobList: selectedJob}} 
-          : {$push: {favoriteJobList: selectedJob}})
-      })
+        body: JSON.stringify(
+          jobIsFav
+            ? { $pull: { favoriteJobList: selectedJob } }
+            : { $push: { favoriteJobList: selectedJob } }
+        ),
+      });
 
       const response_job = await fetch(`/job/${selectedJob}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({isFavorite: !jobIsFav})
-      })
+        body: JSON.stringify({ isFavorite: !jobIsFav }),
+      });
 
-      if(! response_job.ok || ! response_user.ok){
-        throw Error("Response not ok")
+      if (!response_job.ok || !response_user.ok) {
+        throw Error("Response not ok");
       }
-      
-      const updated_job = await response_job.json()
 
-      
+      const updated_job = await response_job.json();
+
       setJobData((prevData) =>
-          prevData.map((job) => (job._id === selectedJob ? updated_job : job))
+        prevData.map((job) => (job._id === selectedJob ? updated_job : job))
       );
-      setTimeout(() => {
-        setOpen(null)
-      }, numBoolFiltersSelected['Favorite'] ? 0 : 500);
-      
-    } catch(error) {
-      console.error(error)
+      setTimeout(
+        () => {
+          setOpen(null);
+        },
+        numBoolFiltersSelected["Favorite"] ? 0 : 500
+      );
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -192,19 +200,19 @@ export default function Tables() {
   };
 
   const handleFilterSelection = (type, attr, key, value) => {
-    if(type === 'booleanFilters'){
+    if (type === "booleanFilters") {
       setNumBoolFiltersSelected((prev) => {
-        const inc = value ? 1 : -1
+        const inc = value ? 1 : -1;
         return {
           ...prev,
-          [attr]: prev[attr] + inc
-        }
-      })
+          [attr]: prev[attr] + inc,
+        };
+      });
     }
-    let copy = JSON.parse(JSON.stringify(filters))
-    copy[type][attr][key] = value
-    setFilters(copy)
-  }
+    let copy = JSON.parse(JSON.stringify(filters));
+    copy[type][attr][key] = value;
+    setFilters(copy);
+  };
 
   useEffect(() => {
     fetch("/job", {
@@ -221,67 +229,75 @@ export default function Tables() {
   }, []);
 
   useEffect(() => {
-
-    if(jobData.length === 0){
-      return
+    if (jobData.length === 0) {
+      return;
     }
 
     const initialFilterContent = {
       booleanFilters: {
-        'Favorite': (Object.keys(filters).length ? 
-        {'Favorite Jobs': filters.booleanFilters['Favorite']['Favorite Jobs']} :{'Favorite Jobs': false}),
-        'Company': getObjFromAttr('jobCompany', jobData, 'Company'),
-        'Job Status': getObjFromAttr('jobStatus', jobData, 'Job Status')
+        Favorite: Object.keys(filters).length
+          ? {
+              "Favorite Jobs":
+                filters.booleanFilters["Favorite"]["Favorite Jobs"],
+            }
+          : { "Favorite Jobs": false },
+        Company: getObjFromAttr("jobCompany", jobData, "Company"),
+        "Job Status": getObjFromAttr("jobStatus", jobData, "Job Status"),
       },
       dateRanges: {
-        'Create At': {
-          'From': getMaxMinDateFromAttr('createdAt', jobData)[0],
-          'To': getMaxMinDateFromAttr('createdAt', jobData)[1],
+        "Create At": {
+          From: getMaxMinDateFromAttr("createdAt", jobData)[0],
+          To: getMaxMinDateFromAttr("createdAt", jobData)[1],
         },
-        'Updated At': {
-          'From': getMaxMinDateFromAttr('updatedAt', jobData)[0],
-          'To': getMaxMinDateFromAttr('updatedAt', jobData)[1],
-        }
-      }
-    }
+        "Updated At": {
+          From: getMaxMinDateFromAttr("updatedAt", jobData)[0],
+          To: getMaxMinDateFromAttr("updatedAt", jobData)[1],
+        },
+      },
+    };
 
-    setInitialFilters(initialFilterContent)
-    setFilters(initialFilterContent)
-    if(Object.keys(filters).length){
-      setFilteredJob(jobData.filter((job) => filterJob(job)))
+    setInitialFilters(initialFilterContent);
+    setFilters(initialFilterContent);
+    if (Object.keys(filters).length) {
+      setFilteredJob(jobData.filter((job) => filterJob(job)));
     } else {
-      setFilteredJob(jobData)
+      setFilteredJob(jobData);
     }
-  }, [jobData])
+  }, [jobData]);
 
   useEffect(() => {
-
-    setFilteredJob(applySortFilter(jobData, compareIncreasing, 
-      filterName).filter((job) => filterJob(job)))
-
-  }, [filterName])
+    setFilteredJob(
+      applySortFilter(jobData, compareIncreasing, filterName).filter((job) =>
+        filterJob(job)
+      )
+    );
+  }, [filterName]);
 
   const filterJob = (job) => {
-    const boolFilters = filters['booleanFilters']
-    let fulfilled = true
-    if(boolFilters['Favorite']['Favorite Jobs']){
-      fulfilled &= job.isFavorite
+    const boolFilters = filters["booleanFilters"];
+    let fulfilled = true;
+    if (boolFilters["Favorite"]["Favorite Jobs"]) {
+      fulfilled &= job.isFavorite;
     }
-    if(numBoolFiltersSelected['Job Status']){
-      fulfilled &= boolFilters['Job Status'][job.jobStatus]
+    if (numBoolFiltersSelected["Job Status"]) {
+      fulfilled &= boolFilters["Job Status"][job.jobStatus];
     }
-    if(numBoolFiltersSelected['Company']){
-      fulfilled &= boolFilters['Company'][job.jobCompany]
+    if (numBoolFiltersSelected["Company"]) {
+      fulfilled &= boolFilters["Company"][job.jobCompany];
     }
-    Object.keys(filters['dateRanges']).forEach((attr) => {
-      const from = dayjs(filters['dateRanges'][attr]['From']).startOf('day')
-      const to = dayjs(filters['dateRanges'][attr]['To']).startOf('day')
-      const cur = dayjs(job[attr === 'Created At' ? 'createdAt' : 'updatedAt']).startOf('day')
+    Object.keys(filters["dateRanges"]).forEach((attr) => {
+      const from = dayjs(filters["dateRanges"][attr]["From"]).startOf("day");
+      const to = dayjs(filters["dateRanges"][attr]["To"]).startOf("day");
+      const cur = dayjs(
+        job[attr === "Created At" ? "createdAt" : "updatedAt"]
+      ).startOf("day");
 
-      fulfilled &= ((cur.isAfter(from) || cur.isSame(from)) && (cur.isBefore(to) || cur.isSame(to)))
-    })
-    return fulfilled
-  }
+      fulfilled &=
+        (cur.isAfter(from) || cur.isSame(from)) &&
+        (cur.isBefore(to) || cur.isSame(to));
+    });
+    return fulfilled;
+  };
 
   function applySortFilter(array, comparator, query) {
     // console.log('query', query, 'array', array)
@@ -313,10 +329,14 @@ export default function Tables() {
   }
 
   const handleFilterOnClose = () => {
-    setOpenFilter(false)
-    const result = applySortFilter(jobData.filter((job) => filterJob(job)), compareIncreasing, filterName)
-    setFilteredJob(result)
-  }
+    setOpenFilter(false);
+    const result = applySortFilter(
+      jobData.filter((job) => filterJob(job)),
+      compareIncreasing,
+      filterName
+    );
+    setFilteredJob(result);
+  };
 
   const changeJobStatus = () => {};
   const handleChangePage = (event, newPage) => {
@@ -328,84 +348,85 @@ export default function Tables() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const [filteredJob, setFilteredJob] = useState(jobData)
+  const [filteredJob, setFilteredJob] = useState(jobData);
 
-  const filteredJobComponent = (jobList) => jobList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-    <TableRow key={row._id}>
-      <TableCell onClick={() => navigate(`/jobs/${row._id}`)}>
-        {index + 1}
-      </TableCell>
-      <TableCell>{fDateTime(row.createdAt)}</TableCell>
-      <TableCell>{row.jobName}</TableCell>
-      <TableCell>{row.jobCompany}</TableCell>
-      <TableCell>
-        {" "}
-        <Popover
-          open={Boolean(openStatus)}
-          anchorEl={openStatus}
-          onClose={handleStatusClose}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }} // Align the top of the popover with the anchor
-          // transformOrigin={{ vertical: "down", horizontal: "left" }}
-        >
-          <MenuItem
-            sx={{ color: "info.main" }}
-            onClick={() => handleStatusUpdate("Applying")}
-          >
-            <Iconify
-              icon={"healthicons:i-documents-accepted-negative"}
-              sx={{ mr: 2 }}
-            />
-            <Typography>Applying</Typography>
-          </MenuItem>
-          <MenuItem
-            sx={{ color: "success.main" }}
-            onClick={() => handleStatusUpdate("Accepted")}
-          >
-            <Iconify
-              icon={"icon-park-outline:file-success"}
-              sx={{ mr: 2 }}
-            />
-            <Typography>Accepted</Typography>
-          </MenuItem>
-          <MenuItem
-            sx={{ color: "error.main" }}
-            onClick={() => handleStatusUpdate("Rejected")}
-          >
-            <Iconify icon={"pajamas:error"} sx={{ mr: 2 }} />
-            <Typography>Rejected</Typography>
-          </MenuItem>
-        </Popover>
-        <Label
-          onClick={(clickEvent) =>
-            handleStatusOpenMenu(clickEvent, row._id)
-          }
-          color={
-            (row.jobStatus === "Applying" && "info") ||
-            (row.jobStatus === "Rejected" && "error") ||
-            "success"
-          }
-        >
-          {sentenceCase(row.jobStatus)}
-        </Label>
-      </TableCell>
-      {row.jobDescription.length > 100 ? (
+  const filteredJobComponent = (jobList) =>
+    jobList
+      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      .map((row, index) => (
+        <TableRow key={row._id}>
+          <TableCell onClick={() => navigate(`/jobs/${row._id}`)}>
+            {index + 1}
+          </TableCell>
+          <TableCell>{fDateTime(row.createdAt)}</TableCell>
+          <TableCell>{row.jobName}</TableCell>
+          <TableCell>{row.jobCompany}</TableCell>
+          <TableCell>
+            {" "}
+            <Popover
+              open={Boolean(openStatus)}
+              anchorEl={openStatus}
+              onClose={handleStatusClose}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }} // Align the top of the popover with the anchor
+              // transformOrigin={{ vertical: "down", horizontal: "left" }}
+            >
+              <MenuItem
+                sx={{ color: "info.main" }}
+                onClick={() => handleStatusUpdate("Applying")}
+              >
+                <Iconify
+                  icon={"healthicons:i-documents-accepted-negative"}
+                  sx={{ mr: 2 }}
+                />
+                <Typography>Applying</Typography>
+              </MenuItem>
+              <MenuItem
+                sx={{ color: "success.main" }}
+                onClick={() => handleStatusUpdate("Accepted")}
+              >
+                <Iconify
+                  icon={"icon-park-outline:file-success"}
+                  sx={{ mr: 2 }}
+                />
+                <Typography>Accepted</Typography>
+              </MenuItem>
+              <MenuItem
+                sx={{ color: "error.main" }}
+                onClick={() => handleStatusUpdate("Rejected")}
+              >
+                <Iconify icon={"pajamas:error"} sx={{ mr: 2 }} />
+                <Typography>Rejected</Typography>
+              </MenuItem>
+            </Popover>
+            <Label
+              onClick={(clickEvent) =>
+                handleStatusOpenMenu(clickEvent, row._id)
+              }
+              color={
+                (row.jobStatus === "Applying" && "info") ||
+                (row.jobStatus === "Rejected" && "error") ||
+                "success"
+              }
+            >
+              {sentenceCase(row.jobStatus)}
+            </Label>
+          </TableCell>
+          {row.jobDescription.length > 100 ? (
             <TableCell>{row.jobDescription.slice(0, 100)}...</TableCell>
           ) : (
             <TableCell>{row.jobDescription}</TableCell>
           )}
-      <TableCell align="right">
-        <IconButton
-          size="large"
-          color="inherit"
-          onClick={(clickEvent) =>
-            handleOpenMenu(clickEvent, row._id)
-          }
-        >
-          <Iconify icon={"eva:more-vertical-fill"} />
-        </IconButton>
-      </TableCell>
-    </TableRow>
-  ))
+          <TableCell align="right">
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={(clickEvent) => handleOpenMenu(clickEvent, row._id)}
+            >
+              <Iconify icon={"eva:more-vertical-fill"} />
+            </IconButton>
+          </TableCell>
+        </TableRow>
+      ));
 
   const isNotFound = !filteredJob.length && !!filterName;
   return (
@@ -423,62 +444,141 @@ export default function Tables() {
             />
           </InputAdornment>
         }
-        sx={{ mb: 1}}
+        sx={{ mb: 1 }}
       />
-      <Button variant="contained" sx={{}} onClick={() => {setOpenFilter(true)}} >Filters</Button>
-      <Dialog open={openFilter} onClose={handleFilterOnClose} sx={{'.MuiPaper-root': {padding: 4, width: 1}}}>
-        <DialogTitle style={{'alignSelf': 'center'}}>Select filters</DialogTitle>
-        {
-          Object.keys(filters).length ?
+      <Button
+        variant="contained"
+        sx={{}}
+        onClick={() => {
+          setOpenFilter(true);
+        }}
+      >
+        Filters
+      </Button>
+      <Dialog
+        open={openFilter}
+        onClose={handleFilterOnClose}
+        sx={{ ".MuiPaper-root": { padding: 4, width: 1 } }}
+      >
+        <DialogTitle style={{ alignSelf: "center" }}>
+          Select filters
+        </DialogTitle>
+        {Object.keys(filters).length ? (
           Object.keys(filters?.booleanFilters).map((attr) => {
-            const title = (<Typography variant='button' key={nanoid()}>{attr}</Typography>)
-            const filter = Object.keys(filters['booleanFilters'][attr]).map((key) => {
-              return (
-                <FormControlLabel key={nanoid()} label={key} control={<Checkbox />} onChange={(e) => handleFilterSelection('booleanFilters', attr, key, e.target.checked)} 
-                  checked={filters['booleanFilters'][attr][key]}
-                />
-              )
-            })
-            const formattedFilter = (<div style={{flexDirection: 'row'}} key={nanoid()}>
-              {filter}
-            </div>)
-
-            return [title, formattedFilter]
-          }) : (<></>)
-        }
-        {
-          Object.keys(filters).length ?
-          Object.keys(filters?.dateRanges).map((attr) => {
-            const title = (<Typography variant='button' key={nanoid()} sx={{mb: '0.5rem', mt: '0.5rem'}}>{attr}</Typography>)
-            const rawPickers = Object.keys(filters['dateRanges'][attr]).map((key) => {
-              return (
-                <div style={{margin: '1rem'}} key={nanoid()}>
-                <LocalizationProvider dateAdapter={AdapterDayjs} key={nanoid()}>
-                  <DatePicker label={key} key={nanoid()} onChange={(value) => handleFilterSelection('dateRanges', attr, key, value.format('YYYY-MM-DD'))} 
-                    value={dayjs(filters['dateRanges'][attr][key]).startOf('day')}
+            const title = (
+              <Typography variant="button" key={nanoid()}>
+                {attr}
+              </Typography>
+            );
+            const filter = Object.keys(filters["booleanFilters"][attr]).map(
+              (key) => {
+                return (
+                  <FormControlLabel
+                    key={nanoid()}
+                    label={key}
+                    control={<Checkbox />}
+                    onChange={(e) =>
+                      handleFilterSelection(
+                        "booleanFilters",
+                        attr,
+                        key,
+                        e.target.checked
+                      )
+                    }
+                    checked={filters["booleanFilters"][attr][key]}
                   />
-                </LocalizationProvider>
-                </div>
-              )
-            })
-            const formattedPicker = (<div style={{display: 'flex', flexDirection: 'row'}} key={nanoid()}>
-              {rawPickers}
-            </div>)
+                );
+              }
+            );
+            const formattedFilter = (
+              <div style={{ flexDirection: "row" }} key={nanoid()}>
+                {filter}
+              </div>
+            );
 
-            return [title, formattedPicker]
-            
-          }) : (<></>)
-        }
-        <Link align="right" color="primary" sx={{ mt: 2, cursor: "pointer" }} onClick={() => {
-          setFilters(initialFilters)
-          setNumBoolFiltersSelected({'Company': 0,'Job Status': 0,'Favorite': 0})
-          }}>
+            return [title, formattedFilter];
+          })
+        ) : (
+          <></>
+        )}
+        {Object.keys(filters).length ? (
+          Object.keys(filters?.dateRanges).map((attr) => {
+            const title = (
+              <Typography
+                variant="button"
+                key={nanoid()}
+                sx={{ mb: "0.5rem", mt: "0.5rem" }}
+              >
+                {attr}
+              </Typography>
+            );
+            const rawPickers = Object.keys(filters["dateRanges"][attr]).map(
+              (key) => {
+                return (
+                  <div style={{ margin: "1rem" }} key={nanoid()}>
+                    <LocalizationProvider
+                      dateAdapter={AdapterDayjs}
+                      key={nanoid()}
+                    >
+                      <DatePicker
+                        label={key}
+                        key={nanoid()}
+                        onChange={(value) =>
+                          handleFilterSelection(
+                            "dateRanges",
+                            attr,
+                            key,
+                            value.format("YYYY-MM-DD")
+                          )
+                        }
+                        value={dayjs(filters["dateRanges"][attr][key]).startOf(
+                          "day"
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </div>
+                );
+              }
+            );
+            const formattedPicker = (
+              <div
+                style={{ display: "flex", flexDirection: "row" }}
+                key={nanoid()}
+              >
+                {rawPickers}
+              </div>
+            );
+
+            return [title, formattedPicker];
+          })
+        ) : (
+          <></>
+        )}
+        <Link
+          align="right"
+          color="primary"
+          sx={{ mt: 2, cursor: "pointer" }}
+          onClick={() => {
+            setFilters(initialFilters);
+            setNumBoolFiltersSelected({
+              Company: 0,
+              "Job Status": 0,
+              Favorite: 0,
+            });
+          }}
+        >
           Clear Filter
         </Link>
-        <Button variant="contained" onClick={() => {
-          setOpenFilter(false)
-          handleFilterOnClose()
-        }} sx={{width: '0.5', alignSelf: 'center', margin: '1rem'}} >Set Filters</Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setOpenFilter(false);
+            handleFilterOnClose();
+          }}
+          sx={{ width: "0.5", alignSelf: "center", margin: "1rem" }}
+        >
+          Set Filters
+        </Button>
       </Dialog>
       <Table size="medium">
         <colgroup>
@@ -501,9 +601,7 @@ export default function Tables() {
             <TableCell align="right">More Actions</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {filteredJobComponent(filteredJob)}
-        </TableBody>
+        <TableBody>{filteredJobComponent(filteredJob)}</TableBody>
         {isNotFound && (
           <TableBody>
             <TableRow>
@@ -553,11 +651,13 @@ export default function Tables() {
             icon={"material-symbols-light:favorite-outline"}
             sx={{ mr: 2 }}
           />
-          {jobData.find(job => job._id === selectedJob)?.isFavorite ? "Remove from favorite" : "Mark as favorite"}
+          {jobData.find((job) => job._id === selectedJob)?.isFavorite
+            ? "Remove from favorite"
+            : "Mark as favorite"}
         </MenuItem>
       </Popover>
       <Link align="right" color="primary" href="/cover-letters" sx={{ mt: 2 }}>
-        Create A new Job
+        Enter A New Job
       </Link>
     </React.Fragment>
   );

@@ -15,6 +15,7 @@ import { MainListItems, SecondaryListItems } from "../components/ListItems";
 
 import Drawer from "../styles/Drawer";
 import AppBar from "../styles/AppBar";
+import theme from "./Theme";
 
 const defaultTheme = createTheme();
 
