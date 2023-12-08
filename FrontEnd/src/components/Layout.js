@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -17,7 +17,7 @@ import Drawer from "../styles/Drawer";
 import AppBar from "../styles/AppBar";
 import theme from "./Theme";
 
-const defaultTheme = createTheme();
+const defaultTheme = theme;
 
 const Layout = ({ open, toggleDrawer, navigate, tabName, children }) => {
   return (

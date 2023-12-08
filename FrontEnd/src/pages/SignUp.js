@@ -18,12 +18,13 @@ import {
   Checkbox,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 
 import { validateSignUpForm } from "../gadgets/Validation";
 import Iconify from "../styles/Iconify";
+import theme from "../components/Theme";
 
-const defaultTheme = createTheme();
+const defaultTheme = theme;
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -175,10 +176,15 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent='center'>
-                <Link href="/sign-in" variant="body2" align="right">
-                  {"Already have an account? Sign In"}
-                </Link>
+            <Grid container justifyContent="center">
+              <Link
+                href="/sign-in"
+                variant="body2"
+                align="right"
+                color="#556cd6"
+              >
+                {"Already have an account? Sign In"}
+              </Link>
             </Grid>
 
             {errMsg && (
