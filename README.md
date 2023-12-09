@@ -56,6 +56,8 @@ BackEnd/
 ├── yarn.lock (track dependencies)
 ├── .env (hidden for security purpose; contains connection to Database, and also OpenAI API KEY, etc.)
 ```
+(How to get the .env file? Privately shared in the **comment** section under Project Source Code Submission Page at BruinLearn)
+<img width="1164" alt="image" src="https://github.com/EW0824/jobGPT/assets/106227061/5ff0d84b-0d89-4953-97cc-c21f61ec6787">
 
 ## Frontend
 
