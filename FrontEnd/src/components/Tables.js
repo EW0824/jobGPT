@@ -81,9 +81,6 @@ export default function Tables() {
     const minDate = new Date(Math.min(...dates));
     const maxDate = new Date(Math.max(...dates));
 
-    console.log(dayjs(minDate).startOf("day").format("YYYY-MM-DD"),
-    dayjs(maxDate).startOf("day").format("YYYY-MM-DD"),)
-
     return [
       dayjs(minDate).startOf("day").format("YYYY-MM-DD"),
       dayjs(maxDate).startOf("day").format("YYYY-MM-DD"),
@@ -313,20 +310,20 @@ export default function Tables() {
     if (numBoolFiltersSelected["Company"]) {
       fulfilled &= boolFilters["Company"][job.jobCompany];
     }
-    // Object.keys(filters["dateRanges"]).forEach((attr) => {
-    //   const from = dayjs(filters["dateRanges"][attr]["From"]).startOf("day");
-    //   const to = dayjs(filters["dateRanges"][attr]["To"]).startOf("day");
-    //   const cur = dayjs(
-    //     job[attr === "Created At" ? "createdAt" : "updatedAt"]
-    //   ).startOf("day");
+    Object.keys(filters["dateRanges"]).forEach((attr) => {
+      const from = dayjs(filters["dateRanges"][attr]["From"]).startOf("day");
+      const to = dayjs(filters["dateRanges"][attr]["To"]).startOf("day");
+      const cur = dayjs(
+        job[attr === "Create At" ? "createdAt" : "updatedAt"]
+      ).startOf("day");
 
-    //   console.log(from.format("YYYY-MM-DD"), cur.format("YYYY-MM-DD"), to.format("YYYY-MM-DD"))
+      fulfilled &=
+        (cur.isAfter(from) || cur.isSame(from)) &&
+        (cur.isBefore(to) || cur.isSame(to));
 
-    //   fulfilled &=
-    //     (cur.isAfter(from) || cur.isSame(from)) &&
-    //     (cur.isBefore(to) || cur.isSame(to));
+        console.log(cur.format("YYYY-MM-DD"), to.format("YYYY-MM-DD"), (cur.isBefore(to) || cur.isSame(to)))
 
-    // });
+    });
     return fulfilled;
   };
 
@@ -389,7 +386,7 @@ export default function Tables() {
           <TableCell onClick={() => navigate(`/jobs/${row._id}`)}>
             {index + 1}
           </TableCell>
-          <TableCell>{fDateTime(row.createdAt)}</TableCell>
+          <TableCell>{dayjs(row.createdAt).format("YYYY-MM-DD")}</TableCell>
           <TableCell>{row.jobName}</TableCell>
           <TableCell>{row.jobCompany}</TableCell>
           <TableCell>
