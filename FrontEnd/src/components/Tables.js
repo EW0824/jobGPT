@@ -55,10 +55,10 @@ export default function Tables() {
   });
   const navigate = useNavigate();
 
-  const getObjFromAttr = (attr, lst, literal_attr) => {
+  const getObjFromAttr = (attr, lst, literal_attr, initialize_empty=false) => {
     const unique = Array.from(new Set(lst.map((job) => job[attr])));
     const obj = unique.reduce((obj, key) => {
-      if (filters?.booleanFilters) {
+      if (!initialize_empty && filters?.booleanFilters) {
         if (Object.keys(filters.booleanFilters[literal_attr]).includes(key)) {
           obj[key] = filters.booleanFilters[literal_attr][key];
           return obj;
@@ -165,7 +165,7 @@ export default function Tables() {
         () => {
           setOpen(null);
         },
-        numBoolFiltersSelected["Favorite"] ? 0 : 500
+        (numBoolFiltersSelected["Favorite"])  ? 0 : 500
       );
     } catch (error) {
       console.error(error);
@@ -191,6 +191,12 @@ export default function Tables() {
         //re-render the page
         setJobData((prevData) =>
           prevData.map((job) => (job._id === selectedJob ? data : job))
+        );
+        setTimeout(
+          () => {
+            setOpenStatus(null)
+          },
+          (filterName != "" || numBoolFiltersSelected["Job Status"])  ? 0 : 500
         );
       })
       .catch((error) => {
@@ -233,7 +239,25 @@ export default function Tables() {
       return;
     }
 
-    const initialFilterContent = {
+    const emptyFilterContent = {
+      booleanFilters: {
+        Favorite: { "Favorite Jobs": false },
+        Company: getObjFromAttr("jobCompany", jobData, "Company", true),
+        "Job Status": getObjFromAttr("jobStatus", jobData, "Job Status", true),
+      },
+      dateRanges: {
+        "Create At": {
+          From: getMaxMinDateFromAttr("createdAt", jobData)[0],
+          To: getMaxMinDateFromAttr("createdAt", jobData)[1],
+        },
+        "Updated At": {
+          From: getMaxMinDateFromAttr("updatedAt", jobData)[0],
+          To: getMaxMinDateFromAttr("updatedAt", jobData)[1],
+        },
+      },
+    };
+
+    const currentFilterContent = {
       booleanFilters: {
         Favorite: Object.keys(filters).length
           ? {
@@ -256,12 +280,13 @@ export default function Tables() {
       },
     };
 
-    setInitialFilters(initialFilterContent);
-    setFilters(initialFilterContent);
+    console.log(emptyFilterContent)
+    setInitialFilters(emptyFilterContent);
+    setFilters(currentFilterContent);
     if (Object.keys(filters).length) {
-      setFilteredJob(jobData.filter((job) => filterJob(job)));
+      setFilteredJob(applySortFilter(jobData, compareIncreasing, filterName).filter((job) => filterJob(job)));
     } else {
-      setFilteredJob(jobData);
+      setFilteredJob(applySortFilter(jobData, compareIncreasing, filterName));
     }
   }, [jobData]);
 
