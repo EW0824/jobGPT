@@ -1,6 +1,12 @@
 # jobGPT
 
-A cover letter generator for the UCLA 35L Project.
+Cover letter generation has always been one of the most intricate parts of any job application. Some use the same one for every job; some have templates with minor adjustments; others ignore it altogether. Getting GPT to do it for you is also too much effort. Beside this annoyance,  one may also vex over keeping track of which job they have applied for. Many use their inbox to keep track - surely there’s a way to automate this, since we are engineers and creatives?
+
+Fear not! With the power of Large Language Models and elegant frontend/backend integrations, we present jobGPT, an all-in-one solution where you may generate cover letters while also keeping track of which job you have applied for. The website allows users to create accounts, as well as updating it with their skills (e.g. Python, product management, etc) and past experiences (e.g. co-Founder, Apple Inc). Then, we offer the option to generate cover letters using information about the job (which the user can pass in either via the LinkedIn url, or manually copy and paste) leveraging the OpenAI API. 
+
+We have a cool pipeline which creates vector stores for long pieces of texts such as the experience and job descriptions, and also a retriever which identifies the most relevant embeddings given the prompt. Our app is built using MERN stack, and keeps track of experience, job, skills and users with Mongoose models communicated with the FrontEnd through RESTful APIs and even CORS. We also have a search feature, beautiful filter pipeline, global state management and session-based authentication system to ensure the user experience is as smooth as humanly imaginable. We hope you enjoy using our web app.
+
+# How to run
 
 Make sure to run `yarn` every time after pull.
 
