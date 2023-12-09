@@ -85,11 +85,17 @@ FrontEnd/
 └── package-lock.json
 ```
 
+## Job URL Directions
+
+Use the top form on the "Cover Letters" page to generate without manual input for jobs on LinkedIn:
+
+![Cover Letters Page](./FrontEnd/public/Cover_Letter_Page.png)
+
 To obtain the correct format of LinkedIn job link for cover letter generation, goto https://www.linkedin.com/jobs/ and search for desired jobs:
 
 ![linkedin.com/jobs](./FrontEnd/public/LinkedIn_jobs.png)
 
-Press the share button on the top-right of the job window and select copy link to copy the correct format of job link to clipboard:
+Click on the desired job to enter detailed job page and press the share button on the top-right of the job window and select copy link to copy the correct format of job link to clipboard:
 
 ![Share On LinkedIn](./FrontEnd/public/Share_On_LinkedIn.png)
 
