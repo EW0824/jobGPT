@@ -8,9 +8,11 @@ We have a cool pipeline which creates vector stores for long pieces of texts suc
 
 # How to run
 
-Make sure to run `yarn` every time after pull.
+Make sure to run `yarn` every time after pull. 
 
 (`npm install` also works, but need to do `npm install --force` for the backend)
+
+(Note: If you are a Mac user and at the UCLA campus, please connect to UCLA_WIFI instead of UCLA_WEB.)
 
 ## LLM
 
