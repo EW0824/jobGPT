@@ -1,5 +1,13 @@
 # jobGPT
 
+jobGPT is an all-in-one solution for jobseekers! 
+
+Keeping track of which jobs you have applied for in the past, jobGPT allows you to customize your dashboard with skills and past experiences. Then, provided with the job URL, it scraps relevant information from the job description and generates a succinct and professional cover letter tailored to the job and your personal history!
+
+---
+
+## Detailed Description
+
 Cover letter generation has always been one of the most intricate parts of any job application. Some use the same one for every job; some have templates with minor adjustments; others ignore it altogether. Getting GPT to do it for you is also too much effort. Beside this annoyance,  one may also vex over keeping track of which job they have applied for. Many use their inbox to keep track - surely there’s a way to automate this, since we are engineers and creatives?
 
 Fear not! With the power of Large Language Models and elegant frontend/backend integrations, we present jobGPT, an all-in-one solution where you may generate cover letters while also keeping track of which job you have applied for. The website allows users to create accounts, as well as updating it with their skills (e.g. Python, product management, etc) and past experiences (e.g. co-Founder, Apple Inc). Then, we offer the option to generate cover letters using information about the job (which the user can pass in either via the LinkedIn url, or manually copy and paste) leveraging the OpenAI API. 
@@ -118,3 +126,4 @@ grep -E '^https://www\.linkedin\.com/jobs/view/[0-9]+$'
 ## Acknowledgments
 
 * [MUI](https://mui.com)
+* [LangChain](https://www.langchain.com/)
